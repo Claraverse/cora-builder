@@ -1,0 +1,120 @@
+/* --- WRAPPER --- */
+.cora_cta_wrap {
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    isolation: isolate;
+    /* BG and Padding set by controls */
+}
+
+/* --- GLOW EFFECT --- */
+.cora_cta_glow {
+    position: absolute;
+    top: -50%;
+    left: -20%;
+    width: 80%;
+    height: 150%;
+    /* Gradient set by control */
+    opacity: 0.6;
+    z-index: -1;
+    filter: blur(80px);
+    pointer-events: none;
+}
+
+/* --- CONTENT --- */
+.cora_cta_content {
+    max-width: 800px;
+    margin: 0 auto 80px auto;
+}
+
+.cora_cta_pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 50px;
+    font-size: 13px;
+    margin-bottom: 24px;
+}
+
+.cora_cta_title {
+    font-size: 56px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 0 0 24px 0;
+    letter-spacing: -1px;
+}
+
+.cora_cta_desc {
+    font-size: 18px;
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto 40px auto;
+}
+
+/* --- BUTTONS --- */
+.cora_cta_actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.cora_cta_btn {
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.cora_cta_btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+/* Secondary Btn base style */
+.cora_btn_secondary {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* --- STATS GRID --- */
+.cora_cta_stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    max-width: 1000px;
+    margin: 0 auto;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 60px;
+}
+
+.cora_stat_val {
+    font-size: 40px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.cora_stat_lbl {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 767px) {
+    .cora_cta_title {
+        font-size: 36px;
+    }
+    
+    .cora_cta_stats {
+        grid-template-columns: 1fr 1fr; /* 2x2 grid */
+        gap: 40px;
+    }
+}
