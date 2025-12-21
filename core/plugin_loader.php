@@ -110,7 +110,7 @@ class Plugin_Loader
             'cora_advance_heading',
             'cora_blog_card',
             'cora_solution_card',
-            'cora_category_card'
+            'cora_category_card','cora_pill_badge'
         ];
 
         foreach ($components as $component) {

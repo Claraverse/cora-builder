@@ -1,0 +1,44 @@
+/* Wrapper for Alignment */
+.cora_pill_wrapper {
+    width: 100%;
+}
+
+/* Atomic Pill Badge */
+.cora_pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Defaults - Overridden by Elementor */
+    padding: 8px 20px;
+    border-radius: 50px;
+    border: 1px solid #EAEAEA;
+    background-color: #fff;
+    
+    /* Layout */
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+/* Icon */
+.cora_pill_icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    color: #101828;
+}
+
+.cora_pill_icon svg {
+    fill: currentColor;
+    width: 16px; /* Default */
+    height: 16px;
+}
+
+/* Text */
+.cora_pill_text {
+    font-size: 14px;
+    font-weight: 600;
+    color: #101828;
+    line-height: 1;
+}
