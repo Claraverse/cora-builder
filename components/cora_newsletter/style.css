@@ -1,0 +1,112 @@
+/* --- WRAPPER --- */
+.cora_news_wrap {
+    position: relative;
+    overflow: hidden;
+    /* BG (Classic/Gradient/Video) set by Controls */
+}
+
+/* --- GRID LAYOUT --- */
+.cora_news_grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 50/50 Split */
+    gap: 60px;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* --- LEFT COLUMN --- */
+.cora_news_pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.cora_news_pill i { font-size: 11px; }
+
+.cora_news_title {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 0 0 16px 0;
+    letter-spacing: -1px;
+}
+
+.cora_news_desc {
+    font-size: 18px;
+    line-height: 1.6;
+    margin-bottom: 32px;
+    max-width: 500px;
+}
+
+/* --- BENEFITS LIST --- */
+.cora_news_list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.cora_news_list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+.cora_news_check {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid #10B981; /* Default Green */
+    color: #10B981; /* Default Green */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    flex-shrink: 0;
+}
+
+/* --- RIGHT COLUMN (FORM BOX) --- */
+.cora_news_form_box {
+    /* Background (Gradient/Classic) set by Controls */
+    /* Default fallback logic in PHP if needed, but styling handled by Elementor controls */
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+.cora_news_note {
+    font-size: 12px;
+    text-align: center;
+    margin-top: 16px;
+    opacity: 0.7;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 991px) {
+    .cora_news_grid {
+        grid-template-columns: 1fr; /* Stack vertically on tablet/mobile */
+        gap: 40px;
+    }
+    
+    .cora_news_desc {
+        max-width: 100%;
+    }
+    
+    /* Ensure padding is comfortable on mobile */
+    .cora_news_wrap {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+    }
+}

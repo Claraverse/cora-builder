@@ -116,7 +116,7 @@ class Plugin_Loader
             'cora_solution_cluster',
             'cora_team_card',
             'cora_pricing_card',
-            'cora_cta_section'
+            'cora_cta_section','cora_newsletter'
         ];
 
         foreach ($components as $component) {
