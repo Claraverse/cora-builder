@@ -97,7 +97,7 @@ class Plugin_Loader {
             require_once CORA_BUILDER_PATH . 'core/base_widget.php';
 
 		$components = [
-			'dual_heading', 'blog_hero',
+			'dual_heading', 'blog_hero','post_grid',
 		];
 
 		foreach ( $components as $component ) {
