@@ -1,0 +1,38 @@
+/* --- THE TOGGLE BUTTON --- */
+#cora-builder-toggle {
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 5px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+#cora-builder-toggle i {
+    font-size: 22px; 
+    color: #4F46E5; /* Cora Purple */
+}
+
+#cora-builder-toggle:hover {
+    background-color: #F3F4F6;
+}
+
+/* --- ACTIVE STATE OVERRIDES --- */
+/* When Cora Mode is ON, hide the search bar completely */
+body.cora-builder-active #elementor-panel-elements-search-area {
+    display: none !important;
+}
+
+/* Force show ONLY Cora categories */
+body.cora-builder-active .elementor-panel-category {
+    display: none !important;
+}
+
+body.cora-builder-active .elementor-panel-category.cora_cat_hero,
+body.cora-builder-active .elementor-panel-category.cora_cat_cards,
+body.cora-builder-active .elementor-panel-category.cora_cat_ui {
+    display: block !important;
+}

@@ -18,15 +18,23 @@ class Plugin_Loader
         return self::$_instance;
     }
 
+
+
+
     public function __construct()
     {
-        // 1. Register Widgets
+
+        // 1. Initialize the NEW Customizer (Injects the Toggle Button)
+       require_once CORA_BUILDER_PATH . 'core/editor_customizer.php';
+		new \Cora_Builder\Core\Editor_Customizer();
+
+        // 2. Register Widgets (No change)
         add_action('elementor/widgets/register', [$this, 'register_components']);
 
-        // 2. Register Custom Category (NEW)
+        // 3. Register Custom Categories (No change)
         add_action('elementor/elements/categories_registered', [$this, 'register_categories']);
 
-        // 3. Enqueue Global Design System
+        // 4. Enqueue Global Design System (No change)
         add_action('elementor/frontend/after_enqueue_styles', [$this, 'enqueue_global_styles']);
     }
 
@@ -116,7 +124,8 @@ class Plugin_Loader
             'cora_solution_cluster',
             'cora_team_card',
             'cora_pricing_card',
-            'cora_cta_section','cora_newsletter'
+            'cora_cta_section',
+            'cora_newsletter'
         ];
 
         foreach ($components as $component) {
