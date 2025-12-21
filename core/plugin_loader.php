@@ -23,10 +23,16 @@ class Plugin_Loader
 
     public function __construct()
     {
+        // 1. Initialize Admin Menu
+        require_once CORA_BUILDER_PATH . 'core/admin_manager.php';
+        new \Cora_Builder\Core\Admin_Manager();
 
-        // 1. Initialize the NEW Customizer (Injects the Toggle Button)
-       require_once CORA_BUILDER_PATH . 'core/editor_customizer.php';
-		new \Cora_Builder\Core\Editor_Customizer();
+        // 2. Initialize Settings Manager (THIS WAS LIKELY MISSING)
+        require_once CORA_BUILDER_PATH . 'core/settings_manager.php';
+        new \Cora_Builder\Core\Settings_Manager();
+        // 3. Initialize Editor Customizer
+        require_once CORA_BUILDER_PATH . 'core/editor_customizer.php';
+        new \Cora_Builder\Core\Editor_Customizer();
 
         // 2. Register Widgets (No change)
         add_action('elementor/widgets/register', [$this, 'register_components']);
