@@ -1,0 +1,76 @@
+/* --- CARD CONTAINER --- */
+.cora_cat_card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center content vertically */
+    /* Alignment (Horizontal) handled by Elementor Control */
+    text-decoration: none;
+    transition: all 0.3s ease;
+    background: #fff; /* Default */
+    border: 1px solid #eee; /* Default */
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+/* --- HOVER ANIMATIONS (User Controlled) --- */
+.cora-hover-move-up:hover {
+    transform: translateY(-5px);
+}
+
+.cora-hover-scale:hover {
+    transform: scale(1.03);
+}
+
+/* --- ICON WRAPPER --- */
+.cora_cat_icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    color: #101828; /* Default Icon Color */
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.cora_cat_icon i {
+    font-size: 32px; /* Default size */
+}
+
+/* Ensure SVG fills the wrapper correctly based on Size Control */
+.cora_cat_icon svg {
+    width: 32px; /* Default overridden by control */
+    height: 32px; /* Default overridden by control */
+    fill: currentColor; /* Inherit text color for SVG */
+    display: block;
+}
+
+.cora_cat_icon img {
+    width: 32px; /* Default overridden by control */
+    height: auto;
+    display: block;
+}
+
+/* --- TITLE --- */
+.cora_cat_title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #101828;
+    transition: color 0.3s ease;
+}
+
+/* --- ALIGNMENT HELPERS --- */
+/* These make sure flex items align correctly based on the container's text-align */
+
+/* If aligned left */
+.cora_cat_card[style*="text-align: left"] .cora_cat_icon {
+    align-self: flex-start;
+}
+
+/* If aligned right */
+.cora_cat_card[style*="text-align: right"] .cora_cat_icon {
+    align-self: flex-end;
+}
+
+/* If aligned center (default) */
+.cora_cat_card[style*="text-align: center"] .cora_cat_icon {
+    align-self: center;
+}
