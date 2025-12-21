@@ -46,6 +46,17 @@ class Admin_Manager
             'cora-settings',
             [$this, 'route_settings_page'] // Calls the new Settings Manager
         );
+        
+
+        // 4. Post Types Submenu (NEW)
+        add_submenu_page(
+            'cora-builder',
+            'Post Types',
+            'Post Types',
+            'manage_options',
+            'cora-cpt',
+            [ $this, 'route_cpt_page' ]
+        );
     }
 
     /**
@@ -117,7 +128,14 @@ class Admin_Manager
             echo '<div class="notice notice-error"><p>Error: Settings Manager class not found.</p></div>';
         }
     }
-
+// Add this routing function
+    public function route_cpt_page() {
+        if ( ! class_exists( '\Cora_Builder\Core\CPT_Manager' ) ) {
+            require_once CORA_BUILDER_PATH . 'core/cpt_manager.php';
+        }
+        $cpt_manager = new \Cora_Builder\Core\CPT_Manager();
+        $cpt_manager->render_cpt_page();
+    }
     /**
      * Enqueue Styles
      */

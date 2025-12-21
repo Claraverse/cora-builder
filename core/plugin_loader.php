@@ -23,17 +23,21 @@ class Plugin_Loader
 
     public function __construct()
     {
-        // 1. Initialize Admin Menu
+      // 1. Admin & Menus
         require_once CORA_BUILDER_PATH . 'core/admin_manager.php';
         new \Cora_Builder\Core\Admin_Manager();
 
-        // 2. Initialize Settings Manager (THIS WAS LIKELY MISSING)
+        // 2. Settings
         require_once CORA_BUILDER_PATH . 'core/settings_manager.php';
         new \Cora_Builder\Core\Settings_Manager();
-        // 3. Initialize Editor Customizer
+
+        // 3. CPT Engine (NEW)
+        require_once CORA_BUILDER_PATH . 'core/cpt_manager.php';
+        new \Cora_Builder\Core\CPT_Manager();
+
+        // 4. Editor Customizer
         require_once CORA_BUILDER_PATH . 'core/editor_customizer.php';
         new \Cora_Builder\Core\Editor_Customizer();
-
         // 2. Register Widgets (No change)
         add_action('elementor/widgets/register', [$this, 'register_components']);
 
