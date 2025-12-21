@@ -106,7 +106,7 @@ class Plugin_Loader
             'dual_heading',
             'blog_hero',
             'post_grid',
-            'cora_card'
+            'cora_card', 'cora_blog_card'
         ];
 
         foreach ($components as $component) {

@@ -1,0 +1,160 @@
+/* --- CARD WRAPPER --- */
+.cora_blog_card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #EAEAEA;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cora_blog_card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+}
+
+/* --- IMAGE SECTION --- */
+.cora_blog_img_wrap {
+    position: relative;
+    display: block;
+    width: 100%;
+    overflow: hidden;
+}
+
+.cora_blog_img {
+    width: 100%;
+    height: 240px; /* Default */
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.5s ease;
+}
+
+.cora_blog_card:hover .cora_blog_img {
+    transform: scale(1.05);
+}
+
+/* --- BADGE --- */
+.cora_blog_badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 50px;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+/* --- CONTENT SECTION --- */
+.cora_blog_card_inner {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.cora_blog_meta {
+    font-size: 13px;
+    color: #667085; /* Gray 500 */
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cora_blog_title {
+    margin: 0 0 12px 0;
+    font-size: 20px;
+    line-height: 1.4;
+    color: #101828; /* Gray 900 */
+}
+
+.cora_blog_title a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s;
+}
+
+.cora_blog_title a:hover {
+    color: #007bff;
+}
+
+.cora_blog_excerpt {
+    font-size: 15px;
+    color: #475467; /* Gray 600 */
+    line-height: 1.6;
+    margin-bottom: 20px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* --- DIVIDER --- */
+.cora_blog_divider {
+    height: 1px;
+    background-color: #F2F4F7; /* Gray 200 */
+    width: 100%;
+    margin-bottom: 16px;
+    margin-top: auto; /* Pushes footer to bottom */
+}
+
+/* --- FOOTER --- */
+.cora_blog_footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cora_blog_author {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cora_author_avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.cora_author_initial {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #7F56D9; /* Purple Brand */
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.cora_author_name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #344054;
+}
+
+.cora_read_btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #101828;
+    text-decoration: none;
+    transition: gap 0.2s ease;
+}
+
+.cora_read_btn:hover {
+    gap: 10px; /* Arrow slide effect */
+}
