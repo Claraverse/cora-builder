@@ -108,7 +108,7 @@ class Plugin_Loader
             'post_grid',
             'cora_card',
             'cora_advance_heading',
-            'cora_blog_card'
+            'cora_blog_card','cora_solution_card'
         ];
 
         foreach ($components as $component) {

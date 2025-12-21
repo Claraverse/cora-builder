@@ -1,0 +1,87 @@
+/* --- CARD WRAPPER --- */
+.cora_sol_card {
+    display: flex;
+    flex-direction: column;
+    background: #fff; /* Default, overridden by Elementor */
+    border-radius: 12px;
+    border: 1px solid #EAEAEA;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cora_sol_card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.06);
+}
+
+/* --- TITLE --- */
+.cora_sol_title {
+    margin: 0 0 12px 0;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #101828;
+}
+
+/* --- DESCRIPTION --- */
+.cora_sol_desc {
+    font-size: 15px;
+    color: #667085;
+    line-height: 1.5;
+    margin-bottom: 24px;
+}
+
+/* --- LIST --- */
+.cora_sol_list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Adjustable via controls */
+}
+
+/* --- LIST ITEM --- */
+.cora_sol_link {
+    display: flex;
+    align-items: center; /* Vertically center icon and text */
+    justify-content: space-between;
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 8px;
+    background: #F9FAFB; /* Light Gray background for items */
+    transition: background 0.2s ease, color 0.2s ease;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: #344054;
+}
+
+.cora_sol_link:hover {
+    background: #F2F4F7;
+    color: #101828;
+}
+
+/* Text inside link (wrapped in span for truncation) */
+.cora_sol_link span {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+/* --- ICON --- */
+.cora_sol_icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    color: #667085;
+    transition: transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cora_sol_icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.cora_sol_link:hover .cora_sol_icon {
+    transform: translateX(4px); /* Subtle slide effect */
+    color: #007bff; /* Active color */
+}
