@@ -1,0 +1,83 @@
+/* --- CARD --- */
+.cora_ind_card {
+    display: flex;
+    flex-direction: column;
+    background: #fff; /* Default */
+    border: 1px solid #EAEAEA; /* Default */
+    border-radius: 12px;
+    padding: 32px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+/* Hover Animations */
+.cora-anim-up:hover {
+    transform: translateY(-5px);
+}
+.cora-anim-scale:hover {
+    transform: scale(1.02);
+}
+
+/* --- ICON --- */
+.cora_ind_icon {
+    display: inline-flex;
+    color: #101828; /* Default */
+    line-height: 1;
+}
+
+.cora_ind_icon svg {
+    fill: currentColor;
+    display: block;
+}
+
+/* --- TYPOGRAPHY --- */
+.cora_ind_title {
+    margin: 0 0 8px 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #101828;
+}
+
+.cora_ind_desc {
+    font-size: 15px;
+    color: #667085;
+    line-height: 1.5;
+    margin-bottom: 24px;
+    flex-grow: 1; /* Pushes button to bottom if height is fixed */
+}
+
+/* --- BUTTON / LINK --- */
+.cora_ind_btn {
+    font-size: 14px;
+    font-weight: 600;
+    color: #101828;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.3s ease;
+}
+
+.cora-arrow {
+    transition: transform 0.3s ease;
+    font-size: 12px; /* Small arrow */
+}
+
+.cora_ind_card:hover .cora-arrow {
+    transform: translateX(4px); /* Slide arrow on hover */
+}
+
+/* --- ALIGNMENT HELPERS --- */
+.cora_ind_card[style*="text-align: center"] .cora_ind_icon,
+.cora_ind_card[style*="text-align: center"] .cora_ind_btn {
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cora_ind_card[style*="text-align: right"] .cora_ind_icon,
+.cora_ind_card[style*="text-align: right"] .cora_ind_btn {
+    justify-content: flex-end;
+    margin-left: auto;
+}

@@ -87,7 +87,7 @@ class Plugin_Loader
             error_log('Cora Builder: Failed to reorder categories.');
         }
     }
-
+ 
     public function enqueue_global_styles()
     {
         wp_enqueue_style(
@@ -110,7 +110,10 @@ class Plugin_Loader
             'cora_advance_heading',
             'cora_blog_card',
             'cora_solution_card',
-            'cora_category_card','cora_pill_badge'
+            'cora_category_card',
+            'cora_pill_badge',
+            'cora_industry_card',
+            'cora_solution_cluster','cora_team_card','cora_pricing_card'
         ];
 
         foreach ($components as $component) {

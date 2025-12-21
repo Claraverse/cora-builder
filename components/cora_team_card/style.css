@@ -1,0 +1,85 @@
+/* --- CARD --- */
+.cora_team_card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #EAEAEA;
+    border-radius: 24px;
+    padding: 32px;
+    box-sizing: border-box;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* --- HEADER (Avatar + Social) --- */
+.cora_team_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
+.cora_team_avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 24px;
+    background-size: cover;
+    background-position: center;
+    flex-shrink: 0;
+}
+
+/* --- SOCIAL LINKS --- */
+.cora_team_social {
+    display: flex;
+    gap: 8px;
+}
+
+.cora_team_social_link {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #F2F4F7;
+    color: #667085;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.cora_team_social_link:hover {
+    background-color: #101828;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.cora_team_social_link i { font-size: 16px; }
+.cora_team_social_link svg { width: 16px; height: 16px; fill: currentColor; }
+
+/* --- TEXT INFO --- */
+.cora_team_name {
+    margin: 0 0 4px 0;
+    font-size: 24px;
+    font-weight: 700;
+    color: #101828;
+}
+
+.cora_team_role {
+    font-size: 16px;
+    color: #667085;
+    margin-bottom: 16px;
+    font-weight: 500;
+}
+
+.cora_team_bio {
+    font-size: 16px;
+    color: #667085;
+    line-height: 1.6;
+}
+
+/* --- MOBILE --- */
+@media (max-width: 480px) {
+    .cora_team_header {
+        flex-direction: column;
+        gap: 16px;
+    }
+}

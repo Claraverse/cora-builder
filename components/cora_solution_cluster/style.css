@@ -1,0 +1,173 @@
+/* --- CONTAINER --- */
+.cora_cluster_card {
+    display: flex;
+    flex-direction: column;
+    background: #fff; /* Fallback */
+    /* Gradient set inline by control */
+    border: 1px solid #EAEAEA;
+    overflow: hidden;
+    position: relative;
+    box-sizing: border-box;
+    width: 100%; /* Ensure it fills parent */
+}
+
+/* --- HEADER --- */
+.cora_cluster_header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
+.cora_cluster_icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    flex-shrink: 0;
+}
+
+.cora_cluster_icon i { font-size: 20px; }
+.cora_cluster_icon svg { width: 20px; height: 20px; fill: currentColor; }
+
+.cora_cluster_title {
+    margin: 0 0 8px 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #101828;
+    line-height: 1.3;
+}
+
+.cora_cluster_desc {
+    font-size: 15px;
+    color: #667085;
+    line-height: 1.5;
+}
+
+/* --- DIVIDER & SUBHEAD --- */
+.cora_cluster_list_head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #101828;
+}
+
+.cora_list_badge {
+    background: #F2F4F7;
+    color: #667085;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* --- LIST ITEMS --- */
+.cora_cluster_items {
+    display: flex;
+    flex-direction: column;
+    /* Gap controlled by Elementor */
+    margin-bottom: 24px;
+}
+
+.cora_cluster_item {
+    display: flex;
+    align-items: center; /* Vertical Center */
+    /* Padding controlled by Elementor */
+    background: #fff; 
+    border: 1px solid #F2F4F7;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.cora_cluster_item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.cora_cluster_thumb {
+    /* Width/Height controlled by Elementor */
+    border-radius: 8px;
+    background-size: cover;
+    background-position: center;
+    flex-shrink: 0; /* Prevents squishing on mobile */
+    margin-right: 16px;
+}
+
+.cora_cluster_content {
+    flex-grow: 1;
+    min-width: 0; /* Critical for truncation in flex children */
+}
+
+.cora_cluster_item_title {
+    margin: 0 0 6px 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: #101828;
+    line-height: 1.4;
+}
+
+/* --- META WRAPPER --- */
+.cora_cluster_meta {
+    font-size: 12px;
+    color: #98A2B3;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap; /* Allows wrapping on very small screens */
+    column-gap: 6px;
+    row-gap: 2px;
+}
+
+.cora_meta_item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap; /* Keep icon and text together */
+}
+
+.cora_cluster_meta i { font-size: 11px; }
+
+/* --- FOOTER BUTTON --- */
+.cora_cluster_footer {
+    margin-top: auto;
+}
+
+.cora_cluster_btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+    box-sizing: border-box;
+}
+
+.cora_cluster_btn:hover {
+    opacity: 0.9;
+}
+
+/* --- RESPONSIVE ADJUSTMENTS --- */
+@media (max-width: 480px) {
+    /* Stack content if screen is ultra narrow */
+    .cora_cluster_item {
+        /* Optional: enable if you want them stacked on phones */
+        flex-direction: row; align-items: flex-start;
+    }
+    
+    .cora_cluster_thumb {
+        margin-right: 0; margin-bottom: 0;
+    }
+}
