@@ -1,0 +1,117 @@
+/* --- BASE CARD --- */
+.cora_single_card {
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    text-decoration: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 12px;
+    background: transparent;
+    isolation: isolate;
+}
+
+.cora-hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* --- IMAGE --- */
+.cora_card_img_wrap {
+    position: relative;
+    overflow: hidden;
+    /* Dimensions controlled by Elementor */
+}
+
+.cora_card_img {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.5s ease;
+}
+
+.cora_single_card:hover .cora_card_img {
+    transform: scale(1.05);
+}
+
+/* --- BADGE --- */
+.cora_card_badge {
+    position: absolute;
+    top: 10px; left: 10px;
+    background: #007bff; color: #fff;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase;
+    z-index: 10;
+}
+
+/* --- CONTENT --- */
+.cora_card_content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    /* Alignment controlled by Elementor */
+}
+
+.cora_card_title {
+    margin: 5px 0 0 0;
+    line-height: 1.3;
+    color: #111;
+    transition: color 0.3s ease;
+}
+
+.cora_card_meta {
+    font-size: 13px;
+    color: #666;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+
+/* === LAYOUT MODES (Responsive Classes) === */
+
+/* 1. SIDE IMAGE (Left) */
+[class*="cora_layout_"][class*="_side"] {
+    flex-direction: row;
+}
+
+/* 2. STACKED IMAGE (Top) */
+[class*="cora_layout_"][class*="_stacked"] {
+    flex-direction: column;
+}
+[class*="cora_layout_"][class*="_stacked"] .cora_card_img_wrap {
+    width: 100% !important; /* Force full width in stacked mode */
+}
+
+/* 3. OVERLAY (Text on Image) */
+[class*="cora_layout_"][class*="_overlay"] {
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+[class*="cora_layout_"][class*="_overlay"] .cora_card_img_wrap {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 1;
+}
+
+[class*="cora_layout_"][class*="_overlay"] .cora_card_overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 20%, rgba(0,0,0,0.85) 100%);
+    z-index: 2;
+}
+
+[class*="cora_layout_"][class*="_overlay"] .cora_card_content {
+    position: relative;
+    z-index: 3;
+    padding: 24px;
+    justify-content: flex-end;
+    height: 100%;
+}
+
+[class*="cora_layout_"][class*="_overlay"] .cora_card_title { color: #fff; }
+[class*="cora_layout_"][class*="_overlay"] .cora_card_meta { color: rgba(255,255,255,0.8); }
