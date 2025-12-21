@@ -38,6 +38,10 @@ class Plugin_Loader
         // 4. Editor Customizer
         require_once CORA_BUILDER_PATH . 'core/editor_customizer.php';
         new \Cora_Builder\Core\Editor_Customizer();
+
+        // In __construct()
+require_once CORA_BUILDER_PATH . 'core/taxonomy_manager.php';
+new \Cora_Builder\Core\Taxonomy_Manager();
         // 2. Register Widgets (No change)
         add_action('elementor/widgets/register', [$this, 'register_components']);
 

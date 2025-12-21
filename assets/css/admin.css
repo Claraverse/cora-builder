@@ -379,3 +379,77 @@
     font-style: italic;
     border: 1px dashed var(--gray-300);
 }
+
+
+
+
+/* --- MODAL STYLES --- */
+.cora-modal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(16, 24, 40, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+}
+.cora-modal-content {
+    width: 100%;
+    max-width: 500px;
+    animation: coraModalIn 0.3s ease;
+}
+@keyframes coraModalIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+
+/* Tab Navigation */
+.cora-tabs-nav {
+    display: flex;
+    gap: 20px;
+    border-bottom: 1px solid var(--gray-200);
+    margin-bottom: 25px;
+}
+
+.cora-tab-link {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 10px 5px;
+    font-weight: 600;
+    color: var(--gray-500);
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.cora-tab-link:hover {
+    color: var(--gray-900);
+}
+
+.cora-tab-link.active {
+    color: var(--gray-900);
+    border-bottom-color: var(--gray-900);
+}
+
+/* Tab Content Visibility */
+.cora-tab-content {
+    display: none;
+}
+
+.cora-tab-content.active {
+    display: block;
+}
+
+/* Pro Badge */
+.cora-version {
+    background: var(--gray-900);
+    color: #fff;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 8px;
+}

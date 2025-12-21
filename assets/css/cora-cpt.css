@@ -1,0 +1,122 @@
+/**
+ * Cora Post Type Engine: Advanced UI Styles
+ * Modern Monochrome Theme (Grayscale 25-900)
+ */
+
+:root {
+  --cora-primary: #101828; /* Gray 900 */
+  --cora-blue: #3582c4; /* WordPress Pro Blue */
+  --gray-50: #fafafa;
+  --gray-100: #f5f5f5;
+  --gray-200: #e9eaec;
+  --gray-300: #d5d7da;
+  --gray-500: #717680;
+  --gray-900: #101828;
+}
+/* Container & Grid */
+.cora-cpt-container {
+  max-width: 100%;
+}
+
+.cora-settings-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1.6fr;
+  gap: 25px;
+  align-items: start;
+}
+
+/* Engine List UI */
+.engine-list-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.engine-item {
+  background: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.engine-item:hover {
+  border-color: #3582c4;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.engine-item.active {
+  border-color: #3582c4;
+  background: #f0f7ff;
+}
+
+.engine-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.engine-info .dashicons {
+  color: var(--gray-500);
+  font-size: 20px;
+}
+
+.engine-info strong {
+  display: block;
+  font-size: 14px;
+  color: var(--gray-900);
+}
+
+.engine-info code {
+  font-size: 11px;
+  color: var(--gray-500);
+  background: transparent;
+  padding: 0;
+}
+
+/* Icon Preview Field */
+.cora-icon-field {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--gray-50);
+  padding: 8px 12px;
+  border: 1px solid var(--gray-200);
+  border-radius: 6px;
+}
+
+#icon-preview {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  color: var(--gray-900);
+}
+
+/* Delete Button */
+.delete-btn {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  opacity: 0.3;
+  transition: opacity 0.2s;
+}
+
+.engine-item:hover .delete-btn {
+  opacity: 1;
+}
+
+/* Responsive Media Queries */
+@media screen and (max-width: 1024px) {
+  .cora-settings-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cpt-list-card {
+    order: -1; /* Move list to top on mobile for quick access */
+  }
+}

@@ -46,7 +46,7 @@ class Admin_Manager
             'cora-settings',
             [$this, 'route_settings_page'] // Calls the new Settings Manager
         );
-        
+
 
         // 4. Post Types Submenu (NEW)
         add_submenu_page(
@@ -55,7 +55,28 @@ class Admin_Manager
             'Post Types',
             'manage_options',
             'cora-cpt',
-            [ $this, 'route_cpt_page' ]
+            [$this, 'route_cpt_page']
+        );
+
+
+        // Inside register_admin_menu()
+        add_submenu_page(
+            'cora-builder',
+            'Taxonomies',
+            'Taxonomies',
+            'manage_options',
+            'cora-tax',
+            [$this, 'route_tax_page']
+        );
+
+        // Inside register_admin_menu()
+        add_submenu_page(
+            'cora-builder',
+            'Field Groups',
+            'Field Groups',
+            'manage_options',
+            'cora-fieldgroups',
+            [$this, 'route_fieldgroups_page']
         );
     }
 
@@ -128,9 +149,28 @@ class Admin_Manager
             echo '<div class="notice notice-error"><p>Error: Settings Manager class not found.</p></div>';
         }
     }
-// Add this routing function
-    public function route_cpt_page() {
-        if ( ! class_exists( '\Cora_Builder\Core\CPT_Manager' ) ) {
+    // Add this function
+    public function route_tax_page()
+    {
+        if (!class_exists('\Cora_Builder\Core\Taxonomy_Manager')) {
+            require_once CORA_BUILDER_PATH . 'core/taxonomy_manager.php';
+        }
+        $manager = new \Cora_Builder\Core\Taxonomy_Manager();
+        $manager->render_taxonomy_page();
+    }
+    // Add this function
+    public function route_fieldgroups_page()
+    {
+        if (!class_exists('\Cora_Builder\Core\Field_Group_Manager')) {
+            require_once CORA_BUILDER_PATH . 'core/field_group_manager.php';
+        }
+        $manager = new \Cora_Builder\Core\Field_Group_Manager();
+        $manager->render_field_group_page();
+    }
+    // Add this routing function
+    public function route_cpt_page()
+    {
+        if (!class_exists('\Cora_Builder\Core\CPT_Manager')) {
             require_once CORA_BUILDER_PATH . 'core/cpt_manager.php';
         }
         $cpt_manager = new \Cora_Builder\Core\CPT_Manager();
@@ -141,16 +181,16 @@ class Admin_Manager
      */
     public function enqueue_admin_assets()
     {
-        // Only load on "cora-" pages
-        if (!isset($_GET['page']) || strpos($_GET['page'], 'cora') === false) {
+        // Only load for Cora Builder pages
+        if (!isset($_GET['page']) || strpos($_GET['page'], 'cora') === false)
             return;
-        }
 
-        wp_enqueue_style(
-            'cora-admin-css',
-            CORA_BUILDER_URL . 'assets/css/admin.css',
-            [],
-            time() // Forces cache refresh during dev
-        );
+        // Load base admin styles
+        wp_enqueue_style('cora-admin-css', CORA_BUILDER_URL . 'assets/css/admin.css', [], time());
+
+        // Load Post Type specific CSS (NEW)
+        if ($_GET['page'] === 'cora-cpt') {
+            wp_enqueue_style('cora-cpt-pro', CORA_BUILDER_URL . 'assets/css/cora-cpt.css', ['cora-admin-css'], time());
+        }
     }
 }
