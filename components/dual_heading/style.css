@@ -1,0 +1,20 @@
+/* components/dual_heading/style.css */
+
+.cora_dual_heading_wrapper {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    font-weight: 700;
+    
+    /* Use the Global 800 for dark text */
+    color: var(--cora-gray-800); 
+}
+
+.cora_dh_part_1 {
+    margin-right: 6px;
+}
+
+.cora_dh_part_2 {
+    /* Use the Global 500 for a softer secondary text */
+    color: var(--cora-gray-500);
+}

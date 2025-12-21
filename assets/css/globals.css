@@ -1,0 +1,16 @@
+:root {
+    /* * Cora Design System - Gray Palette 
+     * Extracted from approved design spec
+     */
+    --cora-gray-25:  #FDFDFD;
+    --cora-gray-50:  #FAFAFA;
+    --cora-gray-100: #F5F5F5;
+    --cora-gray-200: #E9EAED;
+    --cora-gray-300: #D5D7DA;
+    --cora-gray-400: #A4A7AE;
+    --cora-gray-500: #717680;
+    --cora-gray-600: #535862;
+    --cora-gray-700: #414651;
+    --cora-gray-800: #252B37;
+    --cora-gray-900: #101828;
+}

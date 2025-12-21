@@ -1,0 +1,246 @@
+/* Container */
+.cora_blog_hero_card {
+    position: relative;
+    width: 100%;
+    border-radius: 16px; /* Modern rounded corners */
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Push content to bottom */
+}
+
+/* Gradient Overlay - Crucial for text readability */
+.cora_hero_overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%);
+    z-index: 1;
+    transition: background 0.3s ease;
+}
+
+.cora_blog_hero_card:hover .cora_hero_overlay {
+    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.85) 100%);
+}
+
+/* Content Wrapper */
+.cora_hero_inner {
+    position: relative;
+    z-index: 2; /* Sit above overlay */
+    padding: 40px;
+    color: #fff;
+    max-width: 800px;
+}
+
+/* Badge (Blue Pill) */
+.cora_hero_badge {
+    display: inline-block;
+    background-color: #007bff; /* Bright Blue */
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Title */
+.cora_hero_title {
+    margin: 0 0 16px 0;
+}
+
+.cora_hero_title a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 38px;
+    line-height: 1.2;
+    font-weight: 700;
+    transition: opacity 0.3s;
+}
+
+.cora_hero_title a:hover {
+    opacity: 0.8;
+}
+
+/* Excerpt */
+.cora_hero_excerpt {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 24px;
+    line-height: 1.6;
+    max-width: 90%;
+}
+
+/* Meta Data (Author, Date, Time) */
+.cora_hero_meta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 30px;
+}
+
+.cora_icon_meta i {
+    margin-right: 5px;
+}
+
+/* Button */
+.cora_hero_btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #fff;
+    color: #111;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.cora_hero_btn:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-2px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .cora_hero_inner {
+        padding: 24px;
+    }
+    
+    .cora_hero_title a {
+        font-size: 26px;
+    }
+    
+    .cora_hero_excerpt {
+        font-size: 15px;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    .cora_hero_meta {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+}
+
+/* Container defaults */
+.cora_blog_hero_card {
+    position: relative;
+    width: 100%;
+    /* Default Height if control not touched */
+    min-height: 400px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+}
+
+/* Default Overlay */
+.cora_hero_overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.75) 100%);
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.cora_hero_inner {
+    position: relative;
+    z-index: 2;
+    padding: 40px; /* Default Padding */
+    width: 100%;
+}
+
+/* Badge defaults */
+.cora_hero_badge {
+    display: inline-block;
+    background-color: #007bff;
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}
+
+/* Title defaults */
+.cora_hero_title {
+    margin: 0 0 15px 0;
+}
+
+.cora_hero_title a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.2;
+    display: block;
+}
+
+/* Excerpt defaults */
+.cora_hero_excerpt {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    max-width: 600px;
+}
+
+/* Meta defaults */
+.cora_hero_meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    margin-bottom: 25px;
+    align-items: center;
+}
+
+.cora_meta_item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Button defaults */
+.cora_hero_btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #fff;
+    color: #111;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.cora_alert {
+    padding: 20px;
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    text-align: center;
+}
