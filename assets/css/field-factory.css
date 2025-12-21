@@ -67,3 +67,48 @@
 .header-actions .dashicons { color: #999; margin-left: 10px; font-size: 18px; }
 .header-actions .dashicons:hover { color: #3582c4; }
 .remove-field-btn:hover { color: #F04438; }
+/* Premium Glass Card */
+.cora-card {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #E9EAEC;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    transition: all 0.3s ease;
+}
+
+/* The Disruption Accordion */
+.field-item-acc {
+    margin-bottom: 8px;
+    border: 1px solid #E9EAEC;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+}
+
+.field-item-acc:hover {
+    border-color: #3582c4;
+}
+
+.acc-header {
+    background: #F9FAFB !important;
+    font-size: 13px;
+    height: 48px;
+}
+
+/* Code-style Slugs */
+.acc-header code {
+    background: #eee;
+    color: #475467;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+/* Floating Action Buttons */
+.delete-field {
+    opacity: 0.3;
+    transition: opacity 0.2s, color 0.2s;
+}
+
+.field-item-acc:hover .delete-field {
+    opacity: 1;
+}

@@ -12,40 +12,64 @@ class Field_Group_Manager
 	{
 		add_action('admin_post_cora_save_field_group', [$this, 'handle_save_group']);
 		add_action('admin_post_cora_delete_field_group', [$this, 'handle_delete_group']);
+
+		// Handshake Engine: Attach fields to appropriate locations
 		add_action('add_meta_boxes', [$this, 'register_meta_boxes']);
 		add_action('save_post', [$this, 'save_post_meta_data']);
 	}
 
 	/**
-	 * Handshake: Attach meta boxes to Post Types
+	 * PRO ENGINE: Location Discovery
 	 */
 	public function register_meta_boxes()
 	{
 		$screen = get_current_screen();
 		$groups = get_option($this->option_name, []);
+
 		foreach ($groups as $id => $group) {
 			if (isset($group['rule_type']) && $group['rule_type'] === 'post_type' && $group['location'] === $screen->post_type) {
-				add_meta_box($id, $group['title'], [$this, 'render_meta_box_html'], $screen->post_type, 'normal', 'high', ['fields' => $group['fields'] ?? []]);
+				add_meta_box(
+					$id,
+					$group['title'],
+					[$this, 'render_meta_box_content'],
+					$screen->post_type,
+					'normal',
+					'high',
+					['fields' => $group['fields'] ?? []]
+				);
 			}
 		}
 	}
 
-	public function render_meta_box_html($post, $args)
+	/**
+	 * PRO RENDERER: Modular Field Display
+	 */
+	public function render_meta_box_content($post, $args)
 	{
 		$fields = $args['args']['fields'] ?? [];
 		$values = get_post_meta($post->ID, '_cora_meta_data', true) ?: [];
 		wp_nonce_field('cora_meta_save', 'cora_meta_nonce');
 
 		if (empty($fields)) {
-			echo '<p style="color:#717680; padding:15px; border:1px dashed #E9EAEC;">No fields defined for this group.</p>';
+			echo '<p class="cora-empty-note">Build your fields in the Field Group editor to see them here.</p>';
 			return;
 		}
 
 		foreach ($fields as $field) {
 			$val = $values[$field['name']] ?? ($field['default'] ?? '');
-			echo '<div style="margin-bottom:15px;">';
-			echo '<label style="display:block; font-weight:600; margin-bottom:5px;">' . esc_html($field['label']) . '</label>';
-			echo '<input type="text" name="cora_data[' . esc_attr($field['name']) . ']" value="' . esc_attr($val) . '" style="width:100%;">';
+			echo '<div class="cora-field-instance" style="margin-bottom:20px;">';
+			echo '<label style="display:block; font-weight:600; margin-bottom:6px;">' . esc_html($field['label']) . '</label>';
+
+			// Dynamic Control Switching
+			if ($field['type'] === 'textarea') {
+				echo '<textarea name="cora_data[' . esc_attr($field['name']) . ']" rows="4" style="width:100%;" placeholder="' . esc_attr($field['placeholder'] ?? '') . '">' . esc_textarea($val) . '</textarea>';
+			} else {
+				echo '<input type="text" name="cora_data[' . esc_attr($field['name']) . ']" value="' . esc_attr($val) . '" style="width:100%;" placeholder="' . esc_attr($field['placeholder'] ?? '') . '">';
+			}
+
+			if (!empty($field['instructions'])) {
+				echo '<p style="font-size:11px; color:#667085; margin-top:4px;">' . esc_html($field['instructions']) . '</p>';
+			}
 			echo '</div>';
 		}
 	}
@@ -54,10 +78,14 @@ class Field_Group_Manager
 	{
 		if (!isset($_POST['cora_meta_nonce']) || !wp_verify_nonce($_POST['cora_meta_nonce'], 'cora_meta_save'))
 			return;
-		if (isset($_POST['cora_data']))
+		if (isset($_POST['cora_data'])) {
 			update_post_meta($post_id, '_cora_meta_data', array_map('sanitize_text_field', $_POST['cora_data']));
+		}
 	}
 
+	/**
+	 * PRO BUILDER: Accordion-Style Factory
+	 */
 	public function render_field_group_page()
 	{
 		$groups = get_option($this->option_name, []);
@@ -66,7 +94,9 @@ class Field_Group_Manager
 		?>
 		<div class="cora-admin-wrapper cora-tax-container">
 			<div class="cora-header">
-				<h1>Field Groups <span id="group-badge" class="cora-version">PRO</span></h1>
+				<div class="cora-logo">
+					<h1>Field Groups <span class="cora-version">PRO</span></h1>
+				</div>
 				<div class="cora-actions">
 					<button type="button" id="reset-group-btn" class="cora-btn cora-btn-secondary" style="display:none;">Add
 						New</button>
@@ -76,6 +106,7 @@ class Field_Group_Manager
 
 			<div class="cora-settings-grid">
 				<div class="cora-card">
+					<div class="cora-section-label">Group Configuration</div>
 					<form id="cora-field-group-form" method="post" action="<?php echo admin_url('admin-post.php'); ?>">
 						<input type="hidden" name="action" value="cora_save_field_group">
 						<input type="hidden" name="group_id" id="group_id" value="">
@@ -84,13 +115,13 @@ class Field_Group_Manager
 						<div class="cora-control-group">
 							<label>Group Title *</label>
 							<input type="text" name="group_title" id="group_title" class="cora-input" required
-								placeholder="e.g. Hero Section">
+								placeholder="e.g. Hero Section Settings">
 						</div>
 
-						<div class="cora-section-label" style="margin-top:20px;">Location Rules</div>
+						<div class="cora-section-label" style="margin-top:20px;">Visibility Logic</div>
 						<div class="cora-form-row">
 							<div class="cora-control-group">
-								<label>Category</label>
+								<label>Location Category</label>
 								<select name="rule_type" id="rule_type" class="cora-input">
 									<option value="post_type">Post Type</option>
 									<option value="options_page">Options Page</option>
@@ -102,40 +133,38 @@ class Field_Group_Manager
 							</div>
 						</div>
 
-						<div id="fields-payload" style="display:none;"></div>
+						<div id="fields-json-payload" style="display:none;"></div>
 					</form>
 				</div>
 
 				<div class="cora-card">
-					<h3>Active Groups</h3>
+					<h3>Deployed Groups</h3>
 					<div class="tax-list-wrapper">
 						<?php foreach ($groups as $id => $data): ?>
 							<div class="tax-engine-item" data-config='<?php echo json_encode($data); ?>'
-								data-id="<?php echo $id; ?>">
+								data-id="<?php echo esc_attr($id); ?>">
 								<div class="tax-engine-info">
-									<strong><?php echo esc_html($data['title']); ?></strong>
-									<code><?php echo esc_html($data['location']); ?></code>
+									<div class="tax-icon-box"><span class="dashicons dashicons-layout"></span></div>
+									<div>
+										<strong><?php echo esc_html($data['title']); ?></strong>
+										<code><?php echo esc_html($data['location']); ?></code>
+									</div>
 								</div>
-								<form method="post" action="<?php echo admin_url('admin-post.php'); ?>">
-									<input type="hidden" name="action" value="cora_delete_field_group">
-									<input type="hidden" name="group_id" value="<?php echo $id; ?>">
-									<?php wp_nonce_field('cora_group_del_nonce', 'cora_nonce'); ?>
-									<button type="submit" class="delete-btn" onclick="event.stopPropagation();">×</button>
-								</form>
+								<button type="button" class="delete-btn">×</button>
 							</div>
 						<?php endforeach; ?>
 					</div>
 				</div>
 			</div>
 
-			<div class="cora-card" style="margin-top:30px; padding:0;">
-				<div class="field-factory-header"
-					style="padding:20px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
+			<div class="cora-card field-factory-pro" style="margin-top:30px; padding:0;">
+				<div class="factory-header"
+					style="padding:20px; border-bottom:1px solid #E9EAEC; display:flex; justify-content:space-between; align-items:center;">
 					<h3 style="margin:0;">Field Definitions</h3>
-					<button type="button" id="add-field-btn" class="cora-btn cora-btn-secondary">+ Add Field</button>
+					<button type="button" id="add-pro-field" class="cora-btn cora-btn-secondary">+ Add Field</button>
 				</div>
 
-				<div id="cora-fields-accordion" class="cora-pro-accordion">
+				<div id="cora-fields-accordion" class="cora-accordion">
 				</div>
 			</div>
 		</div>
@@ -148,28 +177,20 @@ class Field_Group_Manager
 					echo "'{$slug}': '{$data['title']}',"; ?> };
 				let fieldIndex = 0;
 
-				function createAccordionField(index, data = {}) {
+				function createFieldAccordion(index, data = {}) {
 					return `
-				<div class="accordion-item" data-index="${index}">
-					<div class="accordion-header">
-						<span class="dashicons dashicons-menu handle"></span>
-						<span class="field-label-text">${data.label || '(no label)'}</span>
-						<span class="field-type-badge">${data.type || 'text'}</span>
-						<div class="header-actions">
-							<span class="dashicons dashicons-arrow-down-alt2 toggle-acc"></span>
-							<span class="dashicons dashicons-trash delete-acc"></span>
-						</div>
+				<div class="field-item-acc" data-index="${index}">
+					<div class="acc-header" style="padding:15px 20px; background:#F9FAFB; border-bottom:1px solid #E9EAEC; display:flex; align-items:center; cursor:pointer;">
+						<span class="dashicons dashicons-menu" style="color:#D5D7DA; margin-right:15px;"></span>
+						<strong class="label-preview" style="flex-grow:1;">${data.label || '(no label)'}</strong>
+						<span class="type-badge" style="background:#fff; border:1px solid #E9EAEC; padding:2px 8px; border-radius:4px; font-size:11px; text-transform:uppercase;">${data.type || 'text'}</span>
+						<span class="dashicons dashicons-arrow-down-alt2 toggle-icon" style="margin-left:15px; color:#98A2B3;"></span>
+						<span class="dashicons dashicons-no-alt delete-field" style="margin-left:15px; color:#F04438;"></span>
 					</div>
-					<div class="accordion-body" style="display:none;">
+					<div class="acc-content" style="display:none; padding:25px; background:#fff; border-bottom:1px solid #E9EAEC;">
 						<div class="cora-form-row">
-							<div class="cora-control-group">
-								<label>Field Label</label>
-								<input type="text" class="cora-input f-label" value="${data.label || ''}" placeholder="e.g. Phone Number">
-							</div>
-							<div class="cora-control-group">
-								<label>Field Name (Slug)</label>
-								<input type="text" class="cora-input f-name" value="${data.name || ''}" readonly>
-							</div>
+							<div class="cora-control-group"><label>Field Label</label><input type="text" class="cora-input f-label" value="${data.label || ''}"></div>
+							<div class="cora-control-group"><label>Field Name (Slug)</label><input type="text" class="cora-input f-name" value="${data.name || ''}" readonly></div>
 						</div>
 						<div class="cora-form-row">
 							<div class="cora-control-group">
@@ -177,48 +198,47 @@ class Field_Group_Manager
 								<select class="cora-input f-type">
 									<option value="text" ${data.type === 'text' ? 'selected' : ''}>Text</option>
 									<option value="textarea" ${data.type === 'textarea' ? 'selected' : ''}>Textarea</option>
-									<option value="image" ${data.type === 'image' ? 'selected' : ''}>Image</option>
+									<option value="image" ${data.type === 'image' ? 'selected' : ''}>Image (URL)</option>
 								</select>
 							</div>
-							<div class="cora-control-group">
-								<label>Default Value</label>
-								<input type="text" class="cora-input f-default" value="${data.default || ''}">
-							</div>
+							<div class="cora-control-group"><label>Placeholder</label><input type="text" class="cora-input f-placeholder" value="${data.placeholder || ''}"></div>
 						</div>
+						<div class="cora-control-group"><label>Instructions</label><input type="text" class="cora-input f-instr" value="${data.instructions || ''}"></div>
 					</div>
 				</div>`;
 				}
 
-				$('#add-field-btn').on('click', function () {
-					$('#cora-fields-accordion').append(createAccordionField(fieldIndex));
+				$('#add-pro-field').on('click', function () {
+					$('#cora-fields-accordion').append(createFieldAccordion(fieldIndex));
 					fieldIndex++;
 				});
 
-				$(document).on('click', '.toggle-acc', function () {
-					$(this).closest('.accordion-item').find('.accordion-body').slideToggle(200);
+				$(document).on('click', '.acc-header', function (e) {
+					if ($(e.target).hasClass('delete-field')) {
+						$(this).closest('.field-item-acc').remove();
+						return;
+					}
+					$(this).next('.acc-content').slideToggle(200);
+					$(this).find('.toggle-icon').toggleClass('dashicons-arrow-up-alt2 dashicons-arrow-down-alt2');
 				});
 
 				$(document).on('keyup', '.f-label', function () {
 					const label = $(this).val();
 					const slug = label.toLowerCase().replace(/ /g, '_').replace(/[^\w-]+/g, '');
-					$(this).closest('.accordion-item').find('.field-label-text').text(label || '(no label)');
-					$(this).closest('.accordion-item').find('.f-name').val(slug);
+					$(this).closest('.field-item-acc').find('.label-preview').text(label || '(no label)');
+					$(this).closest('.field-item-acc').find('.f-name').val(slug);
 				});
 
-				// Map UI to hidden form before submit
 				$('#cora-field-group-form').on('submit', function () {
 					let html = '';
-					$('.accordion-item').each(function (i) {
-						const label = $(this).find('.f-label').val();
-						const name = $(this).find('.f-name').val();
-						const type = $(this).find('.f-type').val();
-						const def = $(this).find('.f-default').val();
-						html += `<input type="hidden" name="fields[${i}][label]" value="${label}">`;
-						html += `<input type="hidden" name="fields[${i}][name]" value="${name}">`;
-						html += `<input type="hidden" name="fields[${i}][type]" value="${type}">`;
-						html += `<input type="hidden" name="fields[${i}][default]" value="${def}">`;
+					$('.field-item-acc').each(function (i) {
+						html += `<input type="hidden" name="fields[${i}][label]" value="${$(this).find('.f-label').val()}">`;
+						html += `<input type="hidden" name="fields[${i}][name]" value="${$(this).find('.f-name').val()}">`;
+						html += `<input type="hidden" name="fields[${i}][type]" value="${$(this).find('.f-type').val()}">`;
+						html += `<input type="hidden" name="fields[${i}][placeholder]" value="${$(this).find('.f-placeholder').val()}">`;
+						html += `<input type="hidden" name="fields[${i}][instructions]" value="${$(this).find('.f-instr').val()}">`;
 					});
-					$('#fields-payload').html(html);
+					$('#fields-json-payload').html(html);
 				});
 
 				function updateLocationChoices(type, selectedValue = null) {
@@ -243,12 +263,14 @@ class Field_Group_Manager
 					$('#cora-fields-accordion').empty();
 					if (data.fields) {
 						$.each(data.fields, function (idx, f) {
-							$('#cora-fields-accordion').append(createAccordionField(idx, f));
+							$('#cora-fields-accordion').append(createFieldAccordion(idx, f));
 							fieldIndex = Math.max(fieldIndex, parseInt(idx) + 1);
 						});
 					}
 					$('#reset-group-btn').show();
 				});
+
+				$('#reset-group-btn').on('click', function () { window.location.reload(); });
 			});
 		</script>
 		<?php
