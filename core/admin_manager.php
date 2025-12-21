@@ -59,6 +59,7 @@ class Admin_Manager
         );
 
 
+
         // Inside register_admin_menu()
         add_submenu_page(
             'cora-builder',
@@ -67,6 +68,15 @@ class Admin_Manager
             'manage_options',
             'cora-tax',
             [$this, 'route_tax_page']
+        );
+        // 5. Options Pages Submenu (NEW FEATURE)
+        add_submenu_page(
+            'cora-builder',
+            'Options Pages',
+            'Options Pages',
+            'manage_options',
+            'cora-options-builder',
+            [$this, 'route_options_builder_page']
         );
 
         // Inside register_admin_menu()
@@ -166,6 +176,15 @@ class Admin_Manager
         }
         $manager = new \Cora_Builder\Core\Field_Group_Manager();
         $manager->render_field_group_page();
+    }
+    // Add this function
+    public function route_options_builder_page()
+    {
+        if (!class_exists('\Cora_Builder\Core\Options_Manager')) {
+            require_once CORA_BUILDER_PATH . 'core/options_manager.php';
+        }
+        $manager = new \Cora_Builder\Core\Options_Manager();
+        $manager->render_builder_ui();
     }
     // Add this routing function
     public function route_cpt_page()

@@ -1,0 +1,69 @@
+/* Wide Layout Grid Definitions */
+.field-list-header-row, 
+.cora-field-row-wide {
+    display: grid;
+    grid-template-columns: 40px 1.2fr 1.2fr 1fr 60px;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 15px;
+}
+
+.field-list-header-row {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.cora-fields-repeater-wide {
+    border: 1px solid var(--gray-200);
+    border-radius: 0 0 8px 8px;
+    background: #fff;
+}
+
+.cora-field-row-wide {
+    border-bottom: 1px solid var(--gray-100);
+    transition: background 0.2s;
+}
+
+.cora-field-row-wide:last-child { border-bottom: none; }
+.cora-field-row-wide:hover { background: #f9fcff; }
+
+.remove-field-btn {
+    background: none;
+    border: none;
+    color: var(--gray-300);
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+
+.cora-pro-accordion { background: #fff; }
+.accordion-item { border-bottom: 1px solid #eee; }
+.accordion-header {
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    background: #fcfcfc;
+    cursor: pointer;
+}
+.accordion-header .handle { color: #ccc; margin-right: 15px; cursor: move; }
+.accordion-header .field-label-text { font-weight: 600; flex-grow: 1; font-size: 14px; }
+.accordion-header .field-type-badge {
+    font-size: 11px;
+    background: #f0f0f0;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-right: 20px;
+    text-transform: uppercase;
+}
+.accordion-body { padding: 25px; background: #fff; border-top: 1px solid #f5f5f5; }
+.header-actions .dashicons { color: #999; margin-left: 10px; font-size: 18px; }
+.header-actions .dashicons:hover { color: #3582c4; }
+.remove-field-btn:hover { color: #F04438; }

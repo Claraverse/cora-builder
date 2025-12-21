@@ -1,13 +1,11 @@
 <?php
 namespace Cora_Builder\Core;
 
-if (!defined('ABSPATH')) {
+if (!defined('ABSPATH'))
     exit;
-}
 
 class Plugin_Loader
 {
-
     private static $_instance = null;
 
     public static function instance()
@@ -18,113 +16,89 @@ class Plugin_Loader
         return self::$_instance;
     }
 
-
-
-
     public function __construct()
     {
-      // 1. Admin & Menus
-        require_once CORA_BUILDER_PATH . 'core/admin_manager.php';
-        new \Cora_Builder\Core\Admin_Manager();
+        $this->load_core_managers();
+        $this->init_elementor_hooks();
+    }
 
-        // 2. Settings
-        require_once CORA_BUILDER_PATH . 'core/settings_manager.php';
-        new \Cora_Builder\Core\Settings_Manager();
+    /**
+     * Optimized Manager Loading
+     * Grouping these ensures all admin_init and admin_menu hooks 
+     * are caught globally.
+     */
+    private function load_core_managers()
+    {
+        $managers = [
+            'admin_manager' => 'Admin_Manager',
+            'settings_manager' => 'Settings_Manager',
+            'cpt_manager' => 'CPT_Manager',
+            'taxonomy_manager' => 'Taxonomy_Manager',
+            'options_manager' => 'Options_Manager',
+            'editor_customizer' => 'Editor_Customizer',
+            'field_group_manager' => 'Field_Group_Manager'
+        ];
 
-        // 3. CPT Engine (NEW)
-        require_once CORA_BUILDER_PATH . 'core/cpt_manager.php';
-        new \Cora_Builder\Core\CPT_Manager();
+        foreach ($managers as $file => $class) {
+            $path = CORA_BUILDER_PATH . "core/{$file}.php";
+            if (file_exists($path)) {
+                require_once $path;
+                $full_class = "\\Cora_Builder\\Core\\{$class}";
+                if (class_exists($full_class)) {
+                    new $full_class();
+                }
+            }
+        }
+    }
 
-        // 4. Editor Customizer
-        require_once CORA_BUILDER_PATH . 'core/editor_customizer.php';
-        new \Cora_Builder\Core\Editor_Customizer();
-
-        // In __construct()
-require_once CORA_BUILDER_PATH . 'core/taxonomy_manager.php';
-new \Cora_Builder\Core\Taxonomy_Manager();
-        // 2. Register Widgets (No change)
+    private function init_elementor_hooks()
+    {
         add_action('elementor/widgets/register', [$this, 'register_components']);
-
-        // 3. Register Custom Categories (No change)
         add_action('elementor/elements/categories_registered', [$this, 'register_categories']);
-
-        // 4. Enqueue Global Design System (No change)
         add_action('elementor/frontend/after_enqueue_styles', [$this, 'enqueue_global_styles']);
     }
 
     /**
-     * Register the dedicated Cora Builder section
-     */
-    /**
-     * Register AND Reorder the Cora Builder section
+     * Pro Category Reordering
+     * Moves 'Cora Builder' to the top of the list for a better UX.
      */
     public function register_categories($elements_manager)
     {
-        // 1. Add the category normally (it lands at the bottom)
-        $elements_manager->add_category(
-            'cora_widgets',
-            [
-                'title' => 'Cora Builder',
-                'icon' => 'fa fa-plug',
-            ]
-        );
+        $elements_manager->add_category('cora_widgets', [
+            'title' => 'Cora Builder',
+            'icon' => 'fa fa-plug',
+        ]);
 
-        // 2. The "Hack" to move it up the list
         try {
-            // Access the private $_categories property in Elementor
             $reflection = new \ReflectionClass($elements_manager);
             $property = $reflection->getProperty('categories');
             $property->setAccessible(true);
-
             $categories = $property->getValue($elements_manager);
 
-            // Extract our category
-            $cora_cat = $categories['cora_widgets'];
-            unset($categories['cora_widgets']);
+            if (isset($categories['cora_widgets'])) {
+                $cora_cat = ['cora_widgets' => $categories['cora_widgets']];
+                unset($categories['cora_widgets']);
 
-            // Rebuild the array with ours in the 3rd spot (After 'basic')
-            $new_categories = [];
-            $inserted = false;
+                // Optimized: Insert directly after 'basic' section
+                $pos = array_search('basic', array_keys($categories)) + 1;
+                $categories = array_merge(
+                    array_slice($categories, 0, $pos),
+                    $cora_cat,
+                    array_slice($categories, $pos)
+                );
 
-            foreach ($categories as $key => $value) {
-                $new_categories[$key] = $value;
-
-                // We insert immediately after the 'basic' category
-                if ('basic' === $key) {
-                    $new_categories['cora_widgets'] = $cora_cat;
-                    $inserted = true;
-                }
+                $property->setValue($elements_manager, $categories);
             }
-
-            // Safety net: If 'basic' wasn't found, put it at the end
-            if (!$inserted) {
-                $new_categories['cora_widgets'] = $cora_cat;
-            }
-
-            // Save the new order back to Elementor
-            $property->setValue($elements_manager, $new_categories);
-
         } catch (\Exception $e) {
-            // If the hack fails, it just stays at the bottom. No crash.
-            error_log('Cora Builder: Failed to reorder categories.');
+            error_log('Cora Builder: Category reorder failed.');
         }
-    }
-
-    public function enqueue_global_styles()
-    {
-        wp_enqueue_style(
-            'cora-global-vars',
-            CORA_BUILDER_URL . 'assets/css/globals.css',
-            [],
-            CORA_BUILDER_VERSION
-        );
     }
 
     public function register_components($widgets_manager)
     {
         require_once CORA_BUILDER_PATH . 'core/base_widget.php';
 
-        $components = [
+        $widgets = [
             'dual_heading',
             'blog_hero',
             'post_grid',
@@ -142,15 +116,11 @@ new \Cora_Builder\Core\Taxonomy_Manager();
             'cora_newsletter'
         ];
 
-        foreach ($components as $component) {
-            $file_path = CORA_BUILDER_PATH . "components/{$component}/{$component}.php";
-
+        foreach ($widgets as $component) {
+            $file_path = CORA_BUILDER_PATH . "components/widgets/{$component}/{$component}.php";
             if (file_exists($file_path)) {
                 require_once $file_path;
-
-                $class_name = str_replace('_', ' ', $component);
-                $class_name = ucwords($class_name);
-                $class_name = str_replace(' ', '_', $class_name);
+                $class_name = str_replace(' ', '_', ucwords(str_replace('_', ' ', $component)));
                 $class_full = "\\Cora_Builder\\Components\\{$class_name}";
 
                 if (class_exists($class_full)) {
@@ -158,5 +128,10 @@ new \Cora_Builder\Core\Taxonomy_Manager();
                 }
             }
         }
+    }
+
+    public function enqueue_global_styles()
+    {
+        wp_enqueue_style('cora-global-vars', CORA_BUILDER_URL . 'assets/css/globals.css', [], CORA_BUILDER_VERSION);
     }
 }
