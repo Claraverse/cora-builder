@@ -211,5 +211,20 @@ class Admin_Manager
         if ($_GET['page'] === 'cora-cpt') {
             wp_enqueue_style('cora-cpt-pro', CORA_BUILDER_URL . 'assets/css/cora-cpt.css', ['cora-admin-css'], time());
         }
+        // Load Post Type specific CSS (NEW)
+        if ($_GET['page'] === 'cora-tax') {
+            wp_enqueue_style('cora-tax-pro', CORA_BUILDER_URL . 'assets/css/cora-tax.css', ['cora-admin-css'], time());
+        }
+        // Load Post Type specific CSS (NEW)
+        if ($_GET['page'] === 'cora-options-builder') {
+            wp_enqueue_style('cora-options-builder-pro', CORA_BUILDER_URL . 'assets/css/cora-option.css', ['cora-admin-css'], time());
+        }
+
+
+
+        // Load dedicated Field Groups Studio CSS
+        if ($_GET['page'] === 'cora-fieldgroups') {
+            wp_enqueue_style('cora-field-studio-css', CORA_BUILDER_URL . 'assets/css/field-groups.css', ['cora-admin-css'], time());
+        }
     }
 }

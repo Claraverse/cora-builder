@@ -1,0 +1,187 @@
+:root {
+    --cora-primary: #6366f1; /* Modern Indigo */
+    --cora-primary-hover: #4f46e5;
+    --cora-bg: #f8fafc;
+    --cora-card-bg: #ffffff;
+    --cora-border: #e2e8f0;
+    --cora-text-main: #1e293b;
+    --cora-text-muted: #64748b;
+    --cora-danger: #ef4444;
+    --cora-radius: 8px;
+    --cora-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Wrapper & Layout */
+.cora-admin-wrapper {
+    margin: 20px 20px 0 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    color: var(--cora-text-main);
+}
+
+.cora-settings-grid {
+    display: grid;
+    gap: 24px;
+    align-items: start;
+    margin-top: 20px;
+}
+
+/* Header Section */
+.cora-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--cora-card-bg);
+    padding: 16px 24px;
+    border-radius: var(--cora-radius);
+    border: 1px solid var(--cora-border);
+    margin-bottom: 24px;
+    box-shadow: var(--cora-shadow);
+}
+
+.cora-logo h1 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--cora-text-main);
+}
+
+.cora-version {
+    font-size: 10px;
+    background: var(--cora-primary);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    vertical-align: middle;
+    margin-left: 8px;
+    letter-spacing: 0.5px;
+}
+
+/* Cards */
+.cora-card {
+    background: var(--cora-card-bg);
+    border: 1px solid var(--cora-border);
+    border-radius: var(--cora-radius);
+    padding: 24px;
+    box-shadow: var(--cora-shadow);
+}
+
+.cora-card h3 {
+    margin-top: 0;
+    font-size: 16px;
+    border-bottom: 1px solid var(--cora-border);
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+/* Form Elements */
+.cora-control-group {
+    margin-bottom: 18px;
+}
+
+.cora-control-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 13px;
+}
+
+.cora-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--cora-border);
+    border-radius: 6px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.cora-input:focus {
+    border-color: var(--cora-primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    outline: none;
+}
+
+/* Buttons */
+.cora-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.cora-btn-primary {
+    background: var(--cora-primary);
+    color: white;
+}
+
+.cora-btn-primary:hover {
+    background: var(--cora-primary-hover);
+    transform: translateY(-1px);
+}
+
+/* Active Pages List */
+.tax-engine-item {
+    background: var(--cora-bg);
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border: 1px solid var(--cora-border);
+}
+
+.tax-engine-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.tax-icon-box {
+    width: 40px;
+    height: 40px;
+    background: white;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--cora-primary);
+    border: 1px solid var(--cora-border);
+}
+
+.tax-engine-info code {
+    background: #e2e8f0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    margin-left: 8px;
+}
+
+/* Delete Button */
+.delete-btn {
+    background: transparent;
+    border: none;
+    color: var(--cora-text-muted);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.delete-btn:hover {
+    color: var(--cora-danger);
+    background: rgba(239, 68, 68, 0.1);
+}
+
+/* Empty State */
+.cora-empty-state h3 {
+    border-bottom: none;
+    margin-bottom: 5px;
+    color: var(--cora-text-main);
+}
+
+.cora-empty-state p {
+    color: var(--cora-text-muted);
+}

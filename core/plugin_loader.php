@@ -35,7 +35,7 @@ class Plugin_Loader
             'cpt_manager' => 'CPT_Manager',
             'taxonomy_manager' => 'Taxonomy_Manager',
             'options_manager' => 'Options_Manager',
-            'editor_customizer' => 'Editor_Customizer',
+            'editor_customizer' => 'Editor_Customizer','field_renderer'      => 'Field_Renderer',
             'field_group_manager' => 'Field_Group_Manager'
         ];
 
@@ -56,6 +56,7 @@ class Plugin_Loader
         add_action('elementor/widgets/register', [$this, 'register_components']);
         add_action('elementor/elements/categories_registered', [$this, 'register_categories']);
         add_action('elementor/frontend/after_enqueue_styles', [$this, 'enqueue_global_styles']);
+        add_action( 'elementor/dynamic_tags/register', [ $this, 'register_cora_dynamic_tags' ] );
     }
 
     /**
@@ -94,7 +95,16 @@ class Plugin_Loader
         }
     }
 
-    public function register_components($widgets_manager)
+public function register_cora_dynamic_tags( $dynamic_tags ) {
+	// 1. Register a custom group so Cora fields are easy to find
+	\Elementor\Plugin::$instance->dynamic_tags->register_group( 'cora-builder-group', [
+		'title' => __( 'Cora Studio', 'cora-builder' )
+	] );
+
+	// 2. Register the tag class
+	require_once CORA_BUILDER_PATH . 'core/dynamic_tags.php';
+	$dynamic_tags->register( new \Cora_Builder\Core\Cora_Dynamic_Tag() );
+}    public function register_components($widgets_manager)
     {
         require_once CORA_BUILDER_PATH . 'core/base_widget.php';
 
