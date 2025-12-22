@@ -36,8 +36,8 @@ abstract class Base_Widget extends Widget_Base {
         }
 
         // JS Path: components/{slug}/script.js
-        $js_file = CORA_BUILDER_PATH . "components/{$slug}/script.js";
-        $js_url  = CORA_BUILDER_URL . "components/{$slug}/script.js";
+        $js_file = CORA_BUILDER_PATH . "components/widgets/{$slug}/script.js";
+        $js_url  = CORA_BUILDER_URL . "components/widgets/{$slug}/script.js";
 
         if ( file_exists( $js_file ) ) {
             wp_register_script( 
