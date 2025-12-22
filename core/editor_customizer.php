@@ -146,7 +146,8 @@ class Editor_Customizer
 			/* --- CORA STUDIO UI --- */
 			#cora-studio-header {
 				background: #fff;
-				padding: 15px;     flex-direction: column;
+				padding: 15px;
+				flex-direction: column;
 				border-bottom: 1px solid #eee;
 			}
 
