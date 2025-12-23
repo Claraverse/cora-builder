@@ -135,17 +135,21 @@ class Field_Group_Manager
 
 		<script>
 			jQuery(document).ready(function ($) {
-				const postTypes = { <?php foreach ($post_types as $pt)
-					echo "'{$pt->name}': '{$pt->label}',"; ?> };
-				const optionsPages = { <?php foreach ($options_pages as $slug => $data)
-					echo "'{$slug}': '{$data['title']}',"; ?> };
+				const postTypes = {
+					<?php foreach ($post_types as $pt)
+						echo "'{$pt->name}': '{$pt->label}',"; ?> };
+				const optionsPages = {
+					<?php foreach ($options_pages as $slug => $data)
+						echo "'{$slug}': '{$data['title']}',"; ?> };
 				let fieldIndex = 0;
 
 				function createFieldAccordion(index, data = {}) {
 					const type = data.type || 'text';
 					const isChoice = ['select', 'checkbox', 'radio', 'button_group'].includes(type);
 					const isRepeater = type === 'repeater';
-
+					// Container types that require sub-field definitions
+					const isContainer = ['repeater', 'flexible_content', 'group', 'accordion', 'tab'].includes(type);
+					const isMessage = type === 'message';
 					return `
 					<div class="field-item-acc" data-index="${index}">
 						<div class="acc-header" style="cursor:pointer; display:flex; align-items:center;">
@@ -198,8 +202,13 @@ class Field_Group_Manager
 											<option value="user" ${type === 'user' ? 'selected' : ''}>User</option>
 										</optgroup>
 										<optgroup label="Layout">
-											<option value="repeater" ${type === 'repeater' ? 'selected' : ''}>Repeater</option>
+											<option value="message" ${type === 'message' ? 'selected' : ''}>Message</option>
+											<option value="accordion" ${type === 'accordion' ? 'selected' : ''}>Accordion</option>
+											<option value="tab" ${type === 'tab' ? 'selected' : ''}>Tab</option>
+											<option value="group" ${type === 'group' ? 'selected' : ''}>Group</option>
+											<option value="clone" ${type === 'clone' ? 'selected' : ''}>Clone</option>
 											<option value="flexible_content" ${type === 'flexible_content' ? 'selected' : ''}>Flexible Content</option>
+											<option value="repeater" ${type === 'repeater' ? 'selected' : ''}>Repeater</option>
 										</optgroup>
 									</select>
 								</div>

@@ -54,6 +54,22 @@ class Field_Renderer
         $string_val = is_array($val) ? '' : $val;
 
         switch ($type) {
+            // LAYOUT MODULES
+            case 'message':
+                $this->module_message($field);
+                break;
+            case 'group':
+            case 'accordion':
+            case 'tab':
+                $this->module_nested_group($field, $val, $input_name);
+                break;
+            case 'repeater':
+            case 'flexible_content':
+                $this->module_repeater($field, $val, $input_name);
+                break;
+            case 'clone':
+                $this->module_clone($field, $val, $input_name);
+                break;
             case 'google_map':
                 $this->module_google_map($field, $string_val, $input_name);
                 break;
@@ -83,10 +99,7 @@ class Field_Renderer
             case 'button_group':
                 $this->module_choices($field, $val, $input_name);
                 break;
-            case 'repeater':
-            case 'flexible_content':
-                $this->module_repeater($field, $val, $input_name);
-                break;
+
             case 'gallery':
                 $this->module_gallery($field, $string_val, $input_name);
                 break;
@@ -304,6 +317,41 @@ class Field_Renderer
     {
         $checked = checked($val, '1', false);
         echo '<label style="display:flex; align-items:center; cursor:pointer; gap:10px;"><input type="hidden" name="' . $input_name . '" value="0"><input type="checkbox" name="' . $input_name . '" value="1" ' . $checked . ' style="width:18px; height:18px;"> <span style="font-weight:600;">' . ($val == '1' ? 'Enabled' : 'Disabled') . '</span></label>';
+    }
+    /* --- NEW LAYOUT MODULES --- */
+
+    private function module_message($field)
+    {
+        echo '<div class="cora-ui-message" style="background:#f0f6fb; border-left:4px solid #2271b1; padding:12px; margin:5px 0;">';
+        echo '<p style="margin:0; font-style:italic; color:#1d2327;">' . esc_html($field['placeholder'] ?? '') . '</p>';
+        echo '</div>';
+    }
+
+    private function module_nested_group($field, $val, $input_name)
+    {
+        $subfields = json_decode($field['subfields_json'] ?? '[]', true) ?: [];
+        $is_accordion = $field['type'] === 'accordion';
+
+        echo '<div class="cora-layout-container cora-' . esc_attr($field['type']) . '" style="border:1px solid #ddd; border-radius:6px; background:#fff; overflow:hidden;">';
+        if ($is_accordion) {
+            echo '<div style="background:#f6f6f6; padding:10px; font-weight:bold; border-bottom:1px solid #ddd; cursor:default;">' . esc_html($field['label']) . '</div>';
+        }
+        echo '<div style="padding:20px;">';
+        foreach ($subfields as $sub) {
+            $sub_val = $val[$sub['name']] ?? '';
+            $sub_input_name = "{$input_name}[{$sub['name']}]";
+            echo '<div style="margin-bottom:15px;"><label style="display:block; font-size:12px; font-weight:bold; margin-bottom:5px;">' . esc_html($sub['label']) . '</label>';
+            $this->render_single_field($sub, $sub_val, $sub_input_name);
+            echo '</div>';
+        }
+        echo '</div></div>';
+    }
+
+    private function module_clone($field, $val, $input_name)
+    {
+        echo '<div class="cora-clone-placeholder" style="padding:15px; border:1px dashed #ccc; background:#f9f9f9; text-align:center; color:#888;">';
+        echo '<span class="dashicons dashicons-admin-page" style="vertical-align:middle; margin-right:5px;"></span> Reference to: ' . esc_html($field['placeholder'] ?: 'Select Group');
+        echo '</div>';
     }
 
     private function parse_choices($text)
