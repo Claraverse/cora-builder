@@ -17,9 +17,6 @@ class Field_Group_Manager
 		add_action('admin_init', [$this, 'register_options_page_fields']);
 	}
 
-	/**
-	 * Logic for Options Page Integration
-	 */
 	public function register_options_page_fields()
 	{
 		$groups = get_option($this->option_name, []);
@@ -41,13 +38,7 @@ class Field_Group_Manager
 		$options = get_option($page_slug . '_data', []);
 		$value = $options[$field['name']] ?? '';
 		$name = "{$page_slug}_data[{$field['name']}]";
-		echo '<div class="cora-field-row">';
-		if ($field['type'] === 'textarea') {
-			echo '<textarea name="' . esc_attr($name) . '" rows="4" style="width:100%;">' . esc_textarea($value) . '</textarea>';
-		} else {
-			echo '<input type="text" name="' . esc_attr($name) . '" value="' . esc_attr($value) . '" style="width:100%;">';
-		}
-		echo '</div>';
+		(new Field_Renderer())->render_single_field($field, $value, $name);
 	}
 
 	public function register_meta_boxes()
@@ -61,61 +52,23 @@ class Field_Group_Manager
 		}
 	}
 
-	/**
-	 * PRO RENDERER: Modular Field Display
-	 * Updated to fix Fatal Error causing white screens
-	 */
 	public function render_meta_box_content($post, $args)
-{
-    // Ensure we are pulling the fields array correctly from the $args passed by add_meta_box
-    $fields = $args['args']['fields'] ?? [];
-    $values = get_post_meta($post->ID, '_cora_meta_data', true) ?: [];
-    
-    wp_nonce_field('cora_meta_save', 'cora_meta_nonce');
-
-    if (empty($fields)) {
-        echo '<p class="cora-empty-note">No fields defined for this group.</p>';
-        return;
-    }
-
-    // Now that the class is loaded by Plugin_Loader, this will no longer crash
-    $renderer = new Field_Renderer();
-    $renderer->render_fields($fields, $values);
-}
-	// public function render_meta_box_content($post, $args)
-	// {
-	// 	// Ensure we have a valid post object before proceeding
-	// 	if (!$post instanceof \WP_Post) {
-	// 		return;
-	// 	}
-
-	// 	$fields = $args['args']['fields'] ?? [];
-	// 	// Use the stored meta key correctly
-	// 	$values = get_post_meta($post->ID, '_cora_meta_data', true) ?: [];
-
-	// 	wp_nonce_field('cora_meta_save', 'cora_meta_nonce');
-
-	// 	if (empty($fields)) {
-	// 		echo '<p class="cora-empty-note">Build your fields in the Field Group editor.</p>';
-	// 		return;
-	// 	}
-
-	// 	// Instantiate the renderer within the same namespace
-	// 	$renderer = new Field_Renderer();
-	// 	$renderer->render_fields($fields, $values);
-	// }
+	{
+		$fields = $args['args']['fields'] ?? [];
+		$values = get_post_meta($post->ID, '_cora_meta_data', true) ?: [];
+		wp_nonce_field('cora_meta_save', 'cora_meta_nonce');
+		(new Field_Renderer())->render_fields($fields, $values);
+	}
 
 	public function save_post_meta_data($post_id)
 	{
 		if (!isset($_POST['cora_meta_nonce']) || !wp_verify_nonce($_POST['cora_meta_nonce'], 'cora_meta_save'))
 			return;
-		if (isset($_POST['cora_meta']))
+		if (isset($_POST['cora_meta']) && is_array($_POST['cora_meta'])) {
 			update_post_meta($post_id, '_cora_meta_data', array_map('sanitize_text_field', $_POST['cora_meta']));
+		}
 	}
 
-	/**
-	 * STUDIO UI: Sidebar + Main Content Layout
-	 */
 	public function render_field_group_page()
 	{
 		$groups = get_option($this->option_name, []);
@@ -123,7 +76,6 @@ class Field_Group_Manager
 		$options_pages = get_option('cora_options_pages', []);
 		?>
 		<div class="cora-admin-wrapper cora-field-studio">
-
 			<aside class="cora-studio-sidebar">
 				<div class="cora-sidebar-header">
 					<h2>Field Groups</h2>
@@ -150,18 +102,15 @@ class Field_Group_Manager
 						<h2 id="current-group-label">New Field Group</h2>
 						<button type="submit" class="cora-btn cora-btn-primary">Deploy Group</button>
 					</div>
-
 					<div class="cora-main-content">
 						<input type="hidden" name="action" value="cora_save_field_group">
 						<input type="hidden" name="group_id" id="group_id" value="">
 						<?php wp_nonce_field('cora_group_nonce', 'cora_nonce'); ?>
-
 						<div class="cora-control-group">
 							<label>Group Title</label>
 							<input type="text" name="group_title" id="group_title" class="cora-input" required
 								placeholder="Hero Settings...">
 						</div>
-
 						<div class="cora-form-row">
 							<div class="cora-control-group">
 								<label>Location</label>
@@ -175,7 +124,6 @@ class Field_Group_Manager
 								<select name="group_location" id="group_location" class="cora-input"></select>
 							</div>
 						</div>
-
 						<div class="field-factory-pro" style="margin-top:40px;">
 							<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
 								<h3 style="margin:0;">Fields</h3>
@@ -192,12 +140,10 @@ class Field_Group_Manager
 
 		<script>
 			jQuery(document).ready(function ($) {
-				const postTypes = {
-					<?php foreach ($post_types as $pt)
-						echo "'{$pt->name}': '{$pt->label}',"; ?> };
-				const optionsPages = {
-					<?php foreach ($options_pages as $slug => $data)
-						echo "'{$slug}': '{$data['title']}',"; ?> };
+				const postTypes = { <?php foreach ($post_types as $pt)
+					echo "'{$pt->name}': '{$pt->label}',"; ?> };
+				const optionsPages = { <?php foreach ($options_pages as $slug => $data)
+					echo "'{$slug}': '{$data['title']}',"; ?> };
 				let fieldIndex = 0;
 
 				function createFieldAccordion(index, data = {}) {
@@ -218,10 +164,14 @@ class Field_Group_Manager
 							<div class="cora-form-row">
 								<div class="cora-control-group">
 									<label>Type</label>
-									<select class="cora-input f-type">
+									<select class="f-type cora-input">
 										<option value="text" ${data.type === 'text' ? 'selected' : ''}>Text</option>
 										<option value="textarea" ${data.type === 'textarea' ? 'selected' : ''}>Textarea</option>
-										<option value="image" ${data.type === 'image' ? 'selected' : ''}>Image (URL)</option>
+										<option value="email" ${data.type === 'email' ? 'selected' : ''}>Email</option>
+										<option value="url" ${data.type === 'url' ? 'selected' : ''}>URL</option>
+										<option value="image" ${data.type === 'image' ? 'selected' : ''}>Image</option>
+										<option value="file" ${data.type === 'file' ? 'selected' : ''}>File</option>
+										<option value="true_false" ${data.type === 'true_false' ? 'selected' : ''}>True / False</option>
 									</select>
 								</div>
 								<div class="cora-control-group"><label>Placeholder</label><input type="text" class="cora-input f-placeholder" value="${data.placeholder || ''}"></div>

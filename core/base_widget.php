@@ -14,17 +14,13 @@ abstract class Base_Widget extends Widget_Base {
         
         $this->register_component_assets();
 	}
-
-    /**
-     * Automatically registers style.css and script.js if they exist 
-     * in the component folder.
-     */
+ 
     private function register_component_assets() {
         $slug = $this->get_component_slug();
         
         // CSS Path: components/{slug}/style.css
-        $css_file = CORA_BUILDER_PATH . "components/{$slug}/style.css";
-        $css_url  = CORA_BUILDER_URL . "components/{$slug}/style.css";
+        $css_file = CORA_BUILDER_PATH . "components/widgets/{$slug}/style.css";
+        $css_url  = CORA_BUILDER_URL . "components/widgets/{$slug}/style.css";
 
         if ( file_exists( $css_file ) ) {
             wp_register_style( 
@@ -49,11 +45,7 @@ abstract class Base_Widget extends Widget_Base {
             );
         }
     }
-
-    /**
-     * Helper to get the folder name from the class.
-     * e.g., returns 'dual_heading'
-     */
+ 
     private function get_component_slug() {
         $class = get_class( $this );
         $parts = explode( '\\', $class );
