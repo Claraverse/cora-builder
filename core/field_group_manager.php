@@ -44,6 +44,8 @@ class Field_Group_Manager
 	public function register_meta_boxes()
 	{
 		$screen = get_current_screen();
+		if (!$screen)
+			return;
 		$groups = get_option($this->option_name, []);
 		foreach ($groups as $id => $group) {
 			if (isset($group['rule_type']) && $group['rule_type'] === 'post_type' && $group['location'] === $screen->post_type) {
@@ -64,33 +66,27 @@ class Field_Group_Manager
 	{
 		if (!isset($_POST['cora_meta_nonce']) || !wp_verify_nonce($_POST['cora_meta_nonce'], 'cora_meta_save'))
 			return;
-		if (isset($_POST['cora_meta']) && is_array($_POST['cora_meta'])) {
-			update_post_meta($post_id, '_cora_meta_data', array_map('sanitize_text_field', $_POST['cora_meta']));
-		}
+		if (isset($_POST['cora_meta']))
+			update_post_meta($post_id, '_cora_meta_data', $_POST['cora_meta']);
 	}
 
 	public function render_field_group_page()
 	{
 		$groups = get_option($this->option_name, []);
 		$post_types = get_post_types(['public' => true], 'objects');
-		$options_pages = get_option('cora_options_pages', []);
 		?>
 		<div class="cora-admin-wrapper cora-field-studio">
 			<aside class="cora-studio-sidebar">
 				<div class="cora-sidebar-header">
-					<h2>Field Groups</h2>
-					<button type="button" id="reset-group-btn" class="cora-btn cora-btn-primary" style="width:100%;">+ Add
-						Group</button>
+					<h2>Field Groups</h2><button type="button" id="reset-group-btn" class="cora-btn cora-btn-primary"
+						style="width:100%;">+ Add Group</button>
 				</div>
 				<div class="cora-sidebar-list">
 					<?php foreach ($groups as $id => $data): ?>
-						<div class="cora-group-item tax-engine-item" data-config='<?php echo json_encode($data); ?>'
+						<div class="cora-group-item tax-engine-item" data-config='<?php echo esc_attr(json_encode($data)); ?>'
 							data-id="<?php echo esc_attr($id); ?>">
-							<span class="dashicons dashicons-layout"></span>
-							<div class="info">
-								<strong><?php echo esc_html($data['title']); ?></strong>
-								<small><?php echo esc_html($data['location']); ?></small>
-							</div>
+							<strong><?php echo esc_html($data['title']); ?></strong>
+							<small style="display:block;"><?php echo esc_html($data['location']); ?></small>
 						</div>
 					<?php endforeach; ?>
 				</div>
@@ -99,36 +95,30 @@ class Field_Group_Manager
 			<main class="cora-studio-main">
 				<form id="cora-field-group-form" method="post" action="<?php echo admin_url('admin-post.php'); ?>">
 					<div class="cora-main-header">
-						<h2 id="current-group-label">New Field Group</h2>
-						<button type="submit" class="cora-btn cora-btn-primary">Deploy Group</button>
+						<h2 id="current-group-label">New Field Group</h2><button type="submit"
+							class="cora-btn cora-btn-primary">Deploy Group</button>
 					</div>
 					<div class="cora-main-content">
 						<input type="hidden" name="action" value="cora_save_field_group">
 						<input type="hidden" name="group_id" id="group_id" value="">
 						<?php wp_nonce_field('cora_group_nonce', 'cora_nonce'); ?>
-						<div class="cora-control-group">
-							<label>Group Title</label>
-							<input type="text" name="group_title" id="group_title" class="cora-input" required
-								placeholder="Hero Settings...">
-						</div>
+						<div class="cora-control-group"><label>Group Title</label><input type="text" name="group_title"
+								id="group_title" class="cora-input" required></div>
 						<div class="cora-form-row">
-							<div class="cora-control-group">
-								<label>Location</label>
-								<select name="rule_type" id="rule_type" class="cora-input">
+							<div class="cora-control-group"><label>Location</label><select name="rule_type" id="rule_type"
+									class="cora-input">
 									<option value="post_type">Post Type</option>
-									<option value="options_page">Options Page</option>
-								</select>
-							</div>
-							<div class="cora-control-group">
-								<label>Target</label>
-								<select name="group_location" id="group_location" class="cora-input"></select>
-							</div>
+								</select></div>
+							<div class="cora-control-group"><label>Target</label><select name="group_location"
+									id="group_location" class="cora-input">
+									<?php foreach ($post_types as $pt)
+										echo '<option value="' . $pt->name . '">' . $pt->label . '</option>'; ?>
+								</select></div>
 						</div>
 						<div class="field-factory-pro" style="margin-top:40px;">
 							<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-								<h3 style="margin:0;">Fields</h3>
-								<button type="button" id="add-pro-field" class="cora-btn cora-btn-secondary">+ Add
-									Field</button>
+								<h3>Fields</h3><button type="button" id="add-pro-field" class="cora-btn cora-btn-secondary">+
+									Add Field</button>
 							</div>
 							<div id="cora-fields-accordion" class="cora-accordion"></div>
 						</div>
@@ -140,20 +130,17 @@ class Field_Group_Manager
 
 		<script>
 			jQuery(document).ready(function ($) {
-				const postTypes = { <?php foreach ($post_types as $pt)
-					echo "'{$pt->name}': '{$pt->label}',"; ?> };
-				const optionsPages = { <?php foreach ($options_pages as $slug => $data)
-					echo "'{$slug}': '{$data['title']}',"; ?> };
 				let fieldIndex = 0;
 
 				function createFieldAccordion(index, data = {}) {
+					const type = data.type || 'text';
+					const isComplex = (type === 'repeater' || type === 'flexible_content');
 					return `
 					<div class="field-item-acc" data-index="${index}">
 						<div class="acc-header" style="cursor:pointer; display:flex; align-items:center;">
-							<span class="dashicons dashicons-menu" style="margin-right:10px; color:#ccc;"></span>
+							<span class="dashicons dashicons-menu" style="margin-right:10px;"></span>
 							<strong class="label-preview" style="flex-grow:1;">${data.label || '(no label)'}</strong>
-							<span class="type-badge">${data.type || 'text'}</span>
-							<span class="dashicons dashicons-arrow-down-alt2 toggle-icon" style="margin-left:10px;"></span>
+							<span class="type-badge">${type}</span>
 							<span class="dashicons dashicons-no-alt delete-field" style="margin-left:10px; color:red;"></span>
 						</div>
 						<div class="acc-content" style="display:none; padding:20px; border-top:1px solid #eee;">
@@ -165,34 +152,29 @@ class Field_Group_Manager
 								<div class="cora-control-group">
 									<label>Type</label>
 									<select class="f-type cora-input">
-										<option value="text" ${data.type === 'text' ? 'selected' : ''}>Text</option>
-										<option value="textarea" ${data.type === 'textarea' ? 'selected' : ''}>Textarea</option>
-										<option value="email" ${data.type === 'email' ? 'selected' : ''}>Email</option>
-										<option value="url" ${data.type === 'url' ? 'selected' : ''}>URL</option>
-										<option value="image" ${data.type === 'image' ? 'selected' : ''}>Image</option>
-										<option value="file" ${data.type === 'file' ? 'selected' : ''}>File</option>
-										<option value="true_false" ${data.type === 'true_false' ? 'selected' : ''}>True / False</option>
+										<optgroup label="Basic"><option value="text" ${type === 'text' ? 'selected' : ''}>Text</option><option value="textarea" ${type === 'textarea' ? 'selected' : ''}>Textarea</option><option value="true_false" ${type === 'true_false' ? 'selected' : ''}>True / False</option></optgroup>
+										<optgroup label="Media"><option value="image" ${type === 'image' ? 'selected' : ''}>Image</option><option value="gallery" ${type === 'gallery' ? 'selected' : ''}>Gallery</option></optgroup>
+										<optgroup label="Relational"><option value="post_object" ${type === 'post_object' ? 'selected' : ''}>Post Object</option><option value="relationship" ${type === 'relationship' ? 'selected' : ''}>Relationship</option></optgroup>
+										<optgroup label="Layout"><option value="repeater" ${type === 'repeater' ? 'selected' : ''}>Repeater</option></optgroup>
 									</select>
 								</div>
 								<div class="cora-control-group"><label>Placeholder</label><input type="text" class="cora-input f-placeholder" value="${data.placeholder || ''}"></div>
+							</div>
+							<div class="complex-fields-config" style="margin-top:15px; ${isComplex ? '' : 'display:none;'}">
+								<label><strong>Sub-fields JSON</strong></label>
+								<textarea class="f-subfields cora-input" style="font-family:monospace; height:80px;">${data.subfields_json || ''}</textarea>
 							</div>
 						</div>
 					</div>`;
 				}
 
-				$('#add-pro-field').on('click', function () {
-					$('#cora-fields-accordion').append(createFieldAccordion(fieldIndex++));
-				});
-
-				$(document).on('click', '.acc-header', function (e) {
-					if ($(e.target).hasClass('delete-field')) { $(this).closest('.field-item-acc').remove(); return; }
-					$(this).next('.acc-content').slideToggle(200);
-				});
-
+				$('#add-pro-field').on('click', () => $('#cora-fields-accordion').append(createFieldAccordion(fieldIndex++)));
+				$(document).on('change', '.f-type', function () { $(this).closest('.acc-content').find('.complex-fields-config').toggle($(this).val() === 'repeater'); });
+				$(document).on('click', '.acc-header', function (e) { if (!$(e.target).hasClass('delete-field')) $(this).next('.acc-content').slideToggle(200); });
+				$(document).on('click', '.delete-field', function () { $(this).closest('.field-item-acc').remove(); });
 				$(document).on('keyup', '.f-label', function () {
-					const label = $(this).val();
-					$(this).closest('.field-item-acc').find('.label-preview').text(label || '(no label)');
-					$(this).closest('.field-item-acc').find('.f-name').val(label.toLowerCase().replace(/ /g, '_'));
+					const label = $(this).val(); $(this).closest('.field-item-acc').find('.label-preview').text(label || '(no label)');
+					$(this).closest('.field-item-acc').find('.f-name').val(label.toLowerCase().trim().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, ''));
 				});
 
 				$('#cora-field-group-form').on('submit', function () {
@@ -201,52 +183,31 @@ class Field_Group_Manager
 						html += `<input type="hidden" name="fields[${i}][label]" value="${$(this).find('.f-label').val()}">`;
 						html += `<input type="hidden" name="fields[${i}][name]" value="${$(this).find('.f-name').val()}">`;
 						html += `<input type="hidden" name="fields[${i}][type]" value="${$(this).find('.f-type').val()}">`;
+						html += `<input type="hidden" name="fields[${i}][placeholder]" value="${$(this).find('.f-placeholder').val()}">`;
+						if ($(this).find('.f-subfields').val()) html += `<input type="hidden" name="fields[${i}][subfields_json]" value='${$(this).find('.f-subfields').val()}'>`;
 					});
 					$('#fields-json-payload').html(html);
 				});
 
-				function updateTargets(type, selected = null) {
-					const $select = $('#group_location').empty();
-					const data = (type === 'options_page') ? optionsPages : postTypes;
-					$.each(data, (k, v) => {
-						let opt = $('<option>').val(k).text(v);
-						if (k === selected) opt.prop('selected', true);
-						$select.append(opt);
-					});
-				}
-
-				$('#rule_type').on('change', function () { updateTargets($(this).val()); });
-				updateTargets('post_type');
-
-				$('.cora-group-item').on('click', function () {
-					const data = $(this).data('config');
-					$('.cora-group-item').removeClass('active');
-					$(this).addClass('active');
-					$('#group_id').val($(this).data('id'));
-					$('#group_title').val(data.title);
-					$('#current-group-label').text('Editing: ' + data.title);
-					$('#rule_type').val(data.rule_type || 'post_type').trigger('change');
-					$('#group_location').val(data.location);
-					$('#cora-fields-accordion').empty();
-					if (data.fields) $.each(data.fields, (idx, f) => { $('#cora-fields-accordion').append(createFieldAccordion(idx, f)); fieldIndex = Math.max(fieldIndex, parseInt(idx) + 1); });
+				$(document).on('click', '.cora-group-item', function () {
+					const data = $(this).data('config'); $('.cora-group-item').removeClass('active'); $(this).addClass('active');
+					$('#group_id').val($(this).data('id')); $('#group_title').val(data.title);
+					$('#group_location').val(data.location); $('#cora-fields-accordion').empty();
+					if (data.fields) $.each(data.fields, (idx, f) => { $('#cora-fields-accordion').append(createFieldAccordion(idx, f)); fieldIndex = idx + 1; });
 				});
-
-				$('#reset-group-btn').on('click', () => { window.location.reload(); });
+				$('#reset-group-btn').on('click', () => window.location.reload());
 			});
 		</script>
 		<?php
 	}
 
-	public function handle_save_group()
-	{
-		if (!wp_verify_nonce($_POST['cora_nonce'], 'cora_group_nonce'))
-			wp_die('Error');
+	public function handle_save_group() {
+		if (!wp_verify_nonce($_POST['cora_nonce'], 'cora_group_nonce')) wp_die('Error');
 		$groups = get_option($this->option_name, []);
-		$id = !empty($_POST['group_id']) ? $_POST['group_id'] : uniqid('group_');
-		$groups[$id] = ['title' => $_POST['group_title'], 'rule_type' => $_POST['rule_type'], 'location' => $_POST['group_location'], 'fields' => $_POST['fields'] ?? []];
+		$id = !empty($_POST['group_id']) ? sanitize_text_field($_POST['group_id']) : uniqid('group_');
+		$groups[$id] = ['title' => sanitize_text_field($_POST['group_title']), 'rule_type' => 'post_type', 'location' => sanitize_text_field($_POST['group_location']), 'fields' => $_POST['fields'] ?? []];
 		update_option($this->option_name, $groups);
-		wp_redirect(admin_url('admin.php?page=cora-fieldgroups'));
-		exit;
+		wp_redirect(admin_url('admin.php?page=cora-fieldgroups')); exit;
 	}
 
 	public function handle_delete_group()

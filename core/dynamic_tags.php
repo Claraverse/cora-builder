@@ -1,104 +1,144 @@
 <?php
 namespace Cora_Builder\Core;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if (!defined('ABSPATH'))
+    exit;
 
-class Cora_Dynamic_Tag extends \Elementor\Core\DynamicTags\Tag {
-
-    public function get_name() {
-        return 'cora-dynamic-tag';
-    }
-
-    public function get_title() {
-        return __( 'Cora Field', 'cora-builder' );
-    }
-
-    public function get_group() {
+abstract class Cora_Dynamic_Tag_Base extends \Elementor\Core\DynamicTags\Tag
+{
+    public function get_group()
+    {
         return 'cora-builder-group';
     }
 
-    public function get_categories() {
-        return [ 
-            \Elementor\Modules\DynamicTags\Module::TEXT_CATEGORY,
-            \Elementor\Modules\DynamicTags\Module::IMAGE_CATEGORY,
-            \Elementor\Modules\DynamicTags\Module::URL_CATEGORY,
-        ];
-    }
-
-    protected function register_controls() {
-        // 1. Fetch all registered field groups
+    protected function get_cora_fields_by_type($filter_types = [])
+    {
         $groups = get_option('cora_field_groups', []);
-        $options = [ '' => __( 'Choose Field', 'cora-builder' ) ];
-        
-        // 2. Build the options list
-        foreach ( $groups as $group ) {
-            if ( ! empty( $group['fields'] ) ) {
-                foreach ( $group['fields'] as $field ) {
-                    // Logic: You can filter here based on $this->get_categories() 
-                    // to only show 'image' types for image controls
-                    $options[ $field['name'] ] = $group['title'] . ': ' . $field['label'];
+        $options = [];
+        if (!empty($groups) && is_array($groups)) {
+            foreach ($groups as $group_id => $group) {
+                $group_options = [];
+                if (!empty($group['fields'])) {
+                    foreach ($group['fields'] as $field) {
+                        $stored_type = strtolower($field['type'] ?? '');
+                        if (empty($filter_types) || in_array($stored_type, $filter_types)) {
+                            $group_options[$field['name']] = $field['label'];
+                        }
+                    }
+                }
+                if (!empty($group_options)) {
+                    $options[$group_id] = ['label' => strtoupper($group['title']), 'options' => $group_options];
                 }
             }
         }
-
-        // 3. Add Control: Toggle between Selection and Manual
-        $this->add_control(
-            'input_type',
-            [
-                'label' => __( 'Input Method', 'cora-builder' ),
-                'type' => \Elementor\Controls_Manager::SELECT,
-                'default' => 'select',
-                'options' => [
-                    'select' => __( 'Select from List', 'cora-builder' ),
-                    'manual' => __( 'Manual Entry', 'cora-builder' ),
-                ],
-            ]
-        );
-
-        // 4. Add Control: The Selection Dropdown
-        $this->add_control(
-            'key_select',
-            [
-                'label' => __( 'Select Field', 'cora-builder' ),
-                'type' => \Elementor\Controls_Manager::SELECT2,
-                'label_block' => true,
-                'options' => $options,
-                'condition' => [
-                    'input_type' => 'select',
-                ],
-            ]
-        );
-
-        // 5. Add Control: Manual Key Input
-        $this->add_control(
-            'key_manual',
-            [
-                'label' => __( 'Manual Field Slug', 'cora-builder' ),
-                'type' => \Elementor\Controls_Manager::TEXT,
-                'placeholder' => __( 'e.g. my_custom_field', 'cora-builder' ),
-                'condition' => [
-                    'input_type' => 'manual',
-                ],
-            ]
-        );
+        return $options;
     }
+}
 
-    public function render() {
-        $settings = $this->get_settings();
-        $key = ( 'manual' === $settings['input_type'] ) ? $settings['key_manual'] : $settings['key_select'];
+class Cora_Dynamic_Text_Tag extends Cora_Dynamic_Tag_Base
+{
+    public function get_name()
+    {
+        return 'cora-text-tag';
+    }
+    public function get_title()
+    {
+        return __('Cora Field (Text)', 'cora-builder');
+    }
+    public function get_categories()
+    {
+        return [\Elementor\Modules\DynamicTags\Module::TEXT_CATEGORY];
+    }
+    protected function register_controls()
+    {
+        $this->add_control('key', ['label' => __('Select Field', 'cora-builder'), 'type' => \Elementor\Controls_Manager::SELECT2, 'groups' => $this->get_cora_fields_by_type(['text', 'textarea', 'email'])]);
+    }
+    public function render()
+    {
+        $values = get_post_meta(get_the_ID(), '_cora_meta_data', true) ?: [];
+        echo wp_kses_post($values[$this->get_settings('key')] ?? '');
+    }
+}
 
-        if ( empty( $key ) ) return;
+class Cora_Dynamic_Image_Tag extends Cora_Dynamic_Tag_Base
+{
+    public function get_name()
+    {
+        return 'cora-image-tag';
+    }
+    public function get_title()
+    {
+        return __('Cora Field (Image)', 'cora-builder');
+    }
+    public function get_categories()
+    {
+        return [\Elementor\Modules\DynamicTags\Module::IMAGE_CATEGORY];
+    }
+    protected function register_controls()
+    {
+        $this->add_control('key', ['label' => __('Select Field', 'cora-builder'), 'type' => \Elementor\Controls_Manager::SELECT2, 'groups' => $this->get_cora_fields_by_type(['image'])]);
+    }
+    public function get_value(array $options = [])
+    {
+        $values = get_post_meta(get_the_ID(), '_cora_meta_data', true) ?: [];
+        return ['id' => 0, 'url' => $values[$this->get_settings('key')] ?? ''];
+    }
+}
 
-        $post_id = get_the_ID();
-        $values = get_post_meta( $post_id, '_cora_meta_data', true ) ?: [];
-        
-        $value = isset( $values[ $key ] ) ? $values[ $key ] : '';
+class Cora_Dynamic_URL_Tag extends Cora_Dynamic_Tag_Base
+{
+    public function get_name()
+    {
+        return 'cora-url-tag';
+    }
+    public function get_title()
+    {
+        return __('Cora Field (URL/File)', 'cora-builder');
+    }
+    public function get_categories()
+    {
+        return [\Elementor\Modules\DynamicTags\Module::URL_CATEGORY];
+    }
+    protected function register_controls()
+    {
+        $this->add_control('key', ['label' => __('Select Field', 'cora-builder'), 'type' => \Elementor\Controls_Manager::SELECT2, 'groups' => $this->get_cora_fields_by_type(['url', 'file', 'link', 'image'])]);
+    }
+    public function render()
+    {
+        $values = get_post_meta(get_the_ID(), '_cora_meta_data', true) ?: [];
+        echo esc_url($values[$this->get_settings('key')] ?? '');
+    }
+}
 
-        // If it's an image category and we have a value, return it properly
-        if ( in_array( \Elementor\Modules\DynamicTags\Module::IMAGE_CATEGORY, $this->get_categories() ) ) {
-            echo esc_url( $value );
-        } else {
-            echo wp_kses_post( $value );
+
+class Cora_Dynamic_Gallery_Tag extends Cora_Dynamic_Tag_Base
+{
+    public function get_name()
+    {
+        return 'cora-gallery-tag';
+    }
+    public function get_title()
+    {
+        return __('Cora Gallery (PRO)', 'cora-builder');
+    }
+    public function get_categories()
+    {
+        return [\Elementor\Modules\DynamicTags\Module::GALLERY_CATEGORY];
+    }
+    protected function register_controls()
+    {
+        $this->add_control('key', ['label' => __('Select Gallery', 'cora-builder'), 'type' => \Elementor\Controls_Manager::SELECT2, 'groups' => $this->get_cora_fields_by_type(['gallery'])]);
+    }
+    public function get_value(array $options = [])
+    {
+        $values = get_post_meta(get_the_ID(), '_cora_meta_data', true) ?: [];
+        $csv = $values[$this->get_settings('key')] ?? '';
+        $urls = !empty($csv) ? explode(',', $csv) : [];
+        $gallery = [];
+        foreach ($urls as $url) {
+            if (!empty($url))
+                $gallery[] = ['id' => 0, 'url' => $url];
         }
+        return $gallery;
     }
 }
