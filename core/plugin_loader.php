@@ -98,18 +98,19 @@ class Plugin_Loader
 
     public function register_cora_dynamic_tags($dynamic_tags)
     {
-        // 1. Register a custom group so Cora fields are easy to find
+        // 1. Register the Cora Group
         \Elementor\Plugin::$instance->dynamic_tags->register_group('cora-builder-group', [
             'title' => __('Cora Studio', 'cora-builder')
         ]);
 
-        // 2. Register the tag class
         require_once CORA_BUILDER_PATH . 'core/dynamic_tags.php';
-        // Register all synchronized classes
+
+        // 2. Register every specialized tag class
         $dynamic_tags->register(new \Cora_Builder\Core\Cora_Dynamic_Text_Tag());
         $dynamic_tags->register(new \Cora_Builder\Core\Cora_Dynamic_Image_Tag());
         $dynamic_tags->register(new \Cora_Builder\Core\Cora_Dynamic_URL_Tag());
-        $dynamic_tags->register(new \Cora_Builder\Core\Cora_Dynamic_Gallery_Tag());
+        $dynamic_tags->register(new \Cora_Builder\Core\Cora_Dynamic_Number_Tag());
+        $dynamic_tags->register( new \Cora_Builder\Core\Cora_Dynamic_Gallery_Tag() );
     }
     public function register_components($widgets_manager)
     {
