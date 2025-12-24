@@ -132,7 +132,12 @@ class Plugin_Loader
             'cora_pricing_card',
             'cora_cta_section',
             'cora_newsletter',
-            'cora_nexus_hero','cora_catalyst_trust_grid'
+            'cora_nexus_hero',
+            'cora_catalyst_trust_grid',
+            'cora_button_group',
+            'cora_pill',
+            'brush_headline',
+            'metric_grid','feature_card_grid'
         ];
 
         foreach ($widgets as $component) {
@@ -147,6 +152,7 @@ class Plugin_Loader
                 }
             }
         }
+
     }
 
     public function enqueue_global_styles()

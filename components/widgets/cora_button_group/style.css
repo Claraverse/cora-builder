@@ -1,0 +1,52 @@
+.cora-button-group-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.cora-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 600;
+}
+
+.btn-icon {
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.btn-icon i, .btn-icon svg {
+    width: 1em;
+    height: 1em;
+    font-size: 1.1em;
+}
+
+/* Base Primary Style */
+.btn-pri {
+    background-color: #0f172a;
+    color: #ffffff;
+    padding: 14px 28px;
+    border-radius: 12px;
+}
+
+/* Base Secondary Style */
+.btn-sec {
+    background-color: #ffffff;
+    color: #0f172a;
+    border: 1px solid #e2e8f0;
+    padding: 14px 28px;
+    border-radius: 12px;
+}
+
+@media (max-width: 767px) {
+    .cora-button-group-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .cora-btn { width: 100%; }
+}

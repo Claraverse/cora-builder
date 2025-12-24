@@ -1,0 +1,50 @@
+/* --- Global Grid Container --- */
+.cora-unit-container.cora-feature-grid-wrapper {
+    display: grid;
+    width: 100%;
+    box-sizing: border-box;
+    /* Grid structure managed by fr-unit sliders */
+}
+
+/* --- Card Base --- */
+.cora-feature-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-sizing: border-box;
+    /* User controls Background, Padding, Radius, and Shadow in Style Tab */
+}
+
+/* --- Icon Box --- */
+.card-icon-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    /* Background and Size managed by Style Tab */
+}
+
+.card-icon-box i,
+.card-icon-box svg {
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
+    display: block;
+}
+
+/* --- Typography --- */
+.card-title, .card-desc {
+    margin: 0;
+    line-height: 1.2;
+}
+
+.card-title {
+    font-weight: 800; /* */
+}
+
+.card-desc {
+    line-height: 1.6; /* */
+}

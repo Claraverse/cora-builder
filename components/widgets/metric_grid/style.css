@@ -1,0 +1,75 @@
+/* --- Global Grid Container --- */
+.cora-unit-container.cora-metric-grid-wrapper {
+    display: grid;
+    width: 100%;
+    box-sizing: border-box;
+    /* Grid structure handled by your fr-unit sliders */
+}
+
+/* --- Individual Metric Item --- */
+.cora-metric-item {
+    display: flex;
+    align-items: center; /* Ensures icon and text block stay centered */
+    box-sizing: border-box;
+    padding: 8px;
+    /* icon_gap slider manages the space between icon and text block */
+}
+
+/* --- Icon Wrapper Fix --- */
+.metric-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    
+    /* These properties create the soft-square look from your reference */
+    background: #f1f5f9; /* Reference: Light grey background */
+    width: 48px;  /* Match reference proportions */
+    height: 48px;
+    border-radius: 12px; /* Soft corner radius */
+    line-height: 1;
+}
+
+/* --- Target inner Icon/SVG for Scaling --- */
+.metric-icon i,
+.metric-icon svg {
+    width: 1em; 
+    height: 1em;
+    font-size: inherit; /* Inherits from your icon_size slider */
+    fill: currentColor;
+    display: block;
+}
+
+/* --- Text Wrapper --- */
+.metric-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* title_gap slider manages vertical space between these lines */
+}
+
+/* --- Typography Baselines --- */
+.metric-title {
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.2;
+    margin: 0; /* Clear browser defaults to prevent "shifting" */
+}
+
+.metric-subtext {
+    color: #64748b;
+    line-height: 1.2;
+    margin: 0;
+}
+
+/* --- Grid Debugging --- */
+.cora-metric-item[style*="outline"] {
+    transition: outline 0.1s ease;
+}
+
+/* --- Mobile Responsive Fallback --- */
+@media (max-width: 767px) {
+    .cora-unit-container.cora-metric-grid-wrapper {
+        grid-template-columns: 1fr; /* Automatic stacking on mobile */
+    }
+}

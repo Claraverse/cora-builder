@@ -1,0 +1,50 @@
+.cora-unit-container {
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+    display: flex; /* Required for the Internal Gap logic */
+    flex-direction: column;
+}
+
+.cora-main-title {
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 850;
+    color: #0f172a;
+    line-height: 1.1;
+    margin: 0; /* Let the Internal Gap control the spacing */
+}
+
+.cora-highlight-wrap {
+    position: relative;
+    display: inline-block;
+    padding: 0 10px;
+    z-index: 1;
+}
+
+.cora-highlight-text {
+    position: relative;
+    z-index: 2;
+    color: #fff;
+}
+
+.brush-svg-wrapper {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    width: 110%;
+    top: 55%;
+    left: 50%;
+}
+
+.brush-svg-wrapper svg {
+    width: 100%;
+    height: auto;
+    fill: currentColor;
+}
+
+.cora-sub-title {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #64748b;
+    margin: 0;
+}
