@@ -144,7 +144,12 @@ class Plugin_Loader
             'cora_image',
             'cora_feature_card',
             'cora_loop_builder',
-            'cora_feature_stats','cora_guide_card','cora_guide_list_card','cora_guide_list_card_v2'
+            'cora_feature_stats',
+            'cora_guide_card',
+            'cora_guide_list_card',
+            'cora_guide_list_card_v2',
+            'cora_mobile_action_bar',
+            'cora_guide_card_v3'
         ];
 
         foreach ($widgets as $component) {

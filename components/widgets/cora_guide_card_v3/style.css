@@ -1,0 +1,73 @@
+.guide-card-v3 {
+    background: #ffffff;
+    border-radius: 24px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+/* --- Media Header --- */
+.v3-header-media {
+    position: relative;
+    height: 240px;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%);
+}
+
+.header-img { width: 100%; height: 100%; object-fit: cover; }
+
+.badge-row {
+    position: absolute;
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    z-index: 2;
+}
+.badge-row.top-row { top: 0; }
+.badge-row.bottom-row { bottom: 0; }
+
+.badge {
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 700;
+    background: #ffffff;
+    color: #0f172a;
+}
+.level-badge { background: #dbeafe; color: #1d4ed8; }
+
+/* --- Card Body --- */
+.v3-card-body {
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Managed by Element Spacing Slider */
+}
+
+.card-title, .card-desc { margin: 0 !important; }
+.card-title { font-size: 24px; font-weight: 750; line-height: 1.2; }
+.card-desc { color: #64748b; line-height: 1.5; }
+
+.section-label { font-weight: 700; font-size: 15px; display: block; margin-bottom: 12px; }
+.tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
+.takeaway-tag { background: #f1f5f9; padding: 6px 12px; border-radius: 8px; font-size: 13px; color: #475569; }
+
+.meta-row { display: flex; gap: 20px; color: #94a3b8; font-weight: 600; font-size: 15px; margin-top: 10px; }
+
+/* --- Footer CTA --- */
+.v3-primary-btn {
+    background: #0f172a;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    border-radius: 16px;
+    text-decoration: none;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 12px;
+}

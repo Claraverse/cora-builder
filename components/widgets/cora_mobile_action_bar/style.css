@@ -1,0 +1,56 @@
+/* --- Desktop Hide Logic --- */
+.cora-mobile-sticky-wrapper {
+    display: none;
+}
+
+/* --- Mobile/Tablet Engagement Logic --- */
+@media (max-width: 1024px) {
+    .cora-mobile-sticky-wrapper {
+        display: flex;
+        position: fixed;
+        bottom: 24px; /* Floats above the edge */
+        left: 0;
+        width: 100%;
+        justify-content: center;
+        padding: 0 20px;
+        z-index: 9999;
+        pointer-events: none; /* Allows clicks to pass through empty space */
+    }
+
+    .cora-sticky-pill {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 500px;
+        background: #0f172a;
+        padding: 12px 12px 12px 24px;
+        border-radius: 100px; /* High-end Pill Shape */
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+        pointer-events: auto;
+        gap: 16px;
+    }
+
+    .sticky-label {
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .sticky-cta-btn {
+        background: #3b82f6;
+        color: #ffffff;
+        padding: 10px 20px;
+        border-radius: 100px;
+        text-decoration: none;
+        font-weight: 800;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+    }
+}
