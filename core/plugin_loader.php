@@ -137,7 +137,7 @@ class Plugin_Loader
             'cora_button_group',
             'cora_pill',
             'brush_headline',
-            'metric_grid','feature_card_grid'
+            'metric_grid','feature_card_grid','cora_checklist','brush_headline_two','cora_image','cora_feature_card','cora_loop_builder'
         ];
 
         foreach ($widgets as $component) {

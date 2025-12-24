@@ -188,6 +188,73 @@ abstract class Base_Widget extends Widget_Base {
         return $text;
     }
     /**
+     * Advanced Text Styling Engine
+     */
+    protected function register_text_styling_controls($id, $label, $selector) {
+        $this->start_controls_section('style_' . $id, [
+            'label' => $label,
+            'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+        ]);
+
+        $this->add_responsive_control($id . '_align', [
+            'label'     => __( 'Alignment', 'cora-builder' ),
+            'type'      => \Elementor\Controls_Manager::CHOOSE,
+            'options'   => [
+                'left'    => [ 'title' => 'Left', 'icon' => 'eicon-text-align-left' ],
+                'center'  => [ 'title' => 'Center', 'icon' => 'eicon-text-align-center' ],
+                'right'   => [ 'title' => 'Right', 'icon' => 'eicon-text-align-right' ],
+                'justify' => [ 'title' => 'Justify', 'icon' => 'eicon-text-align-justify' ],
+            ],
+            'selectors' => [ $selector => 'text-align: {{VALUE}};' ],
+        ]);
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [ 'name' => $id . '_typo', 'selector' => $selector ]
+        );
+
+       // --- FIXED: Use 'text-stroke' string instead of a constant ---
+    $this->add_control($id . '_stroke', [
+        'label'     => __( 'Text Stroke', 'cora-builder' ),
+        'type'      => 'text-stroke', 
+        'selectors' => [ $selector => '-webkit-text-stroke: {{TEXT_STROKE_SIZE}}px {{TEXT_STROKE_COLOR}};' ],
+    ]);
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Text_Shadow::get_type(),
+            [ 'name' => $id . '_shadow', 'selector' => $selector ]
+        );
+
+        $this->add_control($id . '_blend', [
+            'label'     => __( 'Blend Mode', 'cora-builder' ),
+            'type'      => \Elementor\Controls_Manager::SELECT,
+            'options'   => [ 'normal' => 'Normal', 'multiply' => 'Multiply', 'screen' => 'Screen', 'overlay' => 'Overlay' ],
+            'default'   => 'normal',
+            'selectors' => [ $selector => 'mix-blend-mode: {{VALUE}};' ],
+        ]);
+
+        // Hover States
+        $this->start_controls_tabs($id . '_tabs');
+        $this->start_controls_tab($id . '_normal', [ 'label' => 'Normal' ]);
+        $this->add_control($id . '_color', [
+            'label'     => 'Text Color',
+            'type'      => \Elementor\Controls_Manager::COLOR,
+            'selectors' => [ $selector => 'color: {{VALUE}};' ],
+        ]);
+        $this->end_controls_tab();
+
+        $this->start_controls_tab($id . '_hover', [ 'label' => 'Hover' ]);
+        $this->add_control($id . '_color_h', [
+            'label'     => 'Text Color',
+            'type'      => \Elementor\Controls_Manager::COLOR,
+            'selectors' => [ $selector . ':hover' => 'color: {{VALUE}};' ],
+        ]);
+        $this->end_controls_tab();
+        $this->end_controls_tabs();
+
+        $this->end_controls_section();
+    }
+    /**
      * Common Spatial Controls for all Cora Units
      * Handles Gap, Padding, and Margin at Viewport levels
      */

@@ -1,0 +1,32 @@
+.cora-image-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.cora-image-mask {
+    position: relative;
+    overflow: hidden; /* Critical for Border Radius and Fit */
+    line-height: 0;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.cora-image-mask img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+/* --- Caption Styling --- */
+.cora-image-caption {
+    margin-top: 12px; /* Controlled by 'Element Spacing' via register_common_spatial_controls */
+    line-height: 1.5;
+    transition: all 0.3s ease;
+}
+
+/* Hover Effect Fallback */
+.cora-image-container a:hover .cora-image-mask img {
+    transform: scale(1.02);
+}

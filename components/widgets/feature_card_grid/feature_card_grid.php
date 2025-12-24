@@ -3,7 +3,7 @@ namespace Cora_Builder\components;
 
 use Cora_Builder\Core\Base_Widget;
 use Elementor\Controls_Manager;
-use Elementor\Repeater;
+use Elementor\Repeater; 
 use Elementor\Group_Control_Typography;
 use Elementor\Group_Control_Box_Shadow;
 use Elementor\Group_Control_Border;

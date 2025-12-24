@@ -1,0 +1,41 @@
+/* --- Global Container --- */
+.cora-unit-container.cora-checklist-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    /* Vertical Spacing managed by 'Element Spacing (Gap)' slider */
+}
+
+/* --- Item Wrapper --- */
+.checklist-item {
+    display: flex;
+    align-items: flex-start; /* Aligns icon with the first line of text */
+    box-sizing: border-box;
+}
+
+/* --- Icon Alignment Fix --- */
+.checklist-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    line-height: 1;
+    /* Adjust top margin slightly to center icon with the first line's height */
+    margin-top: calc(0.5em - (var(--icon-size, 16px) / 2)); 
+}
+
+.checklist-icon i,
+.checklist-icon svg {
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
+    display: block;
+}
+
+/* --- Text Styling Engine Support --- */
+.checklist-text {
+    line-height: 1.6; /* Reference standard for readability */
+    margin: 0;
+    padding: 0;
+    transition: all 0.3s ease; /* Supports Hover state changes */
+}
