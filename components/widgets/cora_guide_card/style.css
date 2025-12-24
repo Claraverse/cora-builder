@@ -1,0 +1,102 @@
+/* --- Global Reset for Cora Guide Card --- */
+.cora-unit-container.cora-guide-card {
+  display: flex;
+  flex-direction: column;
+  padding: 32px;
+  background: #ffffff;
+  border-radius: 24px;
+  box-sizing: border-box;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 100%; /* Ensures equal height in grid layouts */
+  position: relative; /* Anchor for the Link Mask */
+  border: 1px solid #f1f5f9;
+}
+
+/* --- The Link Mask CTA --- */
+.card-link-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  cursor: pointer;
+}
+
+/* --- Icon Box Reset --- */
+.card-icon-box {
+  width: 64px;
+  height: 64px;
+  background: #0f172a;
+  color: #ffffff;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px; /* Default space before body start */
+  flex-shrink: 0;
+}
+
+/* --- Body Flex Engine (The "Figma" Auto-Layout) --- */
+.cora-guide-card .card-body {
+  display: flex;
+  flex-direction: column;
+  /* This variable is connected to your 'Element Spacing' slider */
+  gap: var(--cora-element-gap, 0px);
+}
+
+/* --- Zeroing Browser Defaults --- */
+.cora-guide-card .card-title,
+.cora-guide-card .card-desc {
+  margin: 0 !important;
+  padding: 0;
+  line-height: 1.2; /* Tightens vertical rhythm */
+}
+
+.cora-guide-card .card-desc {
+  line-height: 1.5;
+  color: #64748b;
+}
+
+/* --- Tag Cloud Reset --- */
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px; /* Internal spacing between tags */
+  margin: 0; /* Removed the hardcoded 32px margin */
+}
+
+.tag-item {
+  background: #f1f5f9;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1; /* Prevents tag height bloat */
+  color: #475569;
+}
+
+/* --- Footer Vertical Anchor --- */
+.card-footer {
+  margin-top: auto; /* Pushes footer to bottom regardless of content length */
+  padding-top: 20px;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 6; /* Sits above the link mask for specific interactions */
+}
+
+.count-text {
+  font-weight: 500;
+  color: #64748b;
+}
+
+/* --- Interaction Effects --- */
+.cora-guide-card:hover {
+  border-color: #3b82f6; /* Subtle Figma-blue focus state */
+}
+
+.cora-guide-card:hover .footer-arrow {
+  transform: translateX(4px);
+  transition: transform 0.2s ease;
+}

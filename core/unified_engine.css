@@ -1,0 +1,23 @@
+/* Unified Design Canvas Engine */
+.cora-unit-container {
+    display: flex; /* Every widget is a flex-layer by default */
+    box-sizing: border-box;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Hug Logic: Element wraps content */
+.cora-unit-container[data-width="auto"] {
+    width: fit-content;
+}
+
+/* Fill Logic: Element fills parent */
+.cora-unit-container[data-width="fill"] {
+    width: 100%;
+    flex-grow: 1;
+}
+
+/* Figma Stroke Rendering */
+.cora-unit-container {
+    -webkit-font-smoothing: antialiased;
+    outline: none;
+}

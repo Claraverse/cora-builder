@@ -74,90 +74,97 @@ if (!defined('ABSPATH')) {
 // }
 
 
-abstract class Base_Widget extends Widget_Base {
+abstract class Base_Widget extends Widget_Base
+{
 
-    public function __construct( $data = [], $args = null ) {
-		parent::__construct( $data, $args );
+    public function __construct($data = [], $args = null)
+    {
+        parent::__construct($data, $args);
 
         $this->register_component_assets();
-	}
+    }
 
-    private function register_component_assets() {
+    private function register_component_assets()
+    {
         $slug = $this->get_component_slug();
 
         // CSS Path: components/{slug}/style.css
         $css_file = CORA_BUILDER_PATH . "components/widgets/{$slug}/style.css";
-        $css_url  = CORA_BUILDER_URL . "components/widgets/{$slug}/style.css";
+        $css_url = CORA_BUILDER_URL . "components/widgets/{$slug}/style.css";
 
-        if ( file_exists( $css_file ) ) {
-            wp_register_style( 
-                'cora_' . $slug . '_css', 
-                $css_url, 
-                [], 
-                CORA_BUILDER_VERSION 
+        if (file_exists($css_file)) {
+            wp_register_style(
+                'cora_' . $slug . '_css',
+                $css_url,
+                [],
+                CORA_BUILDER_VERSION
             );
         }
 
         // JS Path: components/{slug}/script.js
         $js_file = CORA_BUILDER_PATH . "components/widgets/{$slug}/script.js";
-        $js_url  = CORA_BUILDER_URL . "components/widgets/{$slug}/script.js";
+        $js_url = CORA_BUILDER_URL . "components/widgets/{$slug}/script.js";
 
-        if ( file_exists( $js_file ) ) {
-            wp_register_script( 
-                'cora_' . $slug . '_js', 
-                $js_url, 
-                [ 'jquery' ], 
-                CORA_BUILDER_VERSION, 
-                true 
+        if (file_exists($js_file)) {
+            wp_register_script(
+                'cora_' . $slug . '_js',
+                $js_url,
+                ['jquery'],
+                CORA_BUILDER_VERSION,
+                true
             );
         }
     }
 
-    private function get_component_slug() {
-        $class = get_class( $this );
-        $parts = explode( '\\', $class );
-        $class_name = end( $parts );  
-        return strtolower( $class_name );
+    private function get_component_slug()
+    {
+        $class = get_class($this);
+        $parts = explode('\\', $class);
+        $class_name = end($parts);
+        return strtolower($class_name);
     }
 
-    public function get_style_depends() {
+    public function get_style_depends()
+    {
         $slug = $this->get_component_slug();
-		return [ 'cora_' . $slug . '_css' ];
-	}
+        return ['cora_' . $slug . '_css'];
+    }
 
-    public function get_script_depends() {
+    public function get_script_depends()
+    {
         $slug = $this->get_component_slug();
-		return [ 'cora_' . $slug . '_js' ];
-	}
+        return ['cora_' . $slug . '_js'];
+    }
 
     /**
      * Common Layout Controls for all Cora Units
      */
-    protected function register_common_layout_controls() {
+    protected function register_common_layout_controls()
+    {
         $this->start_controls_section('cora_common_layout', [
-            'label' => __( 'Cora Layout', 'cora-builder' ),
-            'tab'   => \Elementor\Controls_Manager::TAB_CONTENT,
+            'label' => __('Cora Layout', 'cora-builder'),
+            'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
         ]);
 
         $this->add_responsive_control('cora_max_width', [
-            'label'      => __( 'Max Width', 'cora-builder' ),
-            'type'       => \Elementor\Controls_Manager::SLIDER,
-            'size_units' => [ 'px', '%', 'vw' ],
-            'range'      => [
-                'px' => [ 'min' => 200, 'max' => 1600 ],
-                '%'  => [ 'min' => 10, 'max' => 100 ],
+            'label' => __('Max Width', 'cora-builder'),
+            'type' => \Elementor\Controls_Manager::SLIDER,
+            'size_units' => ['px', '%', 'vw'],
+            'range' => [
+                'px' => ['min' => 200, 'max' => 1600],
+                '%' => ['min' => 10, 'max' => 100],
             ],
-            'selectors'  => [ '{{WRAPPER}} .cora-unit-container' => 'max-width: {{SIZE}}{{UNIT}}; margin-left: auto; margin-right: auto;' ],
-            'devices'    => [ 'desktop', 'tablet', 'mobile' ], // Requirement: Viewport level control
+            'selectors' => ['{{WRAPPER}} .cora-unit-container' => 'max-width: {{SIZE}}{{UNIT}}; margin-left: auto; margin-right: auto;'],
+            'devices' => ['desktop', 'tablet', 'mobile'], // Requirement: Viewport level control
         ]);
 
         $this->add_responsive_control('cora_container_align', [
-            'label'     => __( 'Container Alignment', 'cora-builder' ),
-            'type'      => \Elementor\Controls_Manager::CHOOSE,
-            'options'   => [
-                'left'   => [ 'title' => 'Left', 'icon' => 'eicon-text-align-left' ],
-                'center' => [ 'title' => 'Center', 'icon' => 'eicon-text-align-center' ],
-                'right'  => [ 'title' => 'Right', 'icon' => 'eicon-text-align-right' ],
+            'label' => __('Container Alignment', 'cora-builder'),
+            'type' => \Elementor\Controls_Manager::CHOOSE,
+            'options' => [
+                'left' => ['title' => 'Left', 'icon' => 'eicon-text-align-left'],
+                'center' => ['title' => 'Center', 'icon' => 'eicon-text-align-center'],
+                'right' => ['title' => 'Right', 'icon' => 'eicon-text-align-right'],
             ],
             'selectors' => [
                 '{{WRAPPER}} .cora-unit-container' => 'margin-left: {{VALUE === "left" ? "0" : (VALUE === "right" ? "auto" : "auto")}}; margin-right: {{VALUE === "right" ? "0" : (VALUE === "left" ? "auto" : "auto")}};',
@@ -173,8 +180,10 @@ abstract class Base_Widget extends Widget_Base {
      * @param int $limit The threshold
      * @param string $mode 'words' or 'letters'
      */
-    protected function truncate_text($text, $limit, $mode = 'words') {
-        if (empty($text) || $limit <= 0) return $text;
+    protected function truncate_text($text, $limit, $mode = 'words')
+    {
+        if (empty($text) || $limit <= 0)
+            return $text;
 
         if ($mode === 'letters') {
             return (strlen($text) > $limit) ? substr($text, 0, $limit) . '...' : $text;
@@ -190,64 +199,65 @@ abstract class Base_Widget extends Widget_Base {
     /**
      * Advanced Text Styling Engine
      */
-    protected function register_text_styling_controls($id, $label, $selector) {
+    protected function register_text_styling_controls($id, $label, $selector)
+    {
         $this->start_controls_section('style_' . $id, [
             'label' => $label,
-            'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+            'tab' => \Elementor\Controls_Manager::TAB_STYLE,
         ]);
 
         $this->add_responsive_control($id . '_align', [
-            'label'     => __( 'Alignment', 'cora-builder' ),
-            'type'      => \Elementor\Controls_Manager::CHOOSE,
-            'options'   => [
-                'left'    => [ 'title' => 'Left', 'icon' => 'eicon-text-align-left' ],
-                'center'  => [ 'title' => 'Center', 'icon' => 'eicon-text-align-center' ],
-                'right'   => [ 'title' => 'Right', 'icon' => 'eicon-text-align-right' ],
-                'justify' => [ 'title' => 'Justify', 'icon' => 'eicon-text-align-justify' ],
+            'label' => __('Alignment', 'cora-builder'),
+            'type' => \Elementor\Controls_Manager::CHOOSE,
+            'options' => [
+                'left' => ['title' => 'Left', 'icon' => 'eicon-text-align-left'],
+                'center' => ['title' => 'Center', 'icon' => 'eicon-text-align-center'],
+                'right' => ['title' => 'Right', 'icon' => 'eicon-text-align-right'],
+                'justify' => ['title' => 'Justify', 'icon' => 'eicon-text-align-justify'],
             ],
-            'selectors' => [ $selector => 'text-align: {{VALUE}};' ],
+            'selectors' => [$selector => 'text-align: {{VALUE}};'],
         ]);
 
         $this->add_group_control(
             \Elementor\Group_Control_Typography::get_type(),
-            [ 'name' => $id . '_typo', 'selector' => $selector ]
+            ['name' => $id . '_typo', 'selector' => $selector]
         );
 
-       // --- FIXED: Use 'text-stroke' string instead of a constant ---
-    $this->add_control($id . '_stroke', [
-        'label'     => __( 'Text Stroke', 'cora-builder' ),
-        'type'      => 'text-stroke', 
-        'selectors' => [ $selector => '-webkit-text-stroke: {{TEXT_STROKE_SIZE}}px {{TEXT_STROKE_COLOR}};' ],
-    ]);
+        // --- FIXED: Use 'text-stroke' string instead of a constant ---
+        $this->add_control($id . '_stroke', [
+            'label' => __('Text Stroke', 'cora-builder'),
+            'type' => 'text-stroke',
+            'selectors' => [$selector => '-webkit-text-stroke: {{TEXT_STROKE_SIZE}}px {{TEXT_STROKE_COLOR}};'],
+        ]);
 
         $this->add_group_control(
             \Elementor\Group_Control_Text_Shadow::get_type(),
-            [ 'name' => $id . '_shadow', 'selector' => $selector ]
+            ['name' => $id . '_shadow', 'selector' => $selector]
         );
 
         $this->add_control($id . '_blend', [
-            'label'     => __( 'Blend Mode', 'cora-builder' ),
-            'type'      => \Elementor\Controls_Manager::SELECT,
-            'options'   => [ 'normal' => 'Normal', 'multiply' => 'Multiply', 'screen' => 'Screen', 'overlay' => 'Overlay' ],
-            'default'   => 'normal',
-            'selectors' => [ $selector => 'mix-blend-mode: {{VALUE}};' ],
+            'label' => __('Blend Mode', 'cora-builder'),
+            'type' => \Elementor\Controls_Manager::SELECT,
+            'options' => ['normal' => 'Normal', 'multiply' => 'Multiply', 'screen' => 'Screen', 'overlay' => 'Overlay'],
+            'default' => 'normal',
+            'selectors' => [$selector => 'mix-blend-mode: {{VALUE}};'],
         ]);
 
         // Hover States
         $this->start_controls_tabs($id . '_tabs');
-        $this->start_controls_tab($id . '_normal', [ 'label' => 'Normal' ]);
+        $this->start_controls_tab($id . '_normal', ['label' => 'Normal']);
         $this->add_control($id . '_color', [
-            'label'     => 'Text Color',
-            'type'      => \Elementor\Controls_Manager::COLOR,
-            'selectors' => [ $selector => 'color: {{VALUE}};' ],
+            'label' => 'Text Color',
+            'type' => \Elementor\Controls_Manager::COLOR,
+            'selectors' => [$selector => 'color: {{VALUE}};'],
         ]);
         $this->end_controls_tab();
 
-        $this->start_controls_tab($id . '_hover', [ 'label' => 'Hover' ]);
+        $this->start_controls_tab($id . '_hover', ['label' => 'Hover']);
         $this->add_control($id . '_color_h', [
-            'label'     => 'Text Color',
-            'type'      => \Elementor\Controls_Manager::COLOR,
-            'selectors' => [ $selector . ':hover' => 'color: {{VALUE}};' ],
+            'label' => 'Text Color',
+            'type' => \Elementor\Controls_Manager::COLOR,
+            'selectors' => [$selector . ':hover' => 'color: {{VALUE}};'],
         ]);
         $this->end_controls_tab();
         $this->end_controls_tabs();
@@ -258,43 +268,85 @@ abstract class Base_Widget extends Widget_Base {
      * Common Spatial Controls for all Cora Units
      * Handles Gap, Padding, and Margin at Viewport levels
      */
-    protected function register_common_spatial_controls() {
+    protected function register_common_spatial_controls()
+    {
+
+
         $this->start_controls_section('cora_spatial_settings', [
-            'label' => __( 'Cora Layout & Spacing', 'cora-builder' ),
-            'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+            'label' => __('Cora Layout & Spacing', 'cora-builder'),
+            'tab' => \Elementor\Controls_Manager::TAB_STYLE,
         ]);
 
-       // Max Width with Dynamic Pen Variable
+        // Max Width with Dynamic Pen Variable
         $this->add_responsive_control('cora_max_width', [
-            'label'      => __( 'Max Width', 'cora-builder' ),
-            'type'       => \Elementor\Controls_Manager::SLIDER,
-            'size_units' => [ 'px', 'em', 'rem', 'vw', '%' ],
-            'range'      => [
-                'px' => [ 'min' => 0, 'max' => 1600 ],
-                'vw' => [ 'min' => 0, 'max' => 100 ],
+            'label' => __('Max Width', 'cora-builder'),
+            'type' => \Elementor\Controls_Manager::SLIDER,
+            'size_units' => ['px', 'em', 'rem', 'vw', '%'],
+            'range' => [
+                'px' => ['min' => 0, 'max' => 1600],
+                'vw' => ['min' => 0, 'max' => 100],
             ],
-            'dynamic'    => [ 'active' => true ], // Enables the "Pen" icon for variables
-            'selectors'  => [ '{{WRAPPER}} .cora-unit-container' => 'max-width: {{SIZE}}{{UNIT}};' ],
+            'dynamic' => ['active' => true], // Enables the "Pen" icon for variables
+            'selectors' => ['{{WRAPPER}} .cora-unit-container' => 'max-width: {{SIZE}}{{UNIT}};'],
         ]);
 
         // Internal Gap with Dynamic Binding
         $this->add_responsive_control('cora_internal_gap', [
-            'label'      => __( 'Element Spacing (Gap)', 'cora-builder' ),
-            'type'       => \Elementor\Controls_Manager::SLIDER,
-            'size_units' => [ 'px', 'em', 'rem', 'vw' ],
-            'dynamic'    => [ 'active' => true ], // Enables variable binding
-            'selectors'  => [ '{{WRAPPER}} .cora-unit-container' => 'gap: {{SIZE}}{{UNIT}};' ],
+            'label' => __('Element Spacing (Gap)', 'cora-builder'),
+            'type' => \Elementor\Controls_Manager::SLIDER,
+            'size_units' => ['px', 'em', 'rem', 'vw'],
+            'dynamic' => ['active' => true], // Enables variable binding
+            'selectors' => ['{{WRAPPER}} .cora-unit-container' => 'gap: {{SIZE}}{{UNIT}};'],
         ]);
 
         // Container Padding with Multi-Unit Support
         $this->add_responsive_control('cora_padding', [
-            'label'      => __( 'Padding', 'cora-builder' ),
-            'type'       => \Elementor\Controls_Manager::DIMENSIONS,
-            'size_units' => [ 'px', '%', 'em', 'rem', 'vh', 'vw' ],
-            'dynamic'    => [ 'active' => true ],
-            'selectors'  => [ '{{WRAPPER}} .cora-unit-container' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+            'label' => __('Padding', 'cora-builder'),
+            'type' => \Elementor\Controls_Manager::DIMENSIONS,
+            'size_units' => ['px', '%', 'em', 'rem', 'vh', 'vw'],
+            'dynamic' => ['active' => true],
+            'selectors' => ['{{WRAPPER}} .cora-unit-container' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'],
         ]);
 
+
+
+        // --- POSITION & SIZE (Figma Style) ---
+        $this->add_responsive_control('cora_width_type', [
+            'label' => __('Width Mode', 'cora-builder'),
+            'type' => \Elementor\Controls_Manager::SELECT,
+            'options' => ['auto' => 'Hug', 'fixed' => 'Fixed', 'fill' => 'Fill Container'],
+            'default' => 'auto',
+        ]);
+
+        $this->add_responsive_control('cora_rotation', [
+            'label' => __('Rotation (°)', 'cora-builder'),
+            'type' => \Elementor\Controls_Manager::SLIDER,
+            'range' => ['px' => ['min' => 0, 'max' => 360]],
+            'selectors' => ['{{WRAPPER}}' => 'transform: rotate({{SIZE}}deg);'],
+        ]);
+
+        // --- APPEARANCE & EFFECTS ---
+        $this->add_control('cora_opacity', [
+            'label' => __('Opacity', 'cora-builder'),
+            'type' => \Elementor\Controls_Manager::SLIDER,
+            'range' => ['px' => ['min' => 0, 'max' => 1, 'step' => 0.1]],
+            'default' => ['size' => 1],
+            'selectors' => ['{{WRAPPER}}' => 'opacity: {{SIZE}};'],
+        ]);
+
+        $this->add_control('cora_overflow', [
+            'label' => __('Overflow', 'cora-builder'),
+            'type' => \Elementor\Controls_Manager::SELECT,
+            'options' => ['visible' => 'Visible', 'hidden' => 'Clip (Hidden)'],
+            'default' => 'visible',
+            'selectors' => ['{{WRAPPER}}' => 'overflow: {{VALUE}};'],
+        ]);
+
+        // --- STROKE & BORDERS (Advanced) ---
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            ['name' => 'cora_stroke', 'label' => 'Stroke', 'selector' => '{{WRAPPER}}']
+        );
         $this->end_controls_section();
     }
 
@@ -302,36 +354,37 @@ abstract class Base_Widget extends Widget_Base {
      * Advanced Positioning & Unit Controls
      * Enables Fixed, Relative, and Viewport-based layouts
      */
-    protected function register_advanced_positioning_controls() {
+    protected function register_advanced_positioning_controls()
+    {
         $this->start_controls_section('cora_positioning_section', [
-            'label' => __( 'Cora Advanced Positioning', 'cora-builder' ),
-            'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+            'label' => __('Cora Advanced Positioning', 'cora-builder'),
+            'tab' => \Elementor\Controls_Manager::TAB_STYLE,
         ]);
 
         $this->add_control('cora_pos_mode', [
-            'label'   => __( 'Position Mode', 'cora-builder' ),
-            'type'    => \Elementor\Controls_Manager::SELECT,
+            'label' => __('Position Mode', 'cora-builder'),
+            'type' => \Elementor\Controls_Manager::SELECT,
             'options' => [
-                'static'   => 'Default',
+                'static' => 'Default',
                 'relative' => 'Relative',
-                'fixed'    => 'Fixed',
+                'fixed' => 'Fixed',
                 'viewport' => 'Viewport (vh/vw)',
             ],
-            'default'   => 'static',
-            'selectors' => [ '{{WRAPPER}} .cora-unit-container' => 'position: {{VALUE}};' ],
+            'default' => 'static',
+            'selectors' => ['{{WRAPPER}} .cora-unit-container' => 'position: {{VALUE}};'],
         ]);
 
         // Dynamic Unit Support for Width
         $this->add_responsive_control('cora_dynamic_width', [
-            'label'      => __( 'Dynamic Width', 'cora-builder' ),
-            'type'       => \Elementor\Controls_Manager::SLIDER,
-            'size_units' => [ 'px', '%', 'vw', 'rem' ],
-            'range'      => [
-                'px' => [ 'min' => 0, 'max' => 2000 ],
-                '%'  => [ 'min' => 0, 'max' => 100 ],
-                'vw' => [ 'min' => 0, 'max' => 100 ],
+            'label' => __('Dynamic Width', 'cora-builder'),
+            'type' => \Elementor\Controls_Manager::SLIDER,
+            'size_units' => ['px', '%', 'vw', 'rem'],
+            'range' => [
+                'px' => ['min' => 0, 'max' => 2000],
+                '%' => ['min' => 0, 'max' => 100],
+                'vw' => ['min' => 0, 'max' => 100],
             ],
-            'selectors' => [ '{{WRAPPER}} .cora-unit-container' => 'width: {{SIZE}}{{UNIT}};' ],
+            'selectors' => ['{{WRAPPER}} .cora-unit-container' => 'width: {{SIZE}}{{UNIT}};'],
         ]);
 
         $this->end_controls_section();

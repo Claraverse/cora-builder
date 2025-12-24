@@ -2,7 +2,7 @@
 namespace Cora_Builder\components;
 
 use Cora_Builder\Core\Base_Widget;
-use Elementor\Controls_Manager;
+use Elementor\Controls_Manager; 
 use Elementor\Repeater;
 
 if (!defined('ABSPATH'))
