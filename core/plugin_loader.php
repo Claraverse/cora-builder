@@ -110,7 +110,7 @@ class Plugin_Loader
         $dynamic_tags->register(new \Cora_Builder\Core\Cora_Dynamic_Image_Tag());
         $dynamic_tags->register(new \Cora_Builder\Core\Cora_Dynamic_URL_Tag());
         $dynamic_tags->register(new \Cora_Builder\Core\Cora_Dynamic_Number_Tag());
-        $dynamic_tags->register( new \Cora_Builder\Core\Cora_Dynamic_Gallery_Tag() );
+        $dynamic_tags->register(new \Cora_Builder\Core\Cora_Dynamic_Gallery_Tag());
     }
     public function register_components($widgets_manager)
     {
@@ -131,7 +131,8 @@ class Plugin_Loader
             'cora_team_card',
             'cora_pricing_card',
             'cora_cta_section',
-            'cora_newsletter'
+            'cora_newsletter',
+            'cora_nexus_hero','cora_catalyst_trust_grid'
         ];
 
         foreach ($widgets as $component) {

@@ -49,7 +49,7 @@ abstract class Base_Widget extends Widget_Base {
     private function get_component_slug() {
         $class = get_class( $this );
         $parts = explode( '\\', $class );
-        $class_name = end( $parts ); // "Dual_Heading"
+        $class_name = end( $parts );  
         return strtolower( $class_name );
     }
 

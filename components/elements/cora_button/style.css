@@ -1,0 +1,14 @@
+.cora-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: var(--cora-primary); /* Uses Global Variable */
+    color: #fff;
+    border-radius: var(--cora-radius); /* Uses Global Variable */
+    text-decoration: none;
+    transition: 0.3s ease;
+    font-family: var(--cora-font-body);
+}
+
+.cora-btn:hover {
+    filter: brightness(1.1);
+}

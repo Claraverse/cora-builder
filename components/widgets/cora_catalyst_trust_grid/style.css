@@ -1,0 +1,25 @@
+.cora-catalyst-grid {
+    display: grid;
+    gap: 20px;
+    width: 100%;
+}
+
+.cora-catalyst-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: #fff;
+    padding: 20px;
+    border-radius: var(--cora-radius); /* */
+    border: 1px solid #f1f5f9;
+    transition: all 0.3s ease;
+}
+
+.cora-catalyst-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.card-icon { font-size: 24px; color: var(--cora-primary); }
+.card-text strong { display: block; font-size: 16px; color: #0f172a; }
+.card-text span { font-size: 13px; color: #94a3b8; }

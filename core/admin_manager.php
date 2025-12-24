@@ -12,8 +12,22 @@ class Admin_Manager
     {
         add_action('admin_menu', [$this, 'register_admin_menu']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
+        add_action('admin_menu', [$this, 'add_cora_dashboard']);
+        add_action('wp_ajax_toggle_cora_widget', [$this, 'handle_widget_toggle']);
     }
-
+    
+    public function add_cora_dashboard()
+    {
+        add_menu_page(
+            'Cora Builder',
+            'Cora Builder',
+            'manage_options',
+            'cora-builder',
+            [$this, 'render_dashboard'],
+            'dashicons-admin-generic',
+            2
+        );
+    }
     public function register_admin_menu()
     {
         // 1. Main Menu Item
@@ -95,57 +109,225 @@ class Admin_Manager
      */
     public function render_dashboard()
     {
+        // Fetch widgets from our tiered folders
+        $widgets = $this->get_all_registered_widgets();
         ?>
-        <div class="cora-admin-wrapper">
-            <div class="cora-header">
-                <div class="cora-logo">
-                    <h1>Cora Builder</h1>
-                    <span class="cora-version">v1.0.0</span>
+            <div class="cora-admin-wrapper">
+                <div class="cora-header">
+                    <div class="cora-logo">
+                        <h1>Cora Builder</h1> 
+                        <span class="cora-version">v1.0.0</span>
+                    </div>
+                     <div class="cora-search-bar">
+                    <i class="dashicons dashicons-search"></i>
+                    <input type="text" id="cora-widget-search" placeholder="Search by name or category...">
                 </div>
-                <div class="cora-actions">
-                    <a href="#" class="cora-btn cora-btn-secondary">Documentation</a>
-                    <a href="#" class="cora-btn cora-btn-primary">Go Pro</a>
+                    <div class="cora-actions">
+                        <a href="#" class="cora-btn cora-btn-secondary">Documentation</a>
+                        <a href="#" class="cora-btn cora-btn-primary">Go Pro</a>
+                    </div>
                 </div>
+
+            
+         
+
+            <nav class="cora-filter-nav">
+                <button class="filter-btn active" data-filter="all">All Units</button>
+                <button class="filter-btn" data-filter="elements">Elements</button>
+                <button class="filter-btn" data-filter="components">Components</button>
+                <button class="filter-btn" data-filter="section">Sections</button>
+                <button class="filter-btn" data-filter="widgets">Widgets</button>
+            </nav>
+
+            <div class="cora-widget-grid" id="cora-grid">
+                <?php foreach ($widgets as $id => $data): ?>
+                        <div class="cora-widget-card" 
+                             data-name="<?php echo esc_attr(strtolower($data['title'])); ?>" 
+                             data-tier="<?php echo esc_attr($data['tier']); ?>">
+                    
+                            <div class="card-status">
+                                <span class="tier-badge"><?php echo esc_html($data['label']); ?></span>
+                                <label class="cora-switch">
+                                    <input type="checkbox" class="widget-toggle" 
+                                           data-widget="<?php echo $id; ?>" 
+                                           <?php checked($data['active']); ?>>
+                                    <span class="cora-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="card-content">
+                                <h3><?php echo esc_html($data['title']); ?></h3>
+                                <p><?php echo esc_html($data['tier']); ?> unit ready for canvas</p>
+                            </div>
+                        </div>
+                <?php endforeach; ?>
             </div>
+        
 
-            <div class="cora-hero">
-                <h2>Welcome to your new Design Experience</h2>
-                <p>Cora Builder empowers you to create stunning, Shopify-like experiences inside WordPress. Get started by
-                    exploring your widgets.</p>
+          
             </div>
+        
+            <?php
+            $this->render_dashboard_styles();
+            $this->render_dashboard_scripts();
+    }
+/**
+ * Saves the widget status (enabled/disabled) to WordPress options via AJAX.
+ */
+public function handle_widget_toggle() {
+    check_ajax_referer('cora_admin_nonce', 'nonce');
 
-            <div class="cora-grid">
-                <div class="cora-card">
-                    <div class="icon-wrap"><span class="dashicons dashicons-layout"></span></div>
-                    <h3>Widget Library</h3>
-                    <p>Browse the 15+ custom components enabled on your site.</p>
-                    <a href="<?php echo admin_url('elementor'); ?>" class="cora-link">
-                        Open Editor <span class="dashicons dashicons-arrow-right-alt2"></span>
-                    </a>
-                </div>
+    $widget_id = sanitize_text_field($_POST['widget_id']);
+    $is_active = $_POST['is_active'] === 'true';
 
-                <div class="cora-card">
-                    <div class="icon-wrap"><span class="dashicons dashicons-admin-settings"></span></div>
-                    <h3>Global Settings</h3>
-                    <p>Configure colors, typography, and default behaviors.</p>
-                    <a href="<?php echo admin_url('admin.php?page=cora-settings'); ?>" class="cora-link">
-                        Manage Settings <span class="dashicons dashicons-arrow-right-alt2"></span>
-                    </a>
-                </div>
+    $disabled_widgets = get_option('cora_disabled_widgets', []);
 
-                <div class="cora-card">
-                    <div class="icon-wrap"><span class="dashicons dashicons-book"></span></div>
-                    <h3>Knowledge Base</h3>
-                    <p>Learn how to use the dual headings, atomic cards, and more.</p>
-                    <a href="#" class="cora-link">
-                        View Tutorials <span class="dashicons dashicons-arrow-right-alt2"></span>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <?php
+    if ($is_active) {
+        $disabled_widgets = array_diff($disabled_widgets, [$widget_id]);
+    } else {
+        if (!in_array($widget_id, $disabled_widgets)) {
+            $disabled_widgets[] = $widget_id;
+        }
     }
 
+    update_option('cora_disabled_widgets', array_values($disabled_widgets));
+    wp_send_json_success(['message' => 'Widget status updated']);
+}
+    private function render_dashboard_styles() {
+    ?>
+    <style>
+        .cora-admin-dashboard { margin-top: 30px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif; }
+        .cora-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .cora-title-section h1 { font-size: 28px; font-weight: 800; color: #1e293b; margin: 0; }
+        
+        /* Search Bar */
+        .cora-search-bar { position: relative; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 5px 15px; width: 350px; display: flex; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .cora-search-bar input { border: none; box-shadow: none; width: 100%; font-size: 14px; padding: 8px; }
+        .cora-search-bar input:focus { outline: none; border: none; box-shadow: none; }
+        
+        /* Filters */
+        .cora-filter-nav { margin-bottom: 30px; display: flex; gap: 10px; }
+        .filter-btn { background: #fff; border: 1px solid #e2e8f0; padding: 8px 20px; border-radius: 30px; cursor: pointer; font-weight: 600; color: #64748b; transition: 0.3s; }
+        .filter-btn.active { background: #0f172a; color: #fff; border-color: #0f172a; }
+
+        /* Grid & Cards */
+        .cora-widget-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .cora-widget-card { background: #fff; border-radius: 16px; border: 1px solid #e2e8f0; padding: 24px; transition: 0.3s; position: relative; }
+        .cora-widget-card:hover { border: 1px solid #101828; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        
+        .card-status { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .tier-badge { font-size: 11px; text-transform: uppercase; font-weight: 700; background: #f1f5f9; padding: 4px 10px; border-radius: 6px; color: #475569; }
+
+        /* Custom Switch */
+        .cora-switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .cora-switch input { opacity: 0; width: 0; height: 0; }
+        .cora-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
+        .cora-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .cora-slider { background-color: #101828; }
+        input:checked + .cora-slider:before { transform: translateX(20px); }
+    </style>
+    <?php
+}
+    private function render_dashboard_scripts()
+    {
+        ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('cora-widget-search');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const cards = document.querySelectorAll('.cora-widget-card');
+
+            function filterWidgets() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
+
+                cards.forEach(card => {
+                    const name = card.dataset.name;
+                    const tier = card.dataset.tier;
+
+                    const matchesSearch = name.includes(searchTerm);
+                    const matchesFilter = activeFilter === 'all' || tier === activeFilter;
+
+                    if (matchesSearch && matchesFilter) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+
+        // Live Search
+        searchInput.addEventListener('input', filterWidgets);
+
+        // Filter Buttons
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                filterWidgets();
+            });
+        });
+    });
+    </script>
+    <?php
+}
+/**
+ * Scans tiered directories to build a registry of all available Cora units.
+ * This enables the many-to-many relationship management in the dashboard.
+ * * @return array Metadata of all discovered widgets.
+ */
+
+
+private function get_all_registered_widgets() {
+    $widgets = [];
+    
+    // Define the tiers and their human-readable labels for the UI
+    $tiers = [
+        'elements'   => 'Element',
+        'components' => 'Component',
+        'widgets'    => 'Widget',
+        'section'    => 'Section'
+    ];
+
+    // Fetch the list of disabled widgets from the database to determine "active" status
+    $disabled_widgets = get_option('cora_disabled_widgets', []);
+
+    foreach ($tiers as $folder => $label) {
+        $path = CORA_BUILDER_PATH . "components/{$folder}/";
+
+        if (!is_dir($path)) {
+            continue;
+        }
+
+        // Scan the directory for subfolders (each subfolder is a widget unit)
+        $items = array_diff(scandir($path), ['..', '.']);
+
+        foreach ($items as $item) {
+            $file_path = $path . "{$item}/{$item}.php";
+
+            if (file_exists($file_path)) {
+                // Generate a unique ID for the widget based on its tier and folder name
+                $widget_id = "{$folder}_{$item}";
+                
+                // Format the title (e.g., cora_nexus_hero -> Cora Nexus Hero)
+                $display_name = str_replace(['_', '-'], ' ', $item);
+                $display_name = ucwords($display_name);
+
+                $widgets[$widget_id] = [
+                    'id'     => $widget_id,
+                    'slug'   => $item,
+                    'title'  => $display_name,
+                    'tier'   => $folder,
+                    'label'  => $label,
+                    'active' => !in_array($widget_id, $disabled_widgets), // Toggle state for the UI
+                    'path'   => $file_path
+                ];
+            }
+        }
+    }
+
+    return $widgets;
+}
     /**
      * Route to the Settings Manager
      */
