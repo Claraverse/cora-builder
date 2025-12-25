@@ -1,0 +1,66 @@
+/* --- Card Architecture --- */
+.project-card-v3 {
+    display: flex;
+    flex-direction: column;
+    /* Authority transferred to Cora Spacing Slider */
+    gap: var(--cora-element-gap, 24px); 
+    width: 100%;
+}
+
+/* --- The Lavender Frame --- */
+.canvas-frame {
+    position: relative;
+    background: #818cf8; /* High-impact Lavender Base */
+    border-radius: 32px;
+    padding: 32px; /* Precision framing */
+    aspect-ratio: 1.5; /* Fixed rhythm for grid alignment */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.canvas-media-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.canvas-media-inner img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Protects illustration proportions */
+}
+
+/* --- Overlapping Glassmorphism --- */
+.pill-hub {
+    position: absolute;
+    bottom: 24px;
+    left: 24px;
+    display: flex;
+    gap: 8px;
+}
+
+.cora-glass-pill-v3 {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(16px); /* High-fidelity frost */
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 10px 24px;
+    border-radius: 100px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Typography Reset */
+.p-card-title-v3 {
+    margin: 0 !important;
+    font-size: 22px;
+    font-weight: 700;
+    color: #334155;
+    line-height: 1.3;
+}

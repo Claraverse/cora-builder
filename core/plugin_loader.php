@@ -129,7 +129,7 @@ class Plugin_Loader
             'cora_industry_card',
             'cora_solution_cluster',
             'cora_team_card',
-             'cora_cta_section',
+            'cora_cta_section',
             'cora_newsletter',
             'cora_nexus_hero',
             'cora_catalyst_trust_grid',
@@ -184,7 +184,20 @@ class Plugin_Loader
             'cora_infra_scaling',
             'cora_security_card',
             'cora_comparison_table',
-            'cora_protection_card','cora_store_builder_card','cora_regional_status','cora_guarantee_block','cora_pricing_card_v3'
+            'cora_protection_card',
+            'cora_store_builder_card',
+            'cora_regional_status',
+            'cora_guarantee_block',
+            'cora_pricing_card_v3',
+
+            // POrtfolio Page
+            'cora_conversion_pill',
+            'cora_app_showcase',
+            'cora_consultation_hero',
+            'cora_project_hero_v2',
+            'cora_project_challenge',
+            'cora_ongoing_projects',
+            'cora_project_stat_card',''
         ];
 
         foreach ($widgets as $component) {
