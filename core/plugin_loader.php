@@ -149,7 +149,10 @@ class Plugin_Loader
             'cora_guide_list_card',
             'cora_guide_list_card_v2',
             'cora_mobile_action_bar',
-            'cora_guide_card_v3'
+            'cora_guide_card_v3',
+
+            // home page
+            'cora_hero_title','cora_info_pill','cora_home_feature_card','cora_blog_header','cora_project_card'
         ];
 
         foreach ($widgets as $component) {

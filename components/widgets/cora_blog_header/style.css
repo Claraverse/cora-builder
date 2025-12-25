@@ -1,0 +1,39 @@
+.blog-header-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centered by default */
+    text-align: center;
+    width: 100%;
+    /* Managed by Element Spacing slider */
+    gap: var(--cora-element-gap, 24px); 
+}
+
+/* --- Headline Engine --- */
+.blog-headline {
+    font-size: 56px;
+    font-weight: 850;
+    line-height: 1.1;
+    color: #0f172a;
+    margin: 0 !important; /* Zero Margin Authority */
+}
+
+/* --- The Italic Highlight --- */
+.highlight-text {
+    color: #3b82f6; /* Blue highlight */
+    font-style: italic; /* Distinct italicized style */
+    font-family: 'Serif Font Name', serif; /* Use your preferred serif font here */
+}
+
+/* --- Subtitle Engine --- */
+.subtitle-text {
+    font-size: 20px;
+    color: #64748b;
+    max-width: 850px;
+    line-height: 1.6;
+    margin: 0 !important;
+}
+
+/* Mobile Scaling */
+@media (max-width: 767px) {
+    .blog-headline { font-size: 36px; }
+}

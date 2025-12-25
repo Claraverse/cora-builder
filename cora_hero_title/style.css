@@ -1,0 +1,42 @@
+.hero-title-container {
+    display: flex;
+    flex-direction: column;
+    /* Spacing is handled by the Element Spacing slider */
+    gap: var(--cora-element-gap, 24px);
+    width: 100%;
+}
+
+.hero-title {
+    font-size: 72px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin: 0 !important; /* Zero Margin Authority */
+    color: #1e293b;
+}
+
+/* --- The Sketch Word (e.g., "Idea") --- */
+.sketch-word {
+    font-family: 'Your Sketch Font', cursive; /* Bind your custom sketch font here */
+    -webkit-text-stroke: 1.5px #1e293b;
+    color: transparent;
+    padding: 0 10px;
+    position: relative;
+}
+
+/* --- The Highlights (e.g., "Website") --- */
+.highlight-word {
+    color: #22c55e; /* Vibrant Green from reference */
+}
+
+.hero-subtitle {
+    font-size: 20px;
+    color: #64748b;
+    max-width: 800px;
+    margin: 0 !important;
+    line-height: 1.6;
+}
+
+/* Responsive Scaling */
+@media (max-width: 767px) {
+    .hero-title { font-size: 42px; }
+}

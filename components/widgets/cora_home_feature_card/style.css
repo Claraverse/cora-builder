@@ -1,0 +1,44 @@
+.cora-feature-card-container {
+    display: flex;
+    align-items: center; /* Middle Aligned Icon */
+    padding: 32px;
+    background: #fdf2ff; /* Light Lavender from reference */
+    border-radius: 24px;
+    box-sizing: border-box;
+    /* This variable is connected to your 'Element Spacing' slider */
+    gap: var(--cora-element-gap, 32px);
+}
+
+/* --- The Icon Box --- */
+.feature-icon-box {
+    font-size: 48px;
+    color: #6d28d9;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- Content Reset --- */
+.feature-content-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Internal vertical gap */
+}
+
+.feature-title, .feature-desc {
+    margin: 0 !important; /* Zero Margin Authority */
+    padding: 0;
+}
+
+.feature-title {
+    font-size: 32px;
+    font-weight: 850;
+    color: #1e2b5e;
+}
+
+.feature-desc {
+    font-size: 18px;
+    color: #475569;
+    line-height: 1.5;
+}

@@ -196,6 +196,9 @@ abstract class Base_Widget extends Widget_Base
 
         return $text;
     }
+
+
+
     /**
      * Advanced Text Styling Engine
      */
@@ -264,6 +267,9 @@ abstract class Base_Widget extends Widget_Base
 
         $this->end_controls_section();
     }
+
+
+
     /**
      * Common Spatial Controls for all Cora Units
      * Handles Gap, Padding, and Margin at Viewport levels
@@ -389,4 +395,56 @@ abstract class Base_Widget extends Widget_Base
 
         $this->end_controls_section();
     }
+
+
+    /**
+ * Advanced Alignment Matrix
+ */
+protected function register_alignment_controls($id, $container_selector, $inner_selector) {
+    
+    $this->start_controls_section('alignment_' . $id, [
+        'label' => __( 'Alignment & Distribution', 'cora-builder' ),
+        'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+    ]);
+
+    // --- 1. BLOCK LEVEL (Horizontal) ---
+    $this->add_responsive_control($id . '_block_align', [
+        'label'   => __( 'Block Alignment', 'cora-builder' ),
+        'type'    => \Elementor\Controls_Manager::CHOOSE,
+        'options' => [
+            'flex-start' => [ 'title' => 'Left', 'icon' => 'eicon-text-align-left' ],
+            'center'     => [ 'title' => 'Center', 'icon' => 'eicon-text-align-center' ],
+            'flex-end'   => [ 'title' => 'Right', 'icon' => 'eicon-text-align-right' ],
+        ],
+        'selectors' => [ '{{WRAPPER}}' => 'display: flex; justify-content: {{VALUE}};' ],
+    ]);
+
+    // --- 2. INNER CONTENT (Vertical) ---
+    $this->add_responsive_control($id . '_inner_valign', [
+        'label'   => __( 'Inner Vertical Align', 'cora-builder' ),
+        'type'    => \Elementor\Controls_Manager::CHOOSE,
+        'options' => [
+            'flex-start' => [ 'title' => 'Top', 'icon' => 'eicon-v-align-top' ],
+            'center'     => [ 'title' => 'Middle', 'icon' => 'eicon-v-align-middle' ],
+            'flex-end'   => [ 'title' => 'Bottom', 'icon' => 'eicon-v-align-bottom' ],
+            'stretch'    => [ 'title' => 'Stretch', 'icon' => 'eicon-v-align-stretch' ],
+        ],
+        'selectors' => [ $container_selector => 'align-items: {{VALUE}};' ],
+    ]);
+
+    // --- 3. ELEMENT DISTRIBUTION ---
+    $this->add_responsive_control($id . '_justify', [
+        'label'   => __( 'Inner Horizontal Align', 'cora-builder' ),
+        'type'    => \Elementor\Controls_Manager::CHOOSE,
+        'options' => [
+            'flex-start'    => [ 'title' => 'Start', 'icon' => 'eicon-text-align-left' ],
+            'center'        => [ 'title' => 'Center', 'icon' => 'eicon-text-align-center' ],
+            'flex-end'      => [ 'title' => 'End', 'icon' => 'eicon-text-align-right' ],
+            'space-between' => [ 'title' => 'Space Between', 'icon' => 'eicon-justify-contents-space-between' ],
+        ],
+        'selectors' => [ $container_selector => 'justify-content: {{VALUE}};' ],
+    ]);
+
+    $this->end_controls_section();
+}
 }

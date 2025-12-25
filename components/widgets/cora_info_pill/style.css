@@ -1,0 +1,36 @@
+.cora-info-pill-container {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 24px 6px 6px; /* Asymmetric padding for the inner badge */
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 100px;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Variable-driven gap via slider */
+    gap: var(--cora-element-gap, 16px);
+}
+
+.cora-info-pill-container:hover {
+    border-color: #3b82f6; /* Figma-blue focus state */
+}
+
+/* --- The Status Badge --- */
+.pill-badge {
+    background: #ede9fe;
+    color: #6d28d9;
+    padding: 10px 24px;
+    border-radius: 100px;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1; /* Reset for spacing precision */
+    white-space: nowrap;
+}
+
+/* --- The Main Message --- */
+.pill-msg {
+    color: #475569;
+    font-size: 16px;
+    line-height: 1;
+    white-space: nowrap;
+}
