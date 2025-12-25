@@ -1,0 +1,34 @@
+/* --- Card Architecture --- */
+.protection-card-wrapper {
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 24px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--cora-element-gap, 24px); 
+}
+
+.prot-card-header { display: flex; justify-content: space-between; align-items: flex-start; }
+.prot-icon-box { width: 64px; height: 64px; background: #000; color: #fff; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 28px; }
+
+.prot-live-pill { font-size: 11px; font-weight: 800; background: #f1f5f9; padding: 4px 12px; border-radius: 100px; display: flex; align-items: center; gap: 6px; }
+.prot-live-pill .dot { width: 6px; height: 6px; background: #000; border-radius: 50%; }
+
+/* Content Reset */
+.prot-title { margin: 0 !important; font-size: 32px; font-weight: 850; color: #0f172a; }
+.prot-desc { margin: 0 !important; font-size: 16px; color: #64748b; line-height: 1.5; }
+
+/* Service Rows */
+.prot-service-stack { display: flex; flex-direction: column; gap: 12px; }
+.prot-service-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 16px; border: 1px solid #f1f5f9; border-radius: 12px;
+    font-size: 14px; font-weight: 600; color: #475569;
+}
+.prot-time-pill { font-size: 12px; font-weight: 800; background: #f1f5f9; color: #000; padding: 2px 14px; border-radius: 100px; }
+
+/* Metric Footer */
+.prot-footer-metric { display: flex; flex-direction: column; gap: 4px; margin-top: 12px; }
+.m-val { font-size: 56px; font-weight: 850; color: #0f172a; line-height: 1; }
+.m-label { font-size: 14px; font-weight: 700; color: #94a3b8; }

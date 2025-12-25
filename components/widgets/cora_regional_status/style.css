@@ -1,0 +1,37 @@
+/* --- Card Architecture --- */
+.regional-status-card {
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 24px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    /* Authority transferred to 'Element Spacing' slider */
+    gap: var(--cora-element-gap, 24px); 
+    max-width: 500px;
+}
+
+/* --- Header & Badges --- */
+.reg-header { display: flex; justify-content: space-between; align-items: center; }
+.status-indicator { font-size: 11px; font-weight: 800; color: #000; display: flex; align-items: center; gap: 8px; }
+.status-indicator .dot { width: 8px; height: 8px; background: #000; border-radius: 50%; }
+.dc-badge { font-size: 11px; font-weight: 800; background: #f1f5f9; padding: 4px 12px; border-radius: 100px; }
+
+/* --- Region Body --- */
+.reg-body { display: flex; flex-direction: column; gap: 12px; }
+.reg-title { margin: 0 !important; font-size: 32px; font-weight: 850; color: #000; }
+.loc-label { font-size: 11px; font-weight: 700; color: #94a3b8; letter-spacing: 0.5px; }
+
+.loc-tag-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.loc-tag { padding: 8px 20px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 14px; font-weight: 600; color: #475569; }
+
+/* --- Metrics Grid --- */
+.reg-metrics-row {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 12px;
+}
+
+.m-unit { display: flex; flex-direction: column; gap: 4px; }
+.m-val { font-size: 24px; font-weight: 850; color: #000; }
+.m-sub { font-size: 10px; font-weight: 700; color: #94a3b8; letter-spacing: 1px; }

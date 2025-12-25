@@ -1,0 +1,36 @@
+/* --- Dark Card Architecture --- */
+.builder-card-dark {
+    background: #000000;
+    border: 1px solid #1a1a1a;
+    border-radius: 24px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    /* Gap managed by Element Spacing slider */
+    gap: var(--cora-element-gap, 24px); 
+    color: #ffffff;
+}
+
+/* --- Header & Badge --- */
+.builder-card-header { display: flex; justify-content: space-between; align-items: flex-start; }
+
+.builder-icon-box {
+    width: 64px; height: 64px;
+    background: #111111;
+    border: 1px solid #333333;
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; color: #ffffff;
+}
+
+.builder-status-badge {
+    font-size: 12px; font-weight: 700; color: #ffffff;
+    padding: 6px 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #333333;
+    border-radius: 100px;
+}
+
+/* --- Content Reset --- */
+.builder-title { margin: 0 !important; font-size: 24px; font-weight: 850; line-height: 1.2; }
+.builder-desc { margin: 0 !important; font-size: 16px; color: #94a3b8; line-height: 1.5; }

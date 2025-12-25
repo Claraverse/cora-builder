@@ -1,0 +1,62 @@
+/* --- Card Container --- */
+.p-card-v3 {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 48px;
+    padding: 64px 40px; /* Large internal padding */
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Banner logic --- */
+.p-banner-v3 {
+    position: absolute;
+    top: 0; left: 0; width: 100%;
+    background: #6366f1; /* Purple */
+    color: #fff;
+    text-align: center;
+    padding: 12px 0;
+    font-size: 12px; font-weight: 800;
+}
+
+.recommended.p-card-v3 { border: 1.5px solid #6366f1; }
+
+/* --- Strict Vertical Stack --- */
+.p-content-stack {
+    display: flex;
+    flex-direction: column;
+    /* Authority transferred to Element Spacing slider */
+    gap: var(--cora-element-gap, 32px);
+    width: 100%;
+}
+
+/* Zero Margin Authority */
+.p-title, .p-tagline, .p-price-row, .p-note { margin: 0 !important; }
+
+.p-title { font-size: 32px; font-weight: 850; color: #1e293b; }
+.p-price-row { font-size: 48px; font-weight: 850; color: #000; display: flex; align-items: baseline; }
+.p-curr { font-size: 24px; margin-right: 4px; }
+.p-mo { font-size: 16px; color: #64748b; margin-left: 4px; }
+
+/* --- Specs Dashboard --- */
+.p-specs-v3 {
+    background: #f1f5f9;
+    border-radius: 24px;
+    padding: 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.s-unit span { display: block; font-size: 10px; font-weight: 700; color: #94a3b8; }
+.s-unit strong { display: block; font-size: 14px; font-weight: 800; color: #000; }
+
+/* Button */
+.p-btn-v3 {
+    background: #fff; border: 1.5px solid #e2e8f0; border-radius: 12px;
+    padding: 16px; text-align: center; color: #000; font-weight: 700; text-decoration: none;
+}
+.recommended .p-btn-v3 { background: #6366f1; color: #fff; border: none; }

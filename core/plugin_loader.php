@@ -129,8 +129,7 @@ class Plugin_Loader
             'cora_industry_card',
             'cora_solution_cluster',
             'cora_team_card',
-            'cora_pricing_card',
-            'cora_cta_section',
+             'cora_cta_section',
             'cora_newsletter',
             'cora_nexus_hero',
             'cora_catalyst_trust_grid',
@@ -156,20 +155,36 @@ class Plugin_Loader
             'cora_info_pill',
             'cora_home_feature_card',
             'cora_blog_header',
-            'cora_project_card','cora_service_card','cora_ecosystem_card','cora_whyus_block','cora_testimonial_block',
+            'cora_project_card',
+            'cora_service_card',
+            'cora_ecosystem_card',
+            'cora_whyus_block',
+            'cora_testimonial_block',
 
             // About Page
-            'cora_about_team_card','cora_mission_block',
+            'cora_about_team_card',
+            'cora_mission_block',
 
             // Contact Page
             'cora_contact_pill',
 
 
             // Blog Page
-            'cora_blog_cat_header','cora_blog_single_header','cora_blog_content',
+            'cora_blog_cat_header',
+            'cora_blog_single_header',
+            'cora_blog_content',
 
             // Mobile App Bar
             'cora_mobile_app_bar',
+
+            // Hosting Page
+            'cora_hosting_hero',
+            'cora_browser_frame',
+            'cora_status_pill',
+            'cora_infra_scaling',
+            'cora_security_card',
+            'cora_comparison_table',
+            'cora_protection_card','cora_store_builder_card','cora_regional_status','cora_guarantee_block','cora_pricing_card_v3'
         ];
 
         foreach ($widgets as $component) {

@@ -1,0 +1,57 @@
+/* --- Container Architecture --- */
+.guarantee-split-card {
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 32px;
+    padding: 32px;
+    display: flex;
+    align-items: center;
+    /* Gap managed by Element Spacing slider */
+    gap: var(--cora-element-gap, 64px); 
+    width: 100%;
+}
+
+/* --- The Visual Anchor --- */
+.guarantee-anchor {
+    flex: 0 0 280px;
+    background: #000000;
+    border-radius: 20px;
+    padding: 48px 32px;
+    text-align: center;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+.d-num { display: block; font-size: 80px; font-weight: 850; line-height: 1; }
+.d-label { display: block; font-size: 20px; font-weight: 800; letter-spacing: 2px; }
+.anchor-divider { width: 40px; height: 3px; background: rgba(255,255,255,0.3); border-radius: 10px; }
+.anchor-text { font-size: 16px; font-weight: 600; opacity: 0.9; margin: 0 !important; }
+
+/* --- The Trust Grid --- */
+.trust-grid-column {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+.trust-unit { display: flex; gap: 16px; }
+.trust-check-icon { 
+    width: 32px; height: 32px; 
+    background: #f1f5f9; border-radius: 50%; 
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; color: #000;
+}
+
+.trust-title { margin: 0 !important; font-size: 18px; font-weight: 800; color: #000; margin-bottom: 4px !important; }
+.trust-desc { margin: 0 !important; font-size: 14px; color: #64748b; line-height: 1.5; }
+
+/* Mobile Logic */
+@media (max-width: 1024px) {
+    .guarantee-split-card { flex-direction: column; padding: 24px; }
+    .guarantee-anchor { width: 100%; flex: none; }
+    .trust-grid-column { grid-template-columns: 1fr; gap: 32px; }
+}

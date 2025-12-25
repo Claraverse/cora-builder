@@ -1,197 +1,51 @@
-/* --- CARD CONTAINER --- */
-.cora_price_card {
-    display: flex;
-    flex-direction: column;
-    background: #fff; /* Default Light Theme */
-    border: 1px solid #EAEAEA; /* Default Light Theme */
-    border-radius: 24px;
-    padding: 32px;
+/* --- Card Architecture --- */
+.pricing-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 32px;
+    padding: 40px 32px;
     position: relative;
-    box-sizing: border-box;
-    transition: all 0.3s ease;
-    height: 100%; /* Ensure equal height in columns */
-}
-
-/* --- BADGE --- */
-.cora_price_badge {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: #101828;
-    color: #fff;
-    font-size: 12px;
-    font-weight: 700;
-    padding: 4px 12px;
-    border-radius: 50px;
-    text-transform: uppercase;
-}
-
-/* --- HEADER --- */
-.cora_price_header {
-    margin-bottom: 24px;
-}
-
-.cora_price_title {
-    margin: 0 0 8px 0;
-    font-size: 20px;
-    font-weight: 700;
-    color: #101828;
-}
-
-.cora_price_desc {
-    font-size: 15px;
-    color: #667085;
-}
-
-/* --- PRICING BOX --- */
-.cora_price_wrap {
-    margin-bottom: 24px;
-}
-
-.cora_price_box {
-    display: flex;
-    align-items: baseline;
-    margin-bottom: 8px;
-    color: #101828;
-}
-
-.cora_price_currency {
-    font-size: 24px;
-    font-weight: 600;
-    margin-right: 4px;
-}
-
-.cora_price_val {
-    font-size: 48px;
-    font-weight: 800;
-    line-height: 1;
-    letter-spacing: -1px;
-}
-
-.cora_price_period {
-    font-size: 16px;
-    color: #667085;
-    margin-left: 4px;
-}
-
-.cora_price_header_link {
-    font-size: 14px;
-    font-weight: 600;
-    color: #007bff;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    cursor: pointer;
-}
-
-/* --- DIVIDER --- */
-.cora_price_divider {
-    height: 1px;
-    background: #F2F4F7;
-    width: 100%;
-    margin-bottom: 24px;
-}
-
-/* --- FEATURES LIST --- */
-.cora_price_features {
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    gap: 16px; /* Controlled by Elementor */
-    flex-grow: 1; /* Pushes footer down */
-    margin-bottom: 32px;
+    gap: 24px;
 }
 
-.cora_feat_item {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
+/* --- Recommended Variant --- */
+.pricing-card.recommended { 
+    border-color: #3b82f6; 
+    background: #f1f7ff; /* Soft blue tint */
 }
 
-.cora_feat_icon {
-    flex-shrink: 0;
-    margin-top: 2px; /* Align with text line-height */
-}
-
-.cora_feat_icon i { font-size: 16px; }
-.cora_feat_icon svg { width: 16px; height: 16px; fill: currentColor; }
-
-/* Icon Colors (Default) */
-.cora_feat_item.is-active .cora_feat_icon { color: #007bff; }
-.cora_feat_item:not(.is-active) .cora_feat_icon { color: #D0D5DD; }
-
-.cora_feat_text {
-    font-size: 15px;
-    color: #344054;
-    line-height: 1.5;
-}
-
-/* --- FOOTER BUTTON --- */
-.cora_price_btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 14px 24px;
-    background: #101828;
+.recommended-ribbon {
+    position: absolute;
+    top: 0; left: 0; width: 100%;
+    background: #4f46e5;
     color: #fff;
-    font-size: 15px;
-    font-weight: 600;
-    border-radius: 8px;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    border: 1px solid transparent;
-    box-sizing: border-box;
+    font-size: 13px; font-weight: 800;
+    text-align: center; padding: 10px 0;
 }
 
-.cora_price_btn:hover {
-    background: #344054;
-    color: #fff;
+.recommended .pricing-header { margin-top: 24px; }
+.recommended .plan-cta { background: #0f172a; color: #fff; border: none; }
+
+/* --- Specs Box --- */
+.specs-box {
+    background: #f8fafc;
+    border-radius: 20px;
+    padding: 24px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
 }
 
+.spec-unit span { display: block; font-size: 11px; font-weight: 700; color: #94a3b8; }
+.spec-unit strong { display: block; font-size: 15px; font-weight: 850; color: #0f172a; margin-top: 4px; }
 
-/* =========================================
-   DARK THEME OVERRIDE (FEATURED CARD)
-========================================= */
-.cora-is-featured-yes .cora_price_card {
-    background: #101828 !important;
-    border-color: #1F2937 !important;
+/* --- Feature Bolt Styling --- */
+.f-row { display: flex; align-items: center; gap: 12px; font-weight: 600; color: #475569; }
+.f-icon-box { 
+    width: 24px; height: 24px; border-radius: 6px; 
+    display: flex; align-items: center; justify-content: center; font-size: 11px; 
 }
 
-.cora-is-featured-yes .cora_price_title,
-.cora-is-featured-yes .cora_price_box,
-.cora-is-featured-yes .cora_price_val,
-.cora-is-featured-yes .cora_feat_text {
-    color: #ffffff !important;
-}
-
-.cora-is-featured-yes .cora_price_desc,
-.cora-is-featured-yes .cora_price_period,
-.cora-is-featured-yes .cora_price_currency {
-    color: #98A2B3 !important;
-}
-
-.cora-is-featured-yes .cora_price_divider {
-    background: #1F2937 !important;
-}
-
-/* Featured Button */
-.cora-is-featured-yes .cora_price_btn {
-    background: #ffffff !important;
-    color: #101828 !important;
-}
-
-.cora-is-featured-yes .cora_price_btn:hover {
-    background: #F2F4F7 !important;
-}
-
-/* Featured Badge override (optional, makes it pop more) */
-.cora-is-featured-yes .cora_price_badge {
-    background: #fff !important;
-    color: #101828 !important;
-}
-
-/* Featured Icons */
-.cora-is-featured-yes .cora_feat_item.is-active .cora_feat_icon { color: #fff !important; }
-.cora-is-featured-yes .cora_feat_item:not(.is-active) .cora_feat_icon { color: #475467 !important; }
+.f-icon-box.bolt { background: #000; color: #fff; }
+.f-icon-box.check { background: #e2e8f0; color: #475569; }

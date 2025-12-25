@@ -1,0 +1,40 @@
+/* --- Card Architecture --- */
+.security-card-wrapper {
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 24px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    /* Gap managed by Element Spacing slider */
+    gap: var(--cora-element-gap, 24px); 
+}
+
+/* --- Header & Badge --- */
+.sec-card-header { display: flex; justify-content: space-between; align-items: flex-start; }
+.sec-icon-box {
+    width: 64px; height: 64px;
+    background: #000; color: #fff;
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center; font-size: 28px;
+}
+
+.sec-status-badge {
+    font-size: 12px; font-weight: 700; color: #64748b;
+    padding: 6px 16px; border: 1px solid #e2e8f0; border-radius: 100px;
+}
+
+/* --- Content Reset --- */
+.sec-title { margin: 0 !important; font-size: 28px; font-weight: 850; color: #0f172a; }
+.sec-desc { margin: 0 !important; font-size: 16px; color: #64748b; line-height: 1.5; }
+
+/* --- Metric Grid --- */
+.sec-metric-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 12px;
+}
+
+.metric-unit { display: flex; flex-direction: column; gap: 4px; }
+.m-val { font-size: 32px; font-weight: 850; color: #0f172a; }
+.m-label { font-size: 13px; font-weight: 600; color: #94a3b8; }

@@ -1,0 +1,73 @@
+/* --- Card Architecture --- */
+.cora-infra-scaling-card {
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 24px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  /* Authority transferred to 'Element Spacing' slider */
+  gap: var(--cora-element-gap, 24px);
+}
+
+/* --- Infrastructure Icon Box --- */
+.infra-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.infra-icon-box {
+  width: 64px;
+  height: 64px;
+  background: #000;
+  color: #fff;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+/* --- Content & Tags Reset --- */
+.infra-title {
+  margin: 0 !important;
+  font-size: 24px;
+  font-weight: 800;
+  color: #000;
+}
+.infra-desc {
+  margin: 0 !important;
+  font-size: 16px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.infra-tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.infra-tag {
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 4px 12px;
+  border-radius: 6px;
+}
+
+/* --- Scalability Badge --- */
+.scalability-badge {
+  background: #000;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 10px;
+  width: fit-content;
+  font-size: 14px;
+  font-weight: 600;
+}
+.scalability-badge .val {
+  font-size: 20px;
+  font-weight: 800;
+  margin-right: 4px;
+}

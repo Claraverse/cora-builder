@@ -1,0 +1,46 @@
+/* --- Table Architecture --- */
+.comp-table-wrapper {
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 24px;
+    overflow: hidden;
+}
+
+/* --- Header Engine --- */
+.comp-table-header { display: grid; grid-template-columns: 2fr 1fr 1fr; background: #fff; }
+.header-col { padding: 32px; text-align: center; border-bottom: 1px solid #e2e8f0; }
+.header-col.cora-main { background: #000; color: #fff; }
+.header-col.trad-side { background: #f8fafc; color: #64748b; }
+
+.header-col .brand { display: block; font-size: 20px; font-weight: 800; }
+.header-col .sub { font-size: 10px; font-weight: 700; opacity: 0.7; }
+
+/* --- Row Logic --- */
+.comp-row { display: grid; grid-template-columns: 2fr 1fr 1fr; border-bottom: 1px solid #f1f5f9; }
+.comp-row.type-category { background: #f8fafc; height: 64px; }
+.comp-row.type-category .f-title { font-weight: 800; font-size: 13px; text-transform: uppercase; color: #000; letter-spacing: 0.5px; }
+
+.comp-col { padding: 24px 32px; display: flex; align-items: center; justify-content: center; border-right: 1px solid #f1f5f9; }
+.comp-col.feature-info { flex-direction: column; align-items: flex-start; justify-content: center; }
+
+/* Content Reset */
+.f-title { margin: 0 !important; font-size: 15px; font-weight: 700; color: #000; }
+.f-sub { font-size: 11px; color: #94a3b8; font-weight: 500; }
+
+/* --- Checkmarks & Pills --- */
+.check-box { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.check-box.black { background: #000; color: #fff; }
+.check-box.gray { background: #f1f5f9; color: #94a3b8; border: 1px solid #e2e8f0; }
+
+.status-pill { padding: 6px 14px; border-radius: 100px; font-size: 11px; font-weight: 700; border: 1px solid transparent; }
+.status-pill.automated { background: #f1f5f9; color: #000; border-color: #e2e8f0; }
+.status-pill.manual { background: #fff; color: #94a3b8; border-color: #e2e8f0; }
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 767px) {
+    .comp-table-header { grid-template-columns: 1.5fr 1fr; }
+    .header-col.trad-side { display: none; } /* Hide traditional on small mobile */
+    .comp-row { grid-template-columns: 1.5fr 1fr; }
+    .trad-val { display: none; }
+}
