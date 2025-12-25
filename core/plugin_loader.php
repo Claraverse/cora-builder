@@ -152,7 +152,24 @@ class Plugin_Loader
             'cora_guide_card_v3',
 
             // home page
-            'cora_hero_title','cora_info_pill','cora_home_feature_card','cora_blog_header','cora_project_card'
+            'cora_hero_title',
+            'cora_info_pill',
+            'cora_home_feature_card',
+            'cora_blog_header',
+            'cora_project_card','cora_service_card','cora_ecosystem_card','cora_whyus_block','cora_testimonial_block',
+
+            // About Page
+            'cora_about_team_card','cora_mission_block',
+
+            // Contact Page
+            'cora_contact_pill',
+
+
+            // Blog Page
+            'cora_blog_cat_header','cora_blog_single_header','cora_blog_content',
+
+            // Mobile App Bar
+            'cora_mobile_app_bar',
         ];
 
         foreach ($widgets as $component) {

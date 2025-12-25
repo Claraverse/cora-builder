@@ -1,0 +1,52 @@
+/* --- Desktop Layout: Asymmetric Split --- */
+.blog-cat-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--cora-element-gap, 60px);
+    width: 100%;
+}
+
+.header-left {
+    flex: 1.2;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* --- Left Side Styling --- */
+.back-link { font-size: 14px; font-weight: 700; color: #0f172a; text-decoration: none; margin-bottom: 20px; }
+.title-icon-wrapper { width: 64px; height: 64px; background: #ffffff; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 32px; color: #a855f7; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+
+/* Zero Margin Authority */
+.main-headline { margin: 0 !important; font-size: 64px; font-weight: 850; color: #0f172a; letter-spacing: -1.5px; }
+.main-subtitle { margin: 0 !important; font-size: 20px; color: #475569; line-height: 1.6; max-width: 550px; }
+
+.header-meta-row { display: flex; gap: 24px; align-items: center; color: #64748b; font-weight: 600; }
+.curated-badge { background: #f3e8ff; color: #9333ea; padding: 4px 12px; border-radius: 100px; font-size: 12px; }
+
+/* --- Right Side: Solution Card --- */
+.header-right { flex: 1; }
+.solution-card {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.04);
+}
+
+.card-badge { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: #475569; padding: 6px 14px; border: 1px solid #e2e8f0; border-radius: 100px; width: fit-content; }
+.card-title { margin: 0 !important; font-size: 28px; font-weight: 800; color: #0f172a; }
+.list-item { display: flex; align-items: center; gap: 12px; font-size: 16px; color: #475569; font-weight: 600; }
+.list-item i { color: #22c55e; } /* Success Green */
+
+.card-cta-btn { background: #0f172a; color: #ffffff; text-align: center; padding: 18px; border-radius: 12px; text-decoration: none; font-weight: 700; display: flex; justify-content: center; gap: 10px; margin-top: 12px; transition: transform 0.3s ease; }
+.card-cta-btn:hover { transform: translateY(-3px); }
+
+/* Mobile Stack */
+@media (max-width: 1024px) {
+    .blog-cat-header-row { flex-direction: column; align-items: flex-start; }
+    .main-headline { font-size: 42px; }
+}

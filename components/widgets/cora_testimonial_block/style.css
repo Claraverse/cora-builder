@@ -1,0 +1,54 @@
+/* --- Container Architecture --- */
+.cora-testimonial-wrapper {
+    position: relative;
+    height: 550px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 32px;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end; /* Anchors card to bottom */
+    padding: 24px;
+}
+
+/* --- The Glass Card --- */
+.testimonial-glass-card {
+    width: 100%;
+    background: rgba(15, 15, 15, 0.4); /* Dark translucent base */
+    backdrop-filter: blur(16px); /* High-end glass effect */
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 32px;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    /* Gap managed by Element Spacing slider */
+    gap: var(--cora-element-gap, 16px); 
+}
+
+/* --- Content Reset --- */
+.testi-category { 
+    margin: 0 !important; 
+    font-family: 'Serif', serif; 
+    font-style: italic; 
+    font-size: 28px; 
+    font-weight: 500; 
+}
+
+.testi-content { 
+    margin: 0 !important; 
+    font-size: 18px; 
+    line-height: 1.5; 
+    font-weight: 500;
+}
+
+.testi-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 8px;
+}
+
+.testi-meta .name { font-weight: 700; font-size: 16px; }
+.testi-meta .role { font-size: 14px; opacity: 0.8; }

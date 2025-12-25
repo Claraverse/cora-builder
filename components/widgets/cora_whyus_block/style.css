@@ -1,0 +1,53 @@
+/* --- Container Architecture --- */
+.cora-why-us-container {
+    display: flex;
+    flex-direction: column;
+    padding: 40px;
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 40px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.03);
+    /* Gap managed by Element Spacing slider */
+    gap: var(--cora-element-gap, 32px); 
+}
+
+/* --- Content Reset --- */
+.why-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.why-title, .why-desc {
+    margin: 0 !important; /* Zero Margin Authority */
+    padding: 0;
+}
+
+.why-title {
+    font-size: 40px;
+    font-weight: 850;
+    color: #1e3a8a; /* Deep Navy Blue */
+    line-height: 1.1;
+}
+
+.why-desc {
+    font-size: 18px;
+    color: #475569;
+    line-height: 1.6;
+}
+
+/* --- Media Preview --- */
+.why-media {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.dashboard-preview {
+    width: 100%;
+    max-width: 450px;
+    height: auto;
+    object-fit: contain;
+    /* Subtle drop shadow for depth */
+    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.05));
+}
