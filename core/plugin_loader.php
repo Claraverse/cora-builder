@@ -197,7 +197,7 @@ class Plugin_Loader
             'cora_project_hero_v2',
             'cora_project_challenge',
             'cora_ongoing_projects',
-            'cora_project_stat_card',''
+            'cora_project_stat_card','cora_challenges_grid','cora_solution_card_two','cora_timeline','cora_deliverable_card'
         ];
 
         foreach ($widgets as $component) {
