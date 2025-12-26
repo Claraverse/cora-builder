@@ -1,0 +1,83 @@
+/* --- Global Container --- */
+.guide-header-container {
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+    margin: 0 !important; /* Zero-Margin */
+    padding: 80px 0; /* Managed by Style Tab dimensions */
+}
+
+/* --- Badge Metadata --- */
+.guide-badge-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 40px !important;
+}
+
+.badge-cat { 
+    background: #dcfce7; color: #166534; /* Soft Green */
+    padding: 6px 14px; border-radius: 100px; font-size: 13px; font-weight: 700; 
+}
+
+.badge-dot { color: #94a3b8; }
+.badge-lvl { font-size: 13px; font-weight: 700; color: #1e293b; }
+
+.badge-rat { 
+    background: #ffedd5; color: #9a3412; /* Soft Orange */
+    padding: 6px 14px; border-radius: 100px; font-size: 13px; font-weight: 700; 
+}
+
+/* --- Identity Hub --- */
+.guide-identity-stack { margin-bottom: 60px !important; }
+
+.guide-h1 { 
+    margin: 0 0 24px 0 !important; 
+    font-size: 72px; 
+    font-weight: 850; 
+    color: #111827; 
+    line-height: 1.1; 
+    letter-spacing: -1.5px;
+}
+
+.guide-p { 
+    margin: 0 !important; 
+    font-size: 24px; 
+    color: #64748b; 
+    max-width: 800px; 
+    line-height: 1.5; 
+}
+
+/* --- Metric Matrix --- */
+.guide-metric-matrix {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+.guide-metric-card {
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 20px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+.metric-top { 
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; font-weight: 700; color: #94a3b8; 
+    margin-bottom: 12px; letter-spacing: 1px;
+}
+
+.metric-val { font-size: 32px; font-weight: 750; color: #111827; }
+
+/* --- Mobile Stack --- */
+@media (max-width: 1024px) {
+    .guide-h1 { font-size: 48px; }
+    .guide-metric-matrix { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 767px) {
+    .guide-metric-matrix { grid-template-columns: 1fr; }
+}

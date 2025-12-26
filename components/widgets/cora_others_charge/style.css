@@ -1,0 +1,91 @@
+/* --- Competitive Card Reset --- */
+.cora-comp-container {
+    width: 100%;
+    max-width: 100vw;
+    background: #ffffff;
+    overflow: hidden; /* No Viewport Overflow */
+    box-sizing: border-box;
+    margin: 0 !important; /* Zero-Margin */
+    padding: 40px; /* Managed via Style Tab */
+}
+
+/* --- Header Engine --- */
+.comp-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 40px !important;
+}
+
+.comp-icon-box {
+    width: 60px; height: 60px;
+    background: #f1f5f9; /* Subtle gray hub */
+    border-radius: 50%;
+    display: flex;
+    align-items: center; justify-content: center;
+}
+
+.comp-icon-box img { width: 40%; }
+
+.comp-h2 {
+    margin: 0 0 4px 0 !important;
+    font-size: 32px;
+    font-weight: 850;
+    color: #0f172a;
+}
+
+.comp-p {
+    margin: 0 !important;
+    font-size: 18px;
+    color: #475569;
+    font-weight: 500;
+}
+
+/* --- Price Canvas Architecture --- */
+.comp-canvas {
+    position: relative;
+    width: 100%;
+    background: #f8fafc;
+    border-radius: 32px;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px;
+    border: 1px solid #f1f5f9;
+}
+
+.comp-illustration {
+    position: absolute;
+    bottom: 0; left: 40px;
+    width: 250px;
+}
+
+.comp-illustration img { width: 100%; height: auto; }
+
+.comp-pricing-stack { text-align: center; z-index: 5; }
+
+.comp-price {
+    margin: 0 !important;
+    font-size: 84px;
+    font-weight: 900;
+    color: #0f172a;
+    letter-spacing: -2px;
+}
+
+.comp-price-label {
+    margin: 0 !important;
+    font-size: 28px;
+    font-weight: 850;
+    color: #0f172a;
+}
+
+/* --- Responsive Adaptability --- */
+@media (max-width: 767px) {
+    .comp-canvas { min-height: 300px; padding: 40px 20px; }
+    .comp-price { font-size: 56px; }
+    .comp-price-label { font-size: 20px; }
+    .comp-illustration { position: relative; left: 0; width: 150px; margin-top: 40px; order: 2; }
+    .comp-pricing-stack { order: 1; }
+}

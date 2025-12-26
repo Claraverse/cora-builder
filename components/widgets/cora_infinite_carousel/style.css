@@ -1,0 +1,55 @@
+/* --- Carousel Architecture --- */
+.cora-infinite-carousel-wrapper {
+    width: 100%;
+    max-width: 100vw;
+    overflow: hidden; /* No Viewport Overflow */
+    background: transparent;
+    padding: 40px 0; /* Managed by Style Tab dimensions */
+    margin: 0 !important; /* Zero-Margin Integrity */
+}
+
+.carousel-track {
+    display: flex;
+    width: max-content;
+    gap: 40px; /* Managed via item_gap slider */
+    animation: coraInfiniteScroll linear infinite;
+}
+
+/* --- Carousel Item Logic --- */
+.carousel-item {
+    flex-shrink: 0;
+    width: 450px; /* Reference width */
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* High-fidelity cropping */
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+/* --- Motion Engine --- */
+@keyframes coraInfiniteScroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); } /* Scrolls half-way (the original set) */
+}
+
+/* Pause on hover for accessibility */
+.cora-infinite-carousel-wrapper:hover .carousel-track {
+    animation-play-state: paused;
+}
+
+/* --- Responsive Adaptability --- */
+@media (max-width: 1024px) {
+    .carousel-item { width: 350px; height: 230px; }
+}
+
+@media (max-width: 767px) {
+    .carousel-item { width: 280px; height: 180px; }
+    .carousel-track { gap: 20px; }
+}

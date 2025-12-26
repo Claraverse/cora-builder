@@ -1,0 +1,82 @@
+/* --- V2 Container Reset --- */
+.cora-comp-container-v2 {
+    width: 100%;
+    max-width: 100vw;
+    background: #ffffff;
+    overflow: hidden;
+    box-sizing: border-box;
+    margin: 0 !important; /* Zero-Margin */
+    padding: 40px; /* Managed via Style Tab */
+    cursor: pointer; /* Indicates interaction */
+}
+
+/* --- Static Header (Same as V1) --- */
+.comp-header { display: flex; align-items: center; gap: 20px; margin-bottom: 40px !important; }
+.comp-icon-box { width: 60px; height: 60px; background: #f1f5f9; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.comp-icon-box img { width: 40%; }
+.comp-h2 { margin: 0 0 4px 0 !important; font-size: 32px; font-weight: 850; color: #0f172a; }
+.comp-p { margin: 0 !important; font-size: 18px; color: #475569; font-weight: 500; }
+
+/* --- Interactive Canvas V2 --- */
+.comp-canvas-v2 {
+    position: relative;
+    width: 100%;
+    background: #f8fafc;
+    border-radius: 32px;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px;
+    border: 1px solid #f1f5f9;
+    overflow: hidden;
+}
+
+.comp-illustration {
+    position: absolute;
+    bottom: 0; left: 40px; width: 250px;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: grayscale(100%) opacity(0.6); /* Initial obscured state */
+}
+.comp-illustration img { width: 100%; height: auto; }
+
+/*Overlay for focus effect*/
+.canvas-overlay {
+    position: absolute; top:0; left:0; width:100%; height:100%;
+    background: rgba(248, 250, 252, 0.8);
+    z-index: 1;
+    transition: opacity 0.5s ease;
+}
+
+/* --- State 1: The Reveal Trigger --- */
+.comp-reveal-trigger {
+    position: relative; z-index: 10;
+    background: #fff;
+    padding: 16px 32px;
+    border-radius: 100px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    font-weight: 700; color: #64748b;
+    display: flex; align-items: center; gap: 10px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* --- State 2: The Hidden Price Stack --- */
+.comp-pricing-stack-hidden {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -30%); /* Start slightly higher and hidden */
+    text-align: center; z-index: 10;
+    opacity: 0; /* Hidden initially */
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.comp-price { margin: 0 !important; font-size: 84px; font-weight: 900; color: #0f172a; letter-spacing: -2px; }
+.comp-price-label { margin: 0 !important; font-size: 28px; font-weight: 850; color: #0f172a; }
+
+/* --- HOVER INTERACTION ENGINE --- */
+.cora-comp-container-v2:hover .canvas-overlay { opacity: 0; } /* Remove haze */
+.cora-comp-container-v2:hover .comp-illustration { filter: grayscale(0%) opacity(1); transform: scale(1.05); } /* Bring illustration to life */
+.cora-comp-container-v2:hover .comp-reveal-trigger { opacity: 0; transform: translateY(20px); pointer-events: none; } /* Hide trigger */
+.cora-comp-container-v2:hover .comp-pricing-stack-hidden { opacity: 1; transform: translate(-50%, -50%); } /* Reveal price */

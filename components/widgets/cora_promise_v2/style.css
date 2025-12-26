@@ -1,0 +1,54 @@
+/* --- Global Promise Architecture --- */
+.cora-promise-v4 {
+    width: 100%;
+    background: #d1d5db; /* Light gray base card */
+    border-radius: 40px;
+    padding: 60px;
+    box-sizing: border-box;
+    margin: 0 !important; /* Zero-Margin */
+}
+
+.v4-text-stack { margin-bottom: 60px; }
+.v4-badge { display: flex; align-items: center; gap: 8px; font-weight: 700; color: #4b5563; margin-bottom: 30px; }
+.v4-h2 { margin: 0 0 40px 0 !important; font-size: 56px; font-weight: 900; color: #111827; line-height: 1.1; }
+.v4-p { margin: 0 !important; font-size: 24px; color: #1f2937; line-height: 1.4; max-width: 700px; font-weight: 500; }
+
+/* --- Inner Hero Canvas --- */
+.v4-hero-canvas {
+    position: relative;
+    width: 100%;
+    height: 500px; /* Default height slider */
+    background-size: cover;
+    background-position: center;
+    border-radius: 32px;
+    display: flex;
+    align-items: center; /* Center-vertical content */
+    padding: 60px;
+    overflow: hidden;
+}
+
+.v4-hero-overlay {
+    position: absolute; top:0; left:0; width:100%; height:100%;
+    background: linear-gradient(90deg, rgba(0,0,0,0.6) 0%, transparent 60%);
+    z-index: 1;
+}
+
+.v4-hero-content { position: relative; z-index: 5; color: #fff; max-width: 500px; }
+.v4-hero-leaf { font-size: 24px; margin-bottom: 24px; }
+
+.v4-hero-h3 { margin: 0 0 20px 0 !important; font-size: 64px; line-height: 1; font-weight: 400; font-family: 'Playfair Display', serif; }
+.v4-hero-p { margin: 0 0 40px 0 !important; font-size: 16px; opacity: 0.9; }
+
+.v4-hero-btns { display: flex; gap: 15px; }
+.v4-hero-btns a { 
+    text-decoration: none; padding: 12px 24px; border-radius: 100px; font-size: 13px; font-weight: 600; 
+}
+.btn-solid { background: #fff; color: #000; }
+.btn-outline { border: 1px solid rgba(255,255,255,0.6); color: #fff; }
+
+/* --- Responsive Stack --- */
+@media (max-width: 767px) {
+    .v4-h2 { font-size: 32px; }
+    .v4-hero-canvas { height: 400px !important; padding: 30px; }
+    .v4-hero-h3 { font-size: 42px; }
+}

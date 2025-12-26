@@ -1,0 +1,83 @@
+/* --- Global Banner Reset --- */
+.cora-promise-banner {
+    width: 100%;
+    max-width: 100vw;
+    background: #d1d5db; /* Default Neutral */
+    display: flex;
+    align-items: center;
+    overflow: hidden; /* No Viewport Overflow */
+    box-sizing: border-box;
+    margin: 0 !important; /* Zero-Margin */
+    padding: 80px 60px; /* Base breathing room */
+}
+
+.promise-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 60px;
+    align-items: center;
+    width: 100%;
+}
+
+/* --- Content Hub --- */
+.promise-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #4b5563;
+    margin-bottom: 32px;
+}
+
+.promise-h2 {
+    margin: 0 0 40px 0 !important;
+    font-size: 64px;
+    font-weight: 900;
+    color: #111827;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+}
+
+.promise-p {
+    margin: 0 !important;
+    font-size: 24px;
+    color: #1f2937;
+    line-height: 1.4;
+    max-width: 500px;
+    font-weight: 500;
+}
+
+/* --- Floating Visual Engine --- */
+.promise-visuals {
+    position: relative;
+    width: 100%;
+}
+
+.promise-main-asset img {
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+    object-fit: cover;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+.promise-tooltip {
+    position: absolute;
+    top: -30px;
+    left: -100px;
+    width: 250px;
+    z-index: 10;
+    filter: drop-shadow(0 30px 60px rgba(0,0,0,0.15));
+}
+
+.promise-tooltip img { width: 100%; height: auto; }
+
+/* --- Responsive Stack --- */
+@media (max-width: 1024px) {
+    .cora-promise-banner { padding: 60px 30px; border-radius: 30px !important; }
+    .promise-grid { grid-template-columns: 1fr; text-align: left; }
+    .promise-h2 { font-size: 42px; }
+    .promise-p { font-size: 18px; }
+    .promise-tooltip { left: 0; top: -50px; width: 180px; }
+}

@@ -1,0 +1,90 @@
+/* --- Global Container Reset --- */
+.cora-perf-container {
+    width: 100%;
+    max-width: 100vw;
+    background: #f8fafc; /* Standard Neutral */
+    overflow: hidden; /* No Viewport Overflow */
+    box-sizing: border-box;
+    margin: 0 !important; /* Zero-Margin */
+    padding: 60px; /* Managed via Style Tab */
+}
+
+/* --- Strategic Header --- */
+.perf-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 60px !important;
+}
+
+.perf-h2 {
+    margin: 0 0 16px 0 !important;
+    font-size: 44px;
+    font-weight: 850;
+    color: #1e293b;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+}
+
+.perf-p {
+    margin: 0 !important;
+    font-size: 20px;
+    color: #64748b;
+    max-width: 550px;
+    line-height: 1.5;
+}
+
+.action-circle {
+    width: 64px; height: 64px;
+    border: 1px solid #e2e8f0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center; justify-content: center;
+    background: #fff;
+    cursor: pointer;
+}
+
+/* --- Visual Canvas Architecture --- */
+.perf-canvas {
+    position: relative;
+    width: 100%;
+    background: #ffffff;
+    border-radius: 32px;
+    padding: 60px;
+    display: flex;
+    justify-content: center;
+    border: 1px solid #f1f5f9;
+}
+
+.canvas-main-img img {
+    width: 100%; height: auto;
+    border-radius: 24px;
+}
+
+/* Floating Tooltips */
+.canvas-tooltip {
+    position: absolute;
+    top: 100px; left: 100px;
+    width: 280px;
+    filter: drop-shadow(0 30px 60px rgba(0,0,0,0.1));
+}
+
+.canvas-uptime-badge {
+    position: absolute;
+    bottom: 150px; right: 100px;
+    background: #dcfce7; /* Light Green Tint */
+    padding: 30px;
+    border-radius: 24px;
+    text-align: center;
+}
+
+.canvas-uptime-badge span { display: block; font-size: 32px; font-weight: 900; color: #166534; }
+.canvas-uptime-badge strong { font-size: 16px; color: #166534; }
+
+/* --- Responsive Adaptability --- */
+@media (max-width: 1024px) {
+    .cora-perf-container { padding: 40px 20px; }
+    .perf-h2 { font-size: 32px; }
+    .canvas-tooltip { width: 180px; left: 20px; }
+    .canvas-uptime-badge { right: 20px; padding: 15px; }
+}

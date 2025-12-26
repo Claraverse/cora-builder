@@ -4,7 +4,7 @@ namespace Cora_Builder\Core;
 if (!defined('ABSPATH'))
     exit;
 
- class Plugin_Loader
+class Plugin_Loader
 {
     private static $_instance = null;
 
@@ -165,6 +165,9 @@ if (!defined('ABSPATH'))
 
             // Course Page
             'cora_community_cta',
+            'cora_category_header',
+            'cora_guide_header',
+            'cora_guide_content',
 
             // About Page
             'cora_about_team_card',
@@ -172,7 +175,11 @@ if (!defined('ABSPATH'))
 
             // Contact Page
             'cora_contact_pill',
+            
 
+
+            // Invoice
+            'cora_invoice_maker',
 
             // Blog Page
             'cora_blog_cat_header',
@@ -231,6 +238,15 @@ if (!defined('ABSPATH'))
             'cora_flex_bento_v2',
             'cora_clean_accordion',
             'cora_success_card',
+
+
+            // Services Page
+            'cora_infinite_carousel',
+            'cora_promise_banner',
+            'cora_performance_block',
+            'cora_others_charge',
+            'cora_others_charge_v2',
+            'cora_promise_v2',
         ];
 
         foreach ($widgets as $component) {
