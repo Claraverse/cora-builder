@@ -1,278 +1,283 @@
 <?php
 namespace Cora_Builder\Core;
 
-if (!defined('ABSPATH')) {
+if (!defined('ABSPATH'))
     exit;
-}
 
+/**
+ * Cora Post Type Engine: Modular SaaS Edition
+ * Structured for easy maintenance and future feature scaling.
+ */
 class CPT_Manager
 {
     private $option_name = 'cora_custom_post_types';
 
     public function __construct()
     {
+        // Core Hooks
         add_action('init', [$this, 'register_stored_cpts']);
         add_action('admin_post_cora_save_cpt', [$this, 'handle_save_cpt']);
         add_action('admin_post_cora_delete_cpt', [$this, 'handle_delete_cpt']);
     }
 
-    public function register_stored_cpts()
-    {
+    /**
+     * MODULE: WORDPRESS REGISTRATION
+     * Handles the background injection of post types into the system.
+     */
+   
+    public function register_stored_cpts() {
         $cpts = get_option($this->option_name, []);
         foreach ($cpts as $slug => $data) {
-            $singular = $data['singular'] ?? 'Post';
-            $plural = $data['plural'] ?? 'Posts';
-            $label_add_new = $data['label_add_new'] ?? '';
-            $label_not_found = $data['label_not_found'] ?? '';
+            $icon = $data['icon_type'] === 'file' ? ($data['icon_file_url'] ?: 'dashicons-admin-post') : 
+                   ($data['icon_type'] === 'svg' ? 'data:image/svg+xml;base64,' . base64_encode($data['icon_svg_code']) : 
+                   ($data['icon_value'] ?: 'dashicons-admin-post'));
 
             register_post_type($slug, [
                 'labels' => [
-                    'name' => $plural,
-                    'singular_name' => $singular,
-                    'add_new' => !empty($label_add_new) ? $label_add_new : 'Add New',
-                    'add_new_item' => !empty($label_add_new) ? $label_add_new : "Add New $singular",
-                    'not_found' => !empty($label_not_found) ? $label_not_found : "No $plural found",
+                    'name'          => $data['plural'] ?: 'Posts',
+                    'singular_name' => $data['singular'] ?: 'Post',
+                    'add_new'       => $data['label_add_new'] ?: 'Add New',
+                    'not_found'     => $data['label_not_found'] ?: 'No items found',
                 ],
-                'public' => isset($data['public']) ? (bool) $data['public'] : true,
-                'has_archive' => isset($data['has_archive']) ? (bool) $data['has_archive'] : true,
-                'hierarchical' => isset($data['hierarchical']) ? (bool) $data['hierarchical'] : false,
-                'show_in_rest' => isset($data['enable_rest']) ? (bool) $data['enable_rest'] : true,
-                'menu_icon' => $data['icon'] ?? 'dashicons-admin-post',
-                'menu_position' => isset($data['menu_position']) ? (int) $data['menu_position'] : 5,
-                'supports' => $data['supports'] ?? ['title', 'editor', 'thumbnail'],
-                'taxonomies' => $data['taxonomies'] ?? [],
-                'rewrite' => ['slug' => $slug],
-                'exclude_from_search' => isset($data['exclude_search']) ? (bool) $data['exclude_search'] : false,
+                'public'             => true, // Force public for frontend visibility
+                'publicly_queryable' => true, // FIXED: Required for single page access
+                'show_ui'            => true,
+                'show_in_menu'       => (bool)($data['show_in_menu'] ?? true),
+                'has_archive'        => (bool)($data['has_archive'] ?? true),
+                'hierarchical'       => (bool)($data['hierarchical'] ?? false),
+                'show_in_rest'       => (bool)($data['enable_rest'] ?? true),
+                'menu_icon'          => $icon,
+                'menu_position'      => (int)($data['menu_position'] ?? 5),
+                'supports'           => $data['supports'] ?? ['title', 'editor', 'thumbnail'],
+                'taxonomies'         => $data['taxonomies'] ?? [],
+                'rewrite'            => ['slug' => $data['rewrite_slug'] ?: $slug, 'with_front' => false],
+                'query_var'          => true,
             ]);
         }
     }
 
+    /**
+     * MAIN VIEW DISPATCHER
+     * This acts as the "Dashboard Index". It calls individual components.
+     */
     public function render_cpt_page()
     {
         $cpts = get_option($this->option_name, []);
+        wp_enqueue_media(); // Load WP Media Library for File Icons
         ?>
-        <div class="cora-admin-wrapper cora-cpt-container">
-            <div class="cora-header">
-                <div class="cora-logo">
-                    <h1>Cora Post Type Engine <span id="mode-badge" class="cora-version">NEW</span></h1>
+        <div class="cora-notion-container" id="cora-workspace-root">
+            <?php $this->render_sidebar(); ?>
+            <main class="cora-main-workspace">
+                <?php $this->render_header(); ?>
+                <div class="cora-grid-layout">
+                    <?php $this->render_config_form(); ?>
+                    <?php $this->render_registry($cpts); ?>
                 </div>
-                <div class="cora-actions">
-                    <button type="button" id="reset-form-btn" class="cora-btn cora-btn-secondary" style="display:none;">Add New
-                        Engine</button>
-                    <button type="submit" form="cora-cpt-form" id="submit-btn" class="cora-btn cora-btn-primary">Deploy
-                        Engine</button>
-                </div>
-            </div>
-
-            <div class="cora-settings-grid">
-                <div class="cora-card cora-form-container" id="cpt-form-card">
-                    <div class="cora-tabs-nav">
-                        <button class="cora-tab-link active" data-tab="general">General</button>
-                        <button class="cora-tab-link" data-tab="labels">Labels</button>
-                        <button class="cora-tab-link" data-tab="advanced">Advanced</button>
-                    </div>
-
-                    <form id="cora-cpt-form" method="post" action="<?php echo admin_url('admin-post.php'); ?>">
-                        <input type="hidden" name="action" value="cora_save_cpt">
-                        <input type="hidden" name="is_edit" id="is_edit" value="0">
-                        <?php wp_nonce_field('cora_cpt_nonce', 'cora_nonce'); ?>
-
-                        <div id="cora-tab-general" class="cora-tab-content active">
-                            <div class="cora-section-label">Basic Identification</div>
-                            <div class="cora-form-row">
-                                <div class="cora-control-group">
-                                    <label>Singular Name</label>
-                                    <input type="text" name="cpt_singular" id="cpt_singular" class="cora-input" required>
-                                </div>
-                                <div class="cora-control-group">
-                                    <label>Plural Name</label>
-                                    <input type="text" name="cpt_plural" id="cpt_plural" class="cora-input" required>
-                                </div>
-                            </div>
-
-                            <div class="cora-control-group">
-                                <label>Slug (Key)</label>
-                                <input type="text" name="cpt_slug" id="cpt_slug" class="cora-input" required>
-                                <small id="slug-hint">Auto-generated. Lowercase and underscores only.</small>
-                            </div>
-
-                            <div class="cora-control-group">
-                                <label>Menu Icon</label>
-                                <div class="cora-icon-field">
-                                    <span id="icon-preview" class="dashicons dashicons-admin-post"></span>
-                                    <input type="text" name="cpt_icon" id="cpt_icon" class="cora-input"
-                                        value="dashicons-admin-post">
-                                </div>
-                            </div>
-
-                            <hr class="cora-divider">
-                            <div class="cora-section-label">Features & Taxonomies</div>
-                            <div class="cora-checkbox-grid">
-                                <label><input type="checkbox" name="cpt_supports[]" value="title" checked> Title</label>
-                                <label><input type="checkbox" name="cpt_supports[]" value="editor" checked> Editor</label>
-                                <label><input type="checkbox" name="cpt_supports[]" value="thumbnail" checked> Image</label>
-                                <label><input type="checkbox" name="cpt_supports[]" value="excerpt" checked> Excerpt</label>
-                                <label><input type="checkbox" name="cpt_taxonomies[]" value="category"> Categories</label>
-                                <label><input type="checkbox" name="cpt_taxonomies[]" value="post_tag"> Tags</label>
-                            </div>
-                        </div>
-
-                        <div id="cora-tab-labels" class="cora-tab-content">
-                            <div class="cora-section-label">Custom Overrides</div>
-                            <div class="cora-control-group">
-                                <label>Add New Label</label>
-                                <input type="text" name="label_add_new" id="label_add_new" class="cora-input"
-                                    placeholder="e.g. Add New Project">
-                            </div>
-                            <div class="cora-control-group">
-                                <label>Not Found Label</label>
-                                <input type="text" name="label_not_found" id="label_not_found" class="cora-input"
-                                    placeholder="e.g. No Projects Found">
-                            </div>
-                        </div>
-
-                        <div id="cora-tab-advanced" class="cora-tab-content">
-                            <div class="cora-section-label">Pro Behavior</div>
-                            <div class="cora-checkbox-list">
-                                <label><input type="checkbox" name="cpt_public" id="cpt_public" value="1" checked>
-                                    Public</label>
-                                <label><input type="checkbox" name="cpt_archive" id="cpt_archive" value="1" checked> Has
-                                    Archive</label>
-                                <label><input type="checkbox" name="cpt_hierarchical" id="cpt_hierarchical" value="1">
-                                    Hierarchical</label>
-                                <label><input type="checkbox" name="enable_rest" id="enable_rest" value="1" checked> REST
-                                    API</label>
-                                <label><input type="checkbox" name="exclude_search" id="exclude_search" value="1"> Hide from
-                                    Search</label>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="cora-card cpt-list-card">
-                    <h3>Deployed Engines</h3>
-                    <div class="engine-list-wrapper">
-                        <?php if (empty($cpts)): ?>
-                            <p class="cora-empty-state">No engines deployed.</p>
-                        <?php else: ?>
-                            <?php foreach ($cpts as $slug => $data): ?>
-                                <div class="engine-item" data-config='<?php echo json_encode($data); ?>'
-                                    data-slug="<?php echo esc_attr($slug); ?>">
-                                    <div class="engine-info">
-                                        <span class="dashicons <?php echo esc_attr($data['icon']); ?>"></span>
-                                        <div>
-                                            <strong><?php echo esc_html($data['plural']); ?></strong>
-                                            <code><?php echo esc_html($slug); ?></code>
-                                        </div>
-                                    </div>
-                                    <form method="post" action="<?php echo admin_url('admin-post.php'); ?>" class="delete-form">
-                                        <input type="hidden" name="action" value="cora_delete_cpt">
-                                        <input type="hidden" name="cpt_slug" value="<?php echo esc_attr($slug); ?>">
-                                        <?php wp_nonce_field('cora_delete_nonce', 'cora_nonce'); ?>
-                                        <button type="submit" class="delete-btn"
-                                            onclick="event.stopPropagation(); return confirm('Delete engine?')">
-                                            <span class="dashicons dashicons-trash"></span>
-                                        </button>
-                                    </form>
-                                </div>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
+            </main>
         </div>
+        <?php
+        $this->render_scripts();
+    }
 
-        <script>
-            jQuery(document).ready(function ($) {
-                const $slugInput = $('#cpt_slug');
-                const $isEdit = $('#is_edit');
-
-                // Tab Switch
-                $('.cora-tab-link').on('click', function (e) {
-                    e.preventDefault();
-                    $('.cora-tab-link, .cora-tab-content').removeClass('active');
-                    $(this).addClass('active');
-                    $('#cora-tab-' + $(this).data('tab')).addClass('active');
-                });
-
-                // Auto-Slug (Only in Create Mode)
-                $('#cpt_singular').on('keyup change', function () {
-                    if ($isEdit.val() === "0") {
-                        let slug = $(this).val().toLowerCase().trim().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '').substring(0, 20);
-                        $slugInput.val(slug);
-                    }
-                });
-
-                // Icon Preview
-                $('#cpt_icon').on('keyup change', function () {
-                    $('#icon-preview').attr('class', 'dashicons ' + $(this).val());
-                });
-
-                // Edit Hydration
-                $('.engine-item').on('click', function () {
-                    const data = $(this).data('config');
-                    const slug = $(this).data('slug');
-
-                    $('.engine-item').removeClass('active');
-                    $(this).addClass('active');
-
-                    // Switch to Edit Mode
-                    $isEdit.val(1);
-                    $slugInput.val(slug).attr('readonly', true).css('background', '#f5f5f5');
-                    $('#slug-hint').text('Slug cannot be changed after deployment.');
-                    $('#submit-btn').text('Update Engine');
-                    $('#reset-form-btn').show();
-                    $('#mode-badge').text('EDIT').css('background', '#3582c4');
-                    $('#cpt-form-card').css('border-top', '3px solid #3582c4');
-
-                    // Fill Fields
-                    $('#cpt_singular').val(data.singular);
-                    $('#cpt_plural').val(data.plural);
-                    $('#cpt_icon').val(data.icon).trigger('change');
-                    $('#label_add_new').val(data.label_add_new);
-                    $('#label_not_found').val(data.label_not_found);
-
-                    // Checkboxes
-                    $('input[type="checkbox"]').prop('checked', false);
-                    if (data.supports) data.supports.forEach(v => $('input[value="' + v + '"]').prop('checked', true));
-                    if (data.taxonomies) data.taxonomies.forEach(v => $('input[value="' + v + '"]').prop('checked', true));
-                    $('#cpt_public').prop('checked', data.public == 1);
-                    $('#cpt_archive').prop('checked', data.has_archive == 1);
-                    $('#cpt_hierarchical').prop('checked', data.hierarchical == 1);
-                    $('#enable_rest').prop('checked', data.enable_rest == 1);
-                    $('#exclude_search').prop('checked', data.exclude_search == 1);
-                });
-
-                $('#reset-form-btn').on('click', function () { window.location.reload(); });
-            });
-        </script>
+    /**
+     * PARTIAL: COLLAPSIBLE SIDEBAR
+     */
+    private function render_sidebar()
+    {
+        ?>
+        <aside class="cora-sidebar-pro" id="cora-sidebar">
+            <button type="button" id="sidebar-toggle" class="sidebar-toggle-btn no-print"><span
+                    class="dashicons dashicons-menu-alt3"></span></button>
+            <div class="sidebar-brand">
+                <span class="cora-logo-mark">C</span>
+                <strong class="sidebar-text">Cora Studio</strong>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="<?php echo admin_url('admin.php?page=cora-builder'); ?>"><span
+                        class="dashicons dashicons-dashboard"></span> <span class="sidebar-text">Dashboard</span></a>
+                <a href="#" class="active"><span class="dashicons dashicons-admin-post"></span> <span class="sidebar-text">Post
+                        Types</span></a>
+                <a href="<?php echo admin_url('admin.php?page=cora-tax'); ?>"><span class="dashicons dashicons-tag"></span>
+                    <span class="sidebar-text">Taxonomies</span></a>
+                <a href="<?php echo admin_url('admin.php?page=cora-fieldgroups'); ?>"><span
+                        class="dashicons dashicons-list-view"></span> <span class="sidebar-text">Field Groups</span></a>
+            </nav>
+        </aside>
         <?php
     }
 
+    /**
+     * PARTIAL: DASHBOARD HEADER
+     */
+    private function render_header()
+    {
+        ?>
+        <header class="workspace-header">
+            <div class="header-info">
+                <h1>Post Type Engine <span class="mode-pill" id="mode-badge">NEW</span></h1>
+                <p>Architect data structures with surgical precision.</p>
+            </div>
+            <div class="header-actions">
+                <button type="button" id="reset-form-btn" class="cora-btn-bw secondary">Clear Workspace</button>
+                <button type="submit" form="cora-cpt-form" id="submit-btn" class="cora-btn-bw primary">Deploy Engine</button>
+            </div>
+        </header>
+        <?php
+    }
+
+    /**
+     * PARTIAL: CONFIGURATION WORKSPACE (The Form)
+     */
+    private function render_config_form()
+    {
+        ?>
+        <section class="cora-card-pro config-area" id="cpt-form-card">
+            <div class="cora-tabs">
+                <button class="tab-link active" data-tab="general">General</button>
+                <button class="tab-link" data-tab="labels">Labels</button>
+                <button class="tab-link" data-tab="advanced">Advanced</button>
+            </div>
+
+            <form id="cora-cpt-form" method="post" action="<?php echo admin_url('admin-post.php'); ?>">
+                <input type="hidden" name="action" value="cora_save_cpt">
+                <input type="hidden" name="is_edit" id="is_edit" value="0">
+                <?php wp_nonce_field('cora_cpt_nonce', 'cora_nonce'); ?>
+
+                <div id="tab-general" class="tab-pane active">
+                    <div class="form-row">
+                        <div class="input-pro"><label>Singular Name</label><input type="text" name="cpt_singular"
+                                id="cpt_singular" required></div>
+                        <div class="input-pro"><label>Plural Name</label><input type="text" name="cpt_plural" id="cpt_plural"
+                                required></div>
+                    </div>
+                    <div class="input-pro"><label>Slug (System Key)</label><input type="text" name="cpt_slug" id="cpt_slug"
+                            required></div>
+
+                    <div class="input-pro">
+                        <label>Icon Configuration</label>
+                        <div class="icon-selector-grid">
+                            <select name="icon_type" id="icon_type" class="icon-select">
+                                <option value="dashicon">Dashicon Name</option>
+                                <option value="svg">SVG Path/Code</option>
+                                <option value="file">Media File Upload</option>
+                            </select>
+                            <div id="icon-input-wrap">
+                                <input type="text" name="icon_value" id="icon_value" placeholder="dashicons-admin-post">
+                                <textarea name="icon_svg_code" id="icon_svg" style="display:none;"
+                                    placeholder="<svg>...</svg>"></textarea>
+                                <div id="icon-file-wrap" style="display:none; display:flex; gap:10px; align-items:center;">
+                                    <input type="text" name="icon_file_url" id="icon_file_url" readonly style="flex-grow:1;">
+                                    <button type="button" class="cora-btn-bw secondary" id="upload-icon-btn"
+                                        style="white-space:nowrap; padding:5px 10px;">Select File</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cora-label-sm">Components & Features</div>
+                    <div class="checkbox-grid-pro">
+                        <label><input type="checkbox" name="cpt_supports[]" value="title" checked> Title</label>
+                        <label><input type="checkbox" name="cpt_supports[]" value="editor" checked> Editor</label>
+                        <label><input type="checkbox" name="cpt_supports[]" value="thumbnail" checked> Featured Image</label>
+                        <label><input type="checkbox" name="cpt_supports[]" value="excerpt"> Excerpt</label>
+                    </div>
+                </div>
+
+                <div id="tab-labels" class="tab-pane">
+                    <div class="input-pro"><label>Add New Label</label><input type="text" name="label_add_new"
+                            id="label_add_new" placeholder="e.g. Add New Member"></div>
+                    <div class="input-pro"><label>Not Found Label</label><input type="text" name="label_not_found"
+                            id="label_not_found" placeholder="e.g. No Members Found"></div>
+                </div>
+
+                <div id="tab-advanced" class="tab-pane">
+                    <div class="form-row">
+                        <div class="input-pro"><label>URL Rewrite</label><input type="text" name="rewrite_slug"
+                                id="rewrite_slug" placeholder="e.g. our-work"></div>
+                        <div class="input-pro"><label>Sidebar Position</label><input type="number" name="menu_position"
+                                id="menu_position" value="5"></div>
+                    </div>
+                    <div class="checkbox-stack-pro">
+                        <label><input type="checkbox" name="cpt_public" id="cpt_public" value="1" checked> Public
+                            Presence</label>
+                        <label><input type="checkbox" name="show_in_menu" id="show_in_menu" value="1" checked> Show in
+                            Sidebar</label>
+                        <label><input type="checkbox" name="cpt_archive" id="cpt_archive" value="1" checked> Deploy Archive
+                            URL</label>
+                        <label><input type="checkbox" name="enable_rest" id="enable_rest" value="1" checked> REST API
+                            Support</label>
+                    </div>
+                </div>
+            </form>
+        </section>
+        <?php
+    }
+
+    /**
+     * PARTIAL: DEPLOYED ENGINES REGISTRY
+     */
+    private function render_registry($cpts)
+    {
+        ?>
+        <section class="cora-registry">
+            <h3 class="panel-label">Deployed Engines</h3>
+            <div class="registry-scroll">
+                <?php if (empty($cpts)): ?>
+                    <p class="empty-state-pro">No engines deployed.</p>
+                <?php else: ?>
+                    <?php foreach ($cpts as $slug => $data):
+                        // Logic for displaying the representative icon
+                        $icon_class = ($data['icon_type'] === 'dashicon') ? ($data['icon_value'] ?: 'dashicons-admin-post') : 'dashicons-format-image';
+                        ?>
+                        <div class="engine-item" data-config='<?php echo esc_attr(json_encode($data)); ?>'
+                            data-slug="<?php echo esc_attr($slug); ?>">
+                            <div class="engine-icon-pro"><span class="dashicons <?php echo esc_attr($icon_class); ?>"></span></div>
+                            <div class="item-meta">
+                                <strong><?php echo esc_html($data['plural']); ?></strong>
+                                <code>/<?php echo esc_html($slug); ?></code>
+                            </div>
+                            <form method="post" action="<?php echo admin_url('admin-post.php'); ?>" class="no-print">
+                                <input type="hidden" name="action" value="cora_delete_cpt">
+                                <input type="hidden" name="cpt_slug" value="<?php echo esc_attr($slug); ?>">
+                                <?php wp_nonce_field('cora_delete_nonce', 'cora_nonce'); ?>
+                                <button type="submit" class="delete-btn"
+                                    onclick="event.stopPropagation(); return confirm('Delete engine?')"><span
+                                        class="dashicons dashicons-trash"></span></button>
+                            </form>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+        </section>
+        <?php
+    }
+
+    /**
+     * CONTROLLER: SAVE DATA
+     */
     public function handle_save_cpt()
     {
-        if (!isset($_POST['cora_nonce']) || !wp_verify_nonce($_POST['cora_nonce'], 'cora_cpt_nonce'))
-            wp_die('Security check failed');
-        if (!current_user_can('manage_options'))
-            return;
-
+        if (!wp_verify_nonce($_POST['cora_nonce'], 'cora_cpt_nonce'))
+            wp_die('Security Error');
         $slug = sanitize_title($_POST['cpt_slug']);
         $cpts = get_option($this->option_name, []);
 
         $cpts[$slug] = [
             'singular' => sanitize_text_field($_POST['cpt_singular']),
             'plural' => sanitize_text_field($_POST['cpt_plural']),
-            'icon' => sanitize_text_field($_POST['cpt_icon']),
-            'supports' => isset($_POST['cpt_supports']) ? array_map('sanitize_text_field', $_POST['cpt_supports']) : [],
-            'taxonomies' => isset($_POST['cpt_taxonomies']) ? array_map('sanitize_text_field', $_POST['cpt_taxonomies']) : [],
-            'public' => isset($_POST['cpt_public']) ? 1 : 0,
-            'has_archive' => isset($_POST['cpt_archive']) ? 1 : 0,
-            'hierarchical' => isset($_POST['cpt_hierarchical']) ? 1 : 0,
-            'enable_rest' => isset($_POST['enable_rest']) ? 1 : 0,
-            'exclude_search' => isset($_POST['exclude_search']) ? 1 : 0,
-            'menu_position' => intval($_POST['menu_position'] ?? 5),
+            'icon_type' => sanitize_text_field($_POST['icon_type']),
+            'icon_value' => sanitize_text_field($_POST['icon_value']),
+            'icon_svg_code' => wp_kses_post($_POST['icon_svg_code']),
+            'icon_file_url' => esc_url_raw($_POST['icon_file_url']),
             'label_add_new' => sanitize_text_field($_POST['label_add_new']),
             'label_not_found' => sanitize_text_field($_POST['label_not_found']),
+            'rewrite_slug' => sanitize_title($_POST['rewrite_slug']),
+            'menu_position' => intval($_POST['menu_position']),
+            'supports' => isset($_POST['cpt_supports']) ? array_map('sanitize_text_field', $_POST['cpt_supports']) : [],
+            'public' => isset($_POST['cpt_public']) ? 1 : 0,
+            'show_in_menu' => isset($_POST['show_in_menu']) ? 1 : 0,
+            'has_archive' => isset($_POST['cpt_archive']) ? 1 : 0,
+            'enable_rest' => isset($_POST['enable_rest']) ? 1 : 0,
         ];
 
         update_option($this->option_name, $cpts);
@@ -281,18 +286,102 @@ class CPT_Manager
         exit;
     }
 
+    /**
+     * CONTROLLER: DELETE DATA
+     */
     public function handle_delete_cpt()
     {
-        if (!isset($_POST['cora_nonce']) || !wp_verify_nonce($_POST['cora_nonce'], 'cora_delete_nonce'))
-            wp_die('Security check failed');
+        if (!wp_verify_nonce($_POST['cora_nonce'], 'cora_delete_nonce'))
+            wp_die('Failed');
         $slug = sanitize_text_field($_POST['cpt_slug']);
         $cpts = get_option($this->option_name, []);
-        if (isset($cpts[$slug])) {
+        if (isset($cpts[$slug]))
             unset($cpts[$slug]);
-            update_option($this->option_name, $cpts);
-            flush_rewrite_rules();
-        }
+        update_option($this->option_name, $cpts);
+        flush_rewrite_rules();
         wp_redirect(admin_url('admin.php?page=cora-cpt'));
         exit;
+    }
+
+    /**
+     * PARTIAL: CORE INTERACTIVE SCRIPTS
+     */
+    private function render_scripts()
+    {
+        ?>
+        <script>
+            jQuery(document).ready(function ($) {
+                // Collapsible Sidebar
+                $('#sidebar-toggle').on('click', function () {
+                    $('.cora-notion-container').toggleClass('sidebar-collapsed');
+                });
+
+                // Tab Engine
+                $('.tab-link').on('click', function (e) {
+                    e.preventDefault();
+                    $('.tab-link, .tab-pane').removeClass('active');
+                    $(this).addClass('active');
+                    $('#tab-' + $(this).data('tab')).addClass('active');
+                });
+
+                // Slug Auto-Generation
+                $('#cpt_singular').on('keyup', function () {
+                    if ($('#is_edit').val() === "0") {
+                        $('#cpt_slug').val($(this).val().toLowerCase().trim().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, ''));
+                    }
+                });
+
+                // Icon mode Switcher logic
+                $('#icon_type').on('change', function () {
+                    const type = $(this).val();
+                    $('#icon_value').toggle(type === 'dashicon');
+                    $('#icon_svg').toggle(type === 'svg');
+                    $('#icon_file_wrap').toggle(type === 'file');
+                }).trigger('change');
+
+                // WordPress Media Library Hook
+                $('#upload-icon-btn').on('click', function (e) {
+                    e.preventDefault();
+                    var frame = wp.media({ title: 'Select Menu Icon', button: { text: 'Use Icon' }, multiple: false });
+                    frame.on('select', function () {
+                        $('#icon_file_url').val(frame.state().get('selection').first().toJSON().url);
+                    }).open();
+                });
+
+                // Data Hydration for Editing
+                $('.engine-item').on('click', function () {
+                    const data = $(this).data('config');
+                    const slug = $(this).data('slug');
+                    $('.engine-item').removeClass('active'); $(this).addClass('active');
+
+                    $('#is_edit').val(1);
+                    $('#cpt_slug').val(slug).attr('readonly', true).css('background', '#f5f5f5');
+                    $('#submit-btn').text('Update Engine');
+                    $('#reset-form-btn').show();
+                    $('#mode-badge').text('EDIT').css('background', '#000');
+
+                    $('#cpt_singular').val(data.singular);
+                    $('#cpt_plural').val(data.plural);
+                    $('#icon_type').val(data.icon_type || 'dashicon').trigger('change');
+                    $('#icon_value').val(data.icon_value);
+                    $('#icon_svg').val(data.icon_svg_code);
+                    $('#icon_file_url').val(data.icon_file_url);
+                    $('#label_add_new').val(data.label_add_new);
+                    $('#label_not_found').val(data.label_not_found);
+                    $('#rewrite_slug').val(data.rewrite_slug);
+                    $('#menu_position').val(data.menu_position);
+
+                    $('input[type="checkbox"]').prop('checked', false);
+                    if (data.supports) data.supports.forEach(v => $(`input[value="${v}"]`).prop('checked', true));
+                    $('#cpt_public').prop('checked', data.public == 1);
+                    $('#show_in_menu').prop('checked', data.show_in_menu == 1);
+                    $('#cpt_archive').prop('checked', data.has_archive == 1);
+                    $('#enable_rest').prop('checked', data.enable_rest == 1);
+                });
+
+                $('#reset-form-btn').on('click', () => window.location.reload());
+            });
+        </script>
+        <?php
     }
 }
