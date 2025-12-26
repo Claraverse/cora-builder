@@ -85,24 +85,8 @@ class CPT_Manager
     private function render_sidebar()
     {
         ?>
-        <aside class="cora-sidebar-pro" id="cora-sidebar">
-            <button type="button" id="sidebar-toggle" class="sidebar-toggle-btn no-print"><span
-                    class="dashicons dashicons-menu-alt3"></span></button>
-            <div class="sidebar-brand">
-                <span class="cora-logo-mark">C</span>
-                <strong class="sidebar-text">Cora Studio</strong>
-            </div>
-            <nav class="sidebar-nav">
-                <a href="<?php echo admin_url('admin.php?page=cora-builder'); ?>"><span
-                        class="dashicons dashicons-dashboard"></span> <span class="sidebar-text">Dashboard</span></a>
-                <a href="#" class="active"><span class="dashicons dashicons-admin-post"></span> <span class="sidebar-text">Post
-                        Types</span></a>
-                <a href="<?php echo admin_url('admin.php?page=cora-tax'); ?>"><span class="dashicons dashicons-tag"></span>
-                    <span class="sidebar-text">Taxonomies</span></a>
-                <a href="<?php echo admin_url('admin.php?page=cora-fieldgroups'); ?>"><span
-                        class="dashicons dashicons-list-view"></span> <span class="sidebar-text">Field Groups</span></a>
-            </nav>
-        </aside>
+        <?php include CORA_BUILDER_PATH . 'views/components/sidebar.php'; ?>
+        
         <?php
     }
 

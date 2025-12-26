@@ -318,9 +318,7 @@ class Field_Renderer
         $checked = checked($val, '1', false);
         echo '<label style="display:flex; align-items:center; cursor:pointer; gap:10px;"><input type="hidden" name="' . $input_name . '" value="0"><input type="checkbox" name="' . $input_name . '" value="1" ' . $checked . ' style="width:18px; height:18px;"> <span style="font-weight:600;">' . ($val == '1' ? 'Enabled' : 'Disabled') . '</span></label>';
     }
-    /* --- NEW LAYOUT MODULES --- */
-
-    private function module_message($field)
+     private function module_message($field)
     {
         echo '<div class="cora-ui-message" style="background:#f0f6fb; border-left:4px solid #2271b1; padding:12px; margin:5px 0;">';
         echo '<p style="margin:0; font-style:italic; color:#1d2327;">' . esc_html($field['placeholder'] ?? '') . '</p>';

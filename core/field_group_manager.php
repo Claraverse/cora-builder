@@ -80,7 +80,9 @@ class Field_Group_Manager
 		$post_types = get_post_types(['public' => true], 'objects');
 		$options_pages = get_option('cora_options_pages', []);
 		?>
+		
 		<div class="cora-admin-wrapper cora-field-studio">
+			
 			<aside class="cora-studio-sidebar">
 				<div class="cora-sidebar-header">
 					<h2>Field Groups</h2><button type="button" id="reset-group-btn" class="cora-btn cora-btn-primary"

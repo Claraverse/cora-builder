@@ -15,7 +15,7 @@ class Admin_Manager
         add_action('admin_menu', [$this, 'add_cora_dashboard']);
         add_action('wp_ajax_toggle_cora_widget', [$this, 'handle_widget_toggle']);
     }
-    
+
     public function add_cora_dashboard()
     {
         add_menu_page(
@@ -112,64 +112,64 @@ class Admin_Manager
         // Fetch widgets from our tiered folders
         $widgets = $this->get_all_registered_widgets();
         ?>
-            <div class="cora-admin-wrapper">
-                <div class="cora-header">
-                    <div class="cora-logo">
-                        <h1>Cora Builder</h1> 
-                        <span class="cora-version">v1.0.0</span>
+                <div class="cora-admin-wrapper">
+                    <div class="cora-header">
+                        <div class="cora-logo">
+                            <h1>Cora Builder</h1> 
+                            <span class="cora-version">v1.0.0</span>
+                        </div>
+                         <div class="cora-search-bar">
+                        <i class="dashicons dashicons-search"></i>
+                        <input type="text" id="cora-widget-search" placeholder="Search by name or category...">
                     </div>
-                     <div class="cora-search-bar">
-                    <i class="dashicons dashicons-search"></i>
-                    <input type="text" id="cora-widget-search" placeholder="Search by name or category...">
-                </div>
-                    <div class="cora-actions">
-                        <a href="#" class="cora-btn cora-btn-secondary">Documentation</a>
-                        <a href="#" class="cora-btn cora-btn-primary">Go Pro</a>
+                        <div class="cora-actions">
+                            <a href="#" class="cora-btn cora-btn-secondary">Documentation</a>
+                            <a href="#" class="cora-btn cora-btn-primary">Go Pro</a>
+                        </div>
                     </div>
-                </div>
 
             
          
 
-            <nav class="cora-filter-nav">
-                <button class="filter-btn active" data-filter="all">All Units</button>
-                <button class="filter-btn" data-filter="elements">Elements</button>
-                <button class="filter-btn" data-filter="components">Components</button>
-                <button class="filter-btn" data-filter="section">Sections</button>
-                <button class="filter-btn" data-filter="widgets">Widgets</button>
-            </nav>
+                <nav class="cora-filter-nav">
+                    <button class="filter-btn active" data-filter="all">All Units</button>
+                    <button class="filter-btn" data-filter="elements">Elements</button>
+                    <button class="filter-btn" data-filter="components">Components</button>
+                    <button class="filter-btn" data-filter="section">Sections</button>
+                    <button class="filter-btn" data-filter="widgets">Widgets</button>
+                </nav>
 
-            <div class="cora-widget-grid" id="cora-grid">
-                <?php foreach ($widgets as $id => $data): ?>
-                        <div class="cora-widget-card" 
-                             data-name="<?php echo esc_attr(strtolower($data['title'])); ?>" 
-                             data-tier="<?php echo esc_attr($data['tier']); ?>">
+                <div class="cora-widget-grid" id="cora-grid">
+                    <?php foreach ($widgets as $id => $data): ?>
+                                <div class="cora-widget-card" 
+                                     data-name="<?php echo esc_attr(strtolower($data['title'])); ?>" 
+                                     data-tier="<?php echo esc_attr($data['tier']); ?>">
                     
-                            <div class="card-status">
-                                <span class="tier-badge"><?php echo esc_html($data['label']); ?></span>
-                                <label class="cora-switch">
-                                    <input type="checkbox" class="widget-toggle" 
-                                           data-widget="<?php echo $id; ?>" 
-                                           <?php checked($data['active']); ?>>
-                                    <span class="cora-slider"></span>
-                                </label>
-                            </div>
+                                    <div class="card-status">
+                                        <span class="tier-badge"><?php echo esc_html($data['label']); ?></span>
+                                        <label class="cora-switch">
+                                            <input type="checkbox" class="widget-toggle" 
+                                                   data-widget="<?php echo $id; ?>" 
+                                                   <?php checked($data['active']); ?>>
+                                            <span class="cora-slider"></span>
+                                        </label>
+                                    </div>
 
-                            <div class="card-content">
-                                <h3><?php echo esc_html($data['title']); ?></h3>
-                                <p><?php echo esc_html($data['tier']); ?> unit ready for canvas</p>
-                            </div>
-                        </div>
-                <?php endforeach; ?>
-            </div>
+                                    <div class="card-content">
+                                        <h3><?php echo esc_html($data['title']); ?></h3>
+                                        <p><?php echo esc_html($data['tier']); ?> unit ready for canvas</p>
+                                    </div>
+                                </div>
+                    <?php endforeach; ?>
+                </div>
         
 
           
-            </div>
+                </div>
         
-            <?php
-            $this->render_dashboard_styles();
-            $this->render_dashboard_scripts();
+                <?php
+                $this->render_dashboard_styles();
+                $this->render_dashboard_scripts();
     }
 /**
  * Saves the widget status (enabled/disabled) to WordPress options via AJAX.

@@ -1,187 +1,274 @@
-:root {
-    --cora-primary: #6366f1; /* Modern Indigo */
-    --cora-primary-hover: #4f46e5;
-    --cora-bg: #f8fafc;
-    --cora-card-bg: #ffffff;
-    --cora-border: #e2e8f0;
-    --cora-text-main: #1e293b;
-    --cora-text-muted: #64748b;
-    --cora-danger: #ef4444;
-    --cora-radius: 8px;
-    --cora-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+/**
+ * Cora Studio: High-Fidelity Design System
+ * Version: 2.5.0 (Modular SaaS Edition)
+ */
+
+/* --- 1. Root Workspace Layout --- */
+.cora-notion-container {
+  display: grid;
+  grid-template-columns: 240px 1fr; /* Default Sidebar Width */
+  transition: grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  height: calc(100vh - 32px);
+  margin-left: -20px; /* Reset WordPress admin padding */
+  background: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #000000;
 }
 
-/* Wrapper & Layout */
-.cora-admin-wrapper {
-    margin: 20px 20px 0 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-    color: var(--cora-text-main);
+/* State: Collapsed Sidebar */
+.cora-notion-container.sidebar-collapsed {
+  grid-template-columns: 70px 1fr;
 }
 
-.cora-settings-grid {
-    display: grid;
-    gap: 24px;
-    align-items: start;
-    margin-top: 20px;
+/* --- 2. Collapsible Sidebar Aesthetics --- */
+.cora-sidebar-pro {
+  background: #fafafa;
+  border-right: 1px solid #eeeeee;
+  padding: 25px 15px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-/* Header Section */
-.cora-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: var(--cora-card-bg);
-    padding: 16px 24px;
-    border-radius: var(--cora-radius);
-    border: 1px solid var(--cora-border);
-    margin-bottom: 24px;
-    box-shadow: var(--cora-shadow);
+.sidebar-toggle-btn {
+  position: absolute;
+  right: 12px;
+  top: 25px;
+  background: none;
+  border: none;
+  color: #000;
+  cursor: pointer;
+  z-index: 10;
+  padding: 5px;
+  border-radius: 4px;
+  transition: background 0.2s;
 }
 
-.cora-logo h1 {
-    font-size: 20px;
-    font-weight: 700;
-    margin: 0;
-    color: var(--cora-text-main);
+.sidebar-toggle-btn:hover {
+  background: #eeeeee;
 }
 
-.cora-version {
-    font-size: 10px;
-    background: var(--cora-primary);
-    color: white;
-    padding: 2px 8px;
-    border-radius: 12px;
-    vertical-align: middle;
-    margin-left: 8px;
-    letter-spacing: 0.5px;
+.cora-logo-mark {
+  background: #000;
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 18px;
+  flex-shrink: 0;
 }
 
-/* Cards */
-.cora-card {
-    background: var(--cora-card-bg);
-    border: 1px solid var(--cora-border);
-    border-radius: var(--cora-radius);
-    padding: 24px;
-    box-shadow: var(--cora-shadow);
+.sidebar-nav a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  text-decoration: none;
+  color: #666666;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  transition: all 0.1s ease;
+  white-space: nowrap;
 }
 
-.cora-card h3 {
-    margin-top: 0;
-    font-size: 16px;
-    border-bottom: 1px solid var(--cora-border);
-    padding-bottom: 15px;
-    margin-bottom: 20px;
+.sidebar-nav a:hover,
+.sidebar-nav a.active {
+  background: #eeeeee;
+  color: #000000;
 }
 
-/* Form Elements */
-.cora-control-group {
-    margin-bottom: 18px;
+/* Collapse Transition Logic */
+.sidebar-collapsed .sidebar-text {
+  opacity: 0;
+  visibility: hidden;
 }
 
-.cora-control-group label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 8px;
-    font-size: 13px;
+/* --- 3. Main Workspace Header --- */
+.cora-main-workspace {
+  padding: 40px 60px;
+  overflow-y: auto;
 }
 
-.cora-input {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid var(--cora-border);
-    border-radius: 6px;
-    transition: border-color 0.2s, box-shadow 0.2s;
+.workspace-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 50px;
 }
 
-.cora-input:focus {
-    border-color: var(--cora-primary);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-    outline: none;
+.workspace-header h1 {
+  font-size: 34px;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -1.2px;
 }
 
-/* Buttons */
-.cora-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 20px;
-    font-weight: 600;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: none;
-    font-size: 14px;
-    text-decoration: none;
+.mode-pill {
+  background: #000;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 5px;
+  margin-left: 10px;
+  vertical-align: middle;
 }
 
-.cora-btn-primary {
-    background: var(--cora-primary);
-    color: white;
+/* --- 4. Content Grid & Configuration --- */
+.cora-grid-layout {
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr;
+  gap: 60px;
 }
 
-.cora-btn-primary:hover {
-    background: var(--cora-primary-hover);
-    transform: translateY(-1px);
+.cora-card-pro {
+  background: #ffffff;
+  border: 1px solid #eeeeee;
+  border-radius: 16px;
+  padding: 40px;
 }
 
-/* Active Pages List */
-.tax-engine-item {
-    background: var(--cora-bg);
-    padding: 12px 16px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    border: 1px solid var(--cora-border);
+/* --- 5. Ghost UI Inputs & Settings API Overrides --- */
+.input-pro label,
+.form-table th {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #999999;
+  letter-spacing: 0.5px;
 }
 
-.tax-engine-info {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+.input-pro label {
+  margin-bottom: 10px;
 }
 
-.tax-icon-box {
-    width: 40px;
-    height: 40px;
-    background: white;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--cora-primary);
-    border: 1px solid var(--cora-border);
+/* Force standard WordPress settings into Ghost Style */
+.ghost-input,
+.form-table input[type="text"],
+.form-table input[type="number"],
+.form-table textarea,
+.form-table select {
+  width: 100% !important;
+  max-width: 600px;
+  padding: 12px 0 !important;
+  border: none !important;
+  border-bottom: 1px solid #eeeeee !important;
+  background: transparent !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  transition: border-color 0.2s;
 }
 
-.tax-engine-info code {
-    background: #e2e8f0;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 11px;
-    margin-left: 8px;
+.ghost-input:focus,
+.form-table input:focus,
+.form-table textarea:focus {
+  border-bottom-color: #000000 !important;
 }
 
-/* Delete Button */
+.form-table th {
+  padding: 25px 0;
+  width: 200px;
+  text-align: left;
+}
+
+/* --- 6. Active Registry Selection --- */
+.engine-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 8px;
+}
+
+.engine-item:hover {
+  background: #fafafa;
+}
+
+.engine-item.active {
+  background: #ffffff !important;
+  border-color: #000000 !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+.engine-icon-pro {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #eeeeee;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+}
+
+.item-meta strong {
+  display: block;
+  font-size: 15px;
+  color: #000;
+}
+.item-meta code {
+  font-size: 11px;
+  color: #888;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* --- 7. Monochrome Action Buttons --- */
+.cora-btn-bw {
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid #000;
+  transition: all 0.2s;
+}
+
+.cora-btn-bw.primary {
+  background: #000;
+  color: #fff;
+}
+
+.cora-btn-bw.secondary {
+  background: #fff;
+  color: #000;
+}
+
+.cora-btn-bw:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
 .delete-btn {
-    background: transparent;
-    border: none;
-    color: var(--cora-text-muted);
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 4px;
-    transition: all 0.2s;
+  background: none;
+  border: none;
+  color: #dddddd;
+  margin-left: auto;
+  cursor: pointer;
+  transition: color 0.2s;
 }
 
 .delete-btn:hover {
-    color: var(--cora-danger);
-    background: rgba(239, 68, 68, 0.1);
+  color: #ff4d4d;
 }
 
-/* Empty State */
-.cora-empty-state h3 {
-    border-bottom: none;
-    margin-bottom: 5px;
-    color: var(--cora-text-main);
-}
-
-.cora-empty-state p {
-    color: var(--cora-text-muted);
+@media print {
+  .no-print {
+    display: none !important;
+  }
 }
