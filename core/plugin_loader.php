@@ -180,6 +180,7 @@ class Plugin_Loader
 
             // Invoice
             'cora_invoice_maker',
+            'cora_invoice_builder',
 
             // Blog Page
             'cora_blog_cat_header',
