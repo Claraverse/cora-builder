@@ -1,0 +1,58 @@
+/* --- Bento Engine Architecture --- */
+.cora-bento-grid {
+    display: grid;
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+    margin: 0 !important; /* Zero-Margin */
+    overflow: hidden; /* No Viewport Overflow */
+}
+
+/* --- Bento Cell Aesthetics --- */
+.cora-bento-item {
+    position: relative;
+    background: #f8fafc;
+    border-radius: 24px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 200px; /* Prevent collapse */
+}
+
+.bento-asset-wrapper {
+    flex-grow: 1;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bento-asset-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* High-fidelity cropping */
+    transition: transform 0.5s ease;
+}
+
+.cora-bento-item:hover img { transform: scale(1.05); }
+
+.bento-content {
+    padding: 30px;
+    position: absolute;
+    bottom: 0; left: 0; width: 100%;
+    background: linear-gradient(0deg, rgba(0,0,0,0.6) 0%, transparent 100%);
+    color: #fff;
+}
+
+.bento-content h3 { margin: 0 !important; font-size: 20px; font-weight: 800; }
+
+/* --- Mobile Logic: Auto-Stacking --- */
+@media (max-width: 767px) {
+    .cora-bento-grid {
+        grid-template-columns: 1fr !important; /* Force stack on small screens */
+    }
+    .cora-bento-item {
+        grid-column: span 1 !important;
+        grid-row: span 1 !important;
+    }
+}

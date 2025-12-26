@@ -1,0 +1,56 @@
+/* --- Accordion Item Container --- */
+.cora-acc-item {
+    width: 100%;
+    background: #f8f9fa;
+    border-radius: 16px;
+    margin: 0 !important; /* Zero-Margin */
+    overflow: hidden;
+    border: 1px solid #f1f5f9;
+    box-sizing: border-box;
+}
+
+/* --- Header Interaction --- */
+.cora-acc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.3s ease;
+}
+
+.acc-ques {
+    margin: 0 !important;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.acc-icon {
+    font-size: 22px;
+    font-weight: 300;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Content Hub --- */
+.cora-acc-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.acc-inner-text {
+    padding-bottom: 30px; /* Controlled by inner_padding slider in production */
+}
+
+.acc-ans {
+    margin: 0 !important;
+    font-size: 16px;
+    color: #64748b;
+    line-height: 1.6;
+}
+
+/* --- Active States --- */
+.cora-acc-item.active .acc-icon {
+    transform: rotate(45deg); /* Plus becomes an X */
+}

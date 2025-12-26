@@ -4,7 +4,7 @@ namespace Cora_Builder\Core;
 if (!defined('ABSPATH'))
     exit;
 
-class Plugin_Loader
+ class Plugin_Loader
 {
     private static $_instance = null;
 
@@ -218,6 +218,19 @@ class Plugin_Loader
             'clara_roadmap_v2',
             'clara_success_hub',
             'clara_faq_grid',
+            'cora_strategy_hub',
+
+            // Shopify Services
+            'cora_service_hero',
+            'cora_problem_card',
+            'cora_integrations_orbit',
+            'cora_service_feature_card',
+            'cora_performance_showcase',
+            'cora_service_banner',
+            'cora_advanced_bento',
+            'cora_flex_bento_v2',
+            'cora_clean_accordion',
+            'cora_success_card',
         ];
 
         foreach ($widgets as $component) {
