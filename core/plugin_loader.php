@@ -153,6 +153,7 @@ class Plugin_Loader
             // home page
             'cora_hero_title',
             'cora_info_pill',
+            'cora_logo_carousel',
             'cora_home_feature_card',
             'cora_blog_header',
             'cora_project_card',
@@ -160,6 +161,10 @@ class Plugin_Loader
             'cora_ecosystem_card',
             'cora_whyus_block',
             'cora_testimonial_block',
+
+
+            // Course Page
+            'cora_community_cta',
 
             // About Page
             'cora_about_team_card',
@@ -197,7 +202,22 @@ class Plugin_Loader
             'cora_project_hero_v2',
             'cora_project_challenge',
             'cora_ongoing_projects',
-            'cora_project_stat_card','cora_challenges_grid','cora_solution_card_two','cora_timeline','cora_deliverable_card'
+            'cora_project_stat_card',
+            'cora_challenges_grid',
+            'cora_solution_card_two',
+            'cora_timeline',
+            'cora_deliverable_card',
+
+            // Booster Services
+            'clara_trust_bar',
+            'clara_lead_magnet',
+            'clara_expert_card',
+            'clara_video_booster',
+            'clara_impact_testimonial',
+            'clara_feature_card',
+            'clara_roadmap_v2',
+            'clara_success_hub',
+            'clara_faq_grid',
         ];
 
         foreach ($widgets as $component) {

@@ -1,0 +1,64 @@
+/* --- Trust Bar Architecture --- */
+.clara-trust-bar {
+    padding: 60px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.trust-matrix {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.2fr;
+    gap: 48px;
+    align-items: flex-start;
+}
+
+/* Individual Unit Layout */
+.t-unit { display: flex; gap: 20px; }
+
+.t-primary-val {
+    font-size: 42px;
+    font-weight: 850;
+    color: #0f172a;
+    line-height: 1;
+    letter-spacing: -1.5px;
+}
+
+.t-copy-stack strong {
+    display: block;
+    font-size: 16px;
+    font-weight: 850;
+    color: #1e293b;
+    margin-bottom: 6px;
+}
+
+.t-copy-stack p {
+    font-size: 13px;
+    color: #64748b;
+    line-height: 1.5;
+    margin: 0 !important;
+}
+
+/* Partner Badge Styling */
+.t-unit.partner-badge {
+    border-left: 1px solid #e2e8f0;
+    padding-left: 48px;
+    justify-content: space-between;
+}
+
+.partner-visual {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+
+.partner-visual img { width: 80px; filter: grayscale(100%) brightness(50%); }
+.partner-visual span { 
+    font-size: 10px; font-weight: 900; color: #1e293b; 
+    text-transform: uppercase; letter-spacing: 2px; 
+}
+
+/* --- Responsive Engine --- */
+@media (max-width: 1024px) {
+    .trust-matrix { grid-template-columns: 1fr; gap: 40px; }
+    .t-unit.partner-badge { border-left: none; padding-left: 0; }
+}

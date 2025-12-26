@@ -1,0 +1,63 @@
+/* --- Card Architecture --- */
+.performance-card-wrapper {
+    background: #e2e8f0; /* Light Slate/Gray Tint */
+    border-radius: 40px;
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.performance-card-wrapper:hover { transform: translateY(-5px); }
+
+/* --- Narrative Stack --- */
+.f-header-stack { max-width: 80%; }
+
+.f-h3 { 
+    margin: 0 !important; 
+    font-size: 44px; 
+    font-weight: 850; 
+    color: #22c55e; /* Clara Green */
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+}
+
+.f-p { 
+    margin: 12px 0 0 0 !important; 
+    font-size: 18px; 
+    color: #475569; 
+    font-weight: 600;
+    line-height: 1.4; 
+}
+
+/* --- Hardware Mockup Engine --- */
+.f-mockup-canvas {
+    background: #ffffff;
+    border-radius: 32px;
+    padding: 60px 40px 0 40px; /* Mockup sits on bottom edge */
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.03);
+}
+
+.laptop-frame {
+    width: 100%;
+    max-width: 600px;
+    filter: drop-shadow(0 40px 60px rgba(0,0,0,0.12));
+}
+
+.laptop-frame img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px 12px 0 0;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 767px) {
+    .performance-card-wrapper { padding: 40px 20px; }
+    .f-h3 { font-size: 32px; }
+    .f-p { font-size: 16px; }
+}

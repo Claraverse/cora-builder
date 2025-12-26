@@ -1,0 +1,59 @@
+/* --- Carousel Architecture --- */
+.logo-carousel-wrapper {
+    width: 100%;
+    overflow: hidden;
+    padding: 60px 0;
+    position: relative;
+    background: #ffffff;
+}
+
+/* Gradient Fade Edges for Professional Depth */
+.logo-carousel-wrapper::before,
+.logo-carousel-wrapper::after {
+    content: "";
+    position: absolute;
+    top: 0; width: 150px; height: 100%;
+    z-index: 2;
+}
+.logo-carousel-wrapper::before { left: 0; background: linear-gradient(to right, #fff, transparent); }
+.logo-carousel-wrapper::after { right: 0; background: linear-gradient(to left, #fff, transparent); }
+
+/* --- The Animation Track --- */
+.logo-track {
+    display: flex;
+    align-items: center;
+    width: max-content;
+    gap: 100px; /* Spacing between logos */
+    animation: coraLogoScroll linear infinite;
+}
+
+@keyframes coraLogoScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.logo-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+}
+
+.logo-item:hover { opacity: 1; }
+
+.logo-item img {
+    height: 32px;
+    width: auto;
+    filter: grayscale(100%); /* Maintain design neutrality */
+    transition: filter 0.3s ease;
+}
+
+.logo-item:hover img { filter: grayscale(0%); }
+
+.logo-text {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e293b;
+    letter-spacing: -0.5px;
+}

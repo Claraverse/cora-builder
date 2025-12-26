@@ -1,0 +1,55 @@
+/* --- Community Block Architecture --- */
+.community-cta-wrapper {
+    background: #020617; /* Deepest Slate/Black */
+    padding: 120px 40px;
+    border-radius: 40px;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    color: #ffffff;
+}
+
+.cta-inner-content { position: relative; z-index: 10; max-width: 800px; margin: 0 auto; }
+
+/* --- Background Glows --- */
+.glow-top-left, .glow-bottom-right {
+    position: absolute; width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, rgba(2, 6, 23, 0) 70%);
+    border-radius: 50%;
+}
+.glow-top-left { top: -200px; left: -200px; }
+.glow-bottom-right { bottom: -200px; right: -200px; }
+
+/* --- Typography Reset --- */
+.community-h2 { 
+    margin: 0 !important; 
+    font-size: 48px; 
+    font-weight: 850; 
+    line-height: 1.1; 
+    letter-spacing: -1px;
+}
+
+.community-p { 
+    margin: 24px 0 48px 0 !important; 
+    font-size: 20px; 
+    opacity: 0.7; 
+    line-height: 1.5; 
+}
+
+/* --- Action Hub --- */
+.community-btn-row { display: flex; justify-content: center; gap: 16px; margin-bottom: 48px; }
+
+.btn-primary-light { 
+    background: #f8fafc; color: #020617; padding: 18px 36px; border-radius: 12px; 
+    font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 12px;
+}
+
+.btn-secondary-dark { 
+    background: rgba(255, 255, 255, 0.05); color: #fff; padding: 18px 36px; border-radius: 12px; 
+    border: 1px solid rgba(255, 255, 255, 0.1); font-weight: 700; text-decoration: none;
+}
+
+/* --- Trust Row --- */
+.community-trust-row { display: flex; justify-content: center; gap: 32px; opacity: 0.8; }
+.trust-unit { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; }
+.trust-unit i { color: #ffffff; font-size: 16px; }

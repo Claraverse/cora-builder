@@ -1,0 +1,82 @@
+/* --- Card Architecture --- */
+.expert-trust-card {
+    background: #dcf2e1; /* Soft Mint Canvas */
+    border-radius: 48px;
+    padding: 40px 60px;
+    display: flex;
+    align-items: center;
+    gap: 48px;
+    max-width: 1000px;
+    position: relative;
+}
+
+/* Avatar Framing */
+.expert-avatar-wrap {
+    width: 240px;
+    height: 240px;
+    border: 8px solid #166534; /* Darker Green Frame */
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.expert-avatar-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* --- Bio Typography --- */
+.expert-bio-stack { flex: 1; }
+
+.expert-name-h2 { 
+    margin: 0 !important; 
+    font-size: 64px; 
+    font-weight: 900; 
+    color: #166534; 
+    line-height: 1; 
+    letter-spacing: -2px;
+}
+
+.expert-title-p { 
+    margin: 8px 0 24px 0 !important; 
+    font-size: 32px; 
+    font-weight: 600; 
+    color: #22c55e; 
+}
+
+.expert-metric-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 24px;
+    font-weight: 700;
+    color: #334155;
+}
+
+/* --- Floating Tech Badges --- */
+.expert-stack-badges {
+    display: flex;
+    gap: -20px; /* Overlapping effect */
+}
+
+.stack-unit {
+    width: 80px;
+    height: 80px;
+    background: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    border: 4px solid #fff;
+}
+
+.stack-unit img { width: 32px; height: auto; }
+
+/* Mobile Adaptability */
+@media (max-width: 1024px) {
+    .expert-trust-card { flex-direction: column; text-align: center; padding: 40px; }
+    .expert-name-h2 { font-size: 44px; }
+    .expert-stack-badges { justify-content: center; margin-top: 32px; }
+}
