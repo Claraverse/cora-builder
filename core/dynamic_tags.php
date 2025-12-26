@@ -6,56 +6,90 @@ if (!defined('ABSPATH'))
 
 /**
  * Base Logic: Fetches and filters Cora Fields from the database.
- * This class provides the shared utility used by all specific tag classes.
+ * Resolved: Uses numerically indexed arrays for Elementor OptGroups to prevent Select2 failures.
  */
 abstract class Cora_Dynamic_Tag_Base extends \Elementor\Core\DynamicTags\Tag
 {
+
     public function get_group()
     {
         return 'cora-builder-group';
     }
 
+    /**
+     * Fetches registered fields and formats them for Elementor's Select2 groups.
+     * FIX: Returns an indexed array instead of an associative array.
+     */
     protected function get_cora_fields_by_type($filter_types = [])
     {
         $groups = get_option('cora_field_groups', []);
-        $options = [];
+        $formatted_options = [];
 
         if (!empty($groups) && is_array($groups)) {
-            foreach ($groups as $group_id => $group) {
+            foreach ($groups as $group) {
                 $group_options = [];
                 if (!empty($group['fields']) && is_array($group['fields'])) {
                     foreach ($group['fields'] as $field) {
-                        // FIX: Ensure case-insensitive matching for stored types
                         $stored_type = strtolower($field['type'] ?? '');
                         if (empty($filter_types) || in_array($stored_type, $filter_types)) {
-                            $group_options[$field['name']] = $field['label'];
+                            $group_options[$field['name']] = $field['label'] . ' (' . $field['name'] . ')';
                         }
                     }
                 }
+
                 if (!empty($group_options)) {
-                    $options[$group_id] = [
+                    // Using [] instead of [$group_id] ensures a numerically indexed array.
+                    $formatted_options[] = [
                         'label' => strtoupper($group['title']),
                         'options' => $group_options,
                     ];
                 }
             }
         }
-        return $options;
+
+        // If no fields are found, provide a debug hint in the dropdown
+        if (empty($formatted_options)) {
+            return [
+                [
+                    'label' => __('System Debug', 'cora-builder'),
+                    'options' => ['none' => __('No matching fields found in Studio', 'cora-builder')]
+                ]
+            ];
+        }
+
+        return $formatted_options;
     }
 
+    /**
+     * Retrieves the actual data value for the tag.
+     * FIX: Support for both Post Meta (CPTs) and Options Pages.
+     */
     protected function get_field_value()
     {
-        $key = $this->get_settings('key');
-        if (empty($key))
+        $slug = $this->get_settings('field_slug');
+        if (empty($slug))
             return '';
-        $values = get_post_meta(get_the_ID(), '_cora_meta_data', true) ?: [];
-        return $values[$key] ?? '';
+
+        // 1. Check current Post Meta (Custom Post Types)
+        $meta = get_post_meta(get_the_ID(), '_cora_meta_data', true) ?: [];
+        if (isset($meta[$slug]))
+            return $meta[$slug];
+
+        // 2. Fallback: Search global Options Pages
+        $groups = get_option('cora_field_groups', []);
+        foreach ($groups as $group) {
+            if (isset($group['rule_type']) && $group['rule_type'] === 'options_page') {
+                $options_data = get_option($group['location'] . '_data', []);
+                if (isset($options_data[$slug]))
+                    return $options_data[$slug];
+            }
+        }
+        return '';
     }
 }
 
 /**
  * TAG: TEXT & HTML
- * Covers: Text, Textarea, WYSIWYG, Number, Email, Password, Select, Radio, User, and Taxonomy.
  */
 class Cora_Dynamic_Text_Tag extends Cora_Dynamic_Tag_Base
 {
@@ -74,11 +108,11 @@ class Cora_Dynamic_Text_Tag extends Cora_Dynamic_Tag_Base
 
     protected function register_controls()
     {
-        $this->add_control('key', [
-            'label' => __('Select Field', 'cora-builder'),
-            'type' => \Elementor\Controls_Manager::SELECT2,
-            // Added 'user' and 'taxonomy' to the text filter list
-            'groups' => $this->get_cora_fields_by_type(['text', 'textarea', 'wysiwyg', 'number', 'email', 'password', 'select', 'radio', 'button_group', 'user', 'taxonomy']),
+        $this->add_control('field_slug', [
+            'label' => __('Field Slug', 'cora-builder'),
+            'type' => \Elementor\Controls_Manager::TEXT,
+            'placeholder' => __('e.g., project_title', 'cora-builder'),
+            'description' => __('Enter the unique Unit Slug defined in the Field Studio.', 'cora-builder'),
             'label_block' => true,
         ]);
     }
@@ -91,7 +125,6 @@ class Cora_Dynamic_Text_Tag extends Cora_Dynamic_Tag_Base
 
 /**
  * TAG: IMAGES
- * Covers: Image.
  */
 class Cora_Dynamic_Image_Tag extends Cora_Dynamic_Tag_Base
 {
@@ -126,7 +159,6 @@ class Cora_Dynamic_Image_Tag extends Cora_Dynamic_Tag_Base
 
 /**
  * TAG: URL & VIDEO
- * Covers: URL, File, Link, oEmbed, and Page Link.
  */
 class Cora_Dynamic_URL_Tag extends Cora_Dynamic_Tag_Base
 {
@@ -140,7 +172,7 @@ class Cora_Dynamic_URL_Tag extends Cora_Dynamic_Tag_Base
     }
     public function get_categories()
     {
-        return [\Elementor\Modules\DynamicTags\Module::URL_CATEGORY, \Elementor\Modules\DynamicTags\Module::POST_META_CATEGORY];
+        return [\Elementor\Modules\DynamicTags\Module::URL_CATEGORY];
     }
 
     protected function register_controls()
@@ -148,8 +180,7 @@ class Cora_Dynamic_URL_Tag extends Cora_Dynamic_Tag_Base
         $this->add_control('key', [
             'label' => __('Select Source', 'cora-builder'),
             'type' => \Elementor\Controls_Manager::SELECT2,
-            // Added 'page_link' to the URL filter list
-            'groups' => $this->get_cora_fields_by_type(['url', 'file', 'link', 'oembed', 'page_link']),
+            'groups' => $this->get_cora_fields_by_type(['url', 'file', 'oembed', 'page_link']),
             'label_block' => true,
         ]);
     }
@@ -162,7 +193,6 @@ class Cora_Dynamic_URL_Tag extends Cora_Dynamic_Tag_Base
 
 /**
  * TAG: NUMERIC
- * Covers: Number, Range, and Post Object (ID).
  */
 class Cora_Dynamic_Number_Tag extends Cora_Dynamic_Tag_Base
 {
@@ -172,7 +202,7 @@ class Cora_Dynamic_Number_Tag extends Cora_Dynamic_Tag_Base
     }
     public function get_title()
     {
-        return __('Cora Field (Number/Range)', 'cora-builder');
+        return __('Cora Field (Number)', 'cora-builder');
     }
     public function get_categories()
     {
@@ -184,7 +214,7 @@ class Cora_Dynamic_Number_Tag extends Cora_Dynamic_Tag_Base
         $this->add_control('key', [
             'label' => __('Select Numeric Field', 'cora-builder'),
             'type' => \Elementor\Controls_Manager::SELECT2,
-            'groups' => $this->get_cora_fields_by_type(['number', 'range', 'post_object']),
+            'groups' => $this->get_cora_fields_by_type(['number', 'range']),
             'label_block' => true,
         ]);
     }
@@ -197,7 +227,6 @@ class Cora_Dynamic_Number_Tag extends Cora_Dynamic_Tag_Base
 
 /**
  * TAG: GALLERY
- * Covers: Gallery.
  */
 class Cora_Dynamic_Gallery_Tag extends Cora_Dynamic_Tag_Base
 {
@@ -231,7 +260,7 @@ class Cora_Dynamic_Gallery_Tag extends Cora_Dynamic_Tag_Base
         $gallery = [];
         foreach ($urls as $url) {
             if (!empty($url)) {
-                $gallery[] = ['id' => 0, 'url' => $url];
+                $gallery[] = ['id' => 0, 'url' => trim($url)];
             }
         }
         return $gallery;
