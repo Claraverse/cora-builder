@@ -1,115 +1,205 @@
 /* Cora Builder - Field Group Studio UI */
 .cora-field-studio {
-    display: flex;
-    gap: 0;
-    margin: 20px 20px 0 0;
-    background: #fff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    overflow: hidden;
-    height: calc(100vh - 140px);
+  display: flex;
+  gap: 0;
+  margin: 20px 20px 0 0;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  height: calc(100vh - 140px);
 }
 
 /* Sidebar - Group List */
 .cora-studio-sidebar {
-    width: 300px;
-    border-right: 1px solid #e2e8f0;
-    display: flex;
-    flex-direction: column;
-    background: #fcfcfc;
+  width: 300px;
+  border-right: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  background: #fcfcfc;
 }
 
 .cora-sidebar-header {
-    padding: 20px;
-    border-bottom: 1px solid #e2e8f0;
+  padding: 20px;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .cora-sidebar-header h2 {
-    margin: 0 0 15px 0;
-    font-size: 16px;
-    font-weight: 700;
+  margin: 0 0 15px 0;
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .cora-sidebar-list {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 10px;
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 10px;
 }
 
 .cora-group-item {
-    padding: 12px 15px;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-bottom: 5px;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    border: 1px solid transparent;
+  padding: 12px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 5px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid transparent;
 }
 
-.cora-group-item:hover { background: #f1f5f9; }
+.cora-group-item:hover {
+  background: #f1f5f9;
+}
 .cora-group-item.active {
-    background: #fff;
-    border-color: #e2e8f0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  background: #fff;
+  border-color: #e2e8f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 /* Main Content - Editor Area */
 .cora-studio-main {
-    flex-grow: 1;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
+  flex-grow: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .cora-main-header {
-    padding: 20px 30px;
-    border-bottom: 1px solid #e2e8f0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #fff;
-    position: sticky;
-    top: 0;
-    z-index: 10;
+  padding: 20px 30px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .cora-main-content {
-    padding: 30px;
-    max-width: 900px;
+  padding: 30px;
+  max-width: 900px;
 }
-.wp-core-ui select{
-        font-size: 14px;
-    line-height: 2;
-    color: #2c3338;
-    border-color: #8c8f94;
-    box-shadow: none;
-    border-radius: 3px;
-    padding: 0 24px 0 8px;
-    min-height: 30px;
-    max-width: 100%;
+.wp-core-ui select {
+  font-size: 14px;
+  line-height: 2;
+  color: #2c3338;
+  border-color: #8c8f94;
+  box-shadow: none;
+  border-radius: 3px;
+  padding: 0 24px 0 8px;
+  min-height: 30px;
+  max-width: 100%;
 }
 
 /* Field Accordion Pro Look */
 .field-item-acc {
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    margin-bottom: 12px;
-    background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  background: #fff;
 }
 
 .acc-header {
-    padding: 15px 20px !important;
-    background: #f8fafc !important;
-    border-bottom: 1px solid #e2e8f0;
+  padding: 15px 20px !important;
+  background: #f8fafc !important;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .type-badge {
-    background: #3582c4;
-    color: #fff;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 10px;
-    text-transform: uppercase;
+  background: #3582c4;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+/* 1. Modal Overlay (Fixed and Centered) */
+.cora-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.45);
+  display: none; /* Hidden by default */
+  align-items: center;
+  justify-content: center;
+  z-index: 999999;
+  backdrop-filter: blur(4px);
+}
+
+.cora-modal-overlay.is-visible {
+  display: flex !important;
+}
+
+/* 2. Modal Container Architecture */
+.cora-modal-container {
+  background: #ffffff;
+  width: 960px;
+  height: 640px;
+  border-radius: 20px;
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  overflow: hidden;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.3);
+}
+
+/* 3. Field Grid Styling */
+.modal-field-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 15px;
+  padding: 20px 30px;
+  overflow-y: auto;
+  max-height: 420px;
+}
+
+.field-type-card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 20px 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.field-type-card:hover,
+.field-type-card.selected {
+  border-color: #000;
+  background: #fafafa;
+  transform: translateY(-2px);
+}
+
+.field-type-card .dashicons {
+  font-size: 28px;
+  margin-bottom: 10px;
+  color: #444;
+}
+
+/* 4. Navigation Styling */
+.modal-nav {
+  display: flex;
+  gap: 15px;
+  padding: 0 30px;
+  border-bottom: 1px solid #eee;
+}
+
+.modal-nav-btn {
+  background: none;
+  border: none;
+  padding: 15px 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: #999;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+
+.modal-nav-btn.active {
+  color: #000;
+  border-bottom-color: #000;
 }

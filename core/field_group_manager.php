@@ -80,9 +80,9 @@ class Field_Group_Manager
 		$post_types = get_post_types(['public' => true], 'objects');
 		$options_pages = get_option('cora_options_pages', []);
 		?>
-		
+
 		<div class="cora-admin-wrapper cora-field-studio">
-			
+
 			<aside class="cora-studio-sidebar">
 				<div class="cora-sidebar-header">
 					<h2>Field Groups</h2><button type="button" id="reset-group-btn" class="cora-btn cora-btn-primary"
@@ -134,135 +134,120 @@ class Field_Group_Manager
 				</form>
 			</main>
 		</div>
-
+		<div id="cora-field-picker-modal" class="cora-modal-overlay">
+			<div class="cora-modal-container">
+				<div class="modal-left">
+					<header class="modal-header">
+						<h2>Select Field Type</h2>
+						<div class="modal-search">
+							<span class="dashicons dashicons-search"></span>
+							<input type="text" id="modal-search-input" placeholder="Search fields...">
+						</div>
+					</header>
+					<nav class="modal-nav">
+						<button type="button" class="modal-nav-btn active" data-cat="Popular">Popular</button>
+						<button type="button" class="modal-nav-btn" data-cat="Basic">Basic</button>
+						<button type="button" class="modal-nav-btn" data-cat="Advanced">Advanced</button>
+						<button type="button" class="modal-nav-btn" data-cat="Choice">Choice</button>
+						<button type="button" class="modal-nav-btn" data-cat="Media">Media</button>
+						<button type="button" class="modal-nav-btn" data-cat="Relational">Relational</button>
+						<button type="button" class="modal-nav-btn" data-cat="Layout">Layout</button>
+					</nav>
+					<div id="modal-field-grid" class="modal-field-grid"></div>
+				</div>
+				<div class="modal-right-preview">
+					<div id="field-preview-content">
+						<h3 id="preview-title">Select a Field</h3>
+						<p id="preview-desc">Choose a field type from the left to see its description and details.</p>
+						<div class="preview-visual">
+							<div class="ghost-line"></div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="cora-btn-bw secondary"
+							onclick="jQuery('#cora-field-picker-modal').removeClass('is-visible')">Cancel</button>
+						<button type="button" class="cora-btn-bw primary" id="confirm-field-selection"
+							style="display:none;">Select Field</button>
+					</div>
+				</div>
+			</div>
+		</div>
 		<script>
 			jQuery(document).ready(function ($) {
-				const postTypes = {
-					<?php foreach ($post_types as $pt)
-						echo "'{$pt->name}': '{$pt->label}',"; ?> };
-				const optionsPages = {
-					<?php foreach ($options_pages as $slug => $data)
-						echo "'{$slug}': '{$data['title']}',"; ?> };
+				/** * 1. DATA HYDRATION: PHP to JS Objects
+				 */
+				const studioPostTypes = { <?php foreach ($post_types as $pt)
+					echo "'{$pt->name}': '" . addslashes($pt->label) . "',"; ?> };
+				const studioOptions = { <?php foreach ($options_pages as $slug => $data)
+					echo "'{$slug}': '" . addslashes($data['title']) . "',"; ?> };
+
+				/**
+				 * 2. COMPREHENSIVE FIELD LIBRARY
+				 * Includes all 29+ types from your original select dropdown.
+				 */
+				const fieldLibrary = {
+					'Popular': [
+						{ id: 'text', label: 'Text', icon: 'dashicons-editor-textcolor', desc: 'Standard single-line text input.' },
+						{ id: 'textarea', label: 'Text Area', icon: 'dashicons-editor-paragraph', desc: 'Multi-line area for long content.' },
+						{ id: 'image', label: 'Image', icon: 'dashicons-format-image', desc: 'Single image selection from Media Library.' },
+						{ id: 'select', label: 'Select', icon: 'dashicons-editor-ul', desc: 'Standard dropdown selection menu.' },
+						{ id: 'repeater', label: 'Repeater', icon: 'dashicons-menu-alt', desc: 'Create rows of repeating sub-field data.' }
+					],
+					'Basic': [
+						{ id: 'text', label: 'Text', icon: 'dashicons-editor-textcolor', desc: 'Standard single-line text input.' },
+						{ id: 'textarea', label: 'Text Area', icon: 'dashicons-editor-paragraph', desc: 'Large area for multi-line text.' },
+						{ id: 'number', label: 'Number', icon: 'dashicons-editor-ol', desc: 'Input restricted to numerical values.' },
+						{ id: 'true_false', label: 'True / False', icon: 'dashicons-yes', desc: 'A simple boolean checkbox/switch.' }
+					],
+					'Advanced': [
+						{ id: 'google_map', label: 'Google Map', icon: 'dashicons-location', desc: 'Interactive map for coordinate selection.' },
+						{ id: 'date_picker', label: 'Date Picker', icon: 'dashicons-calendar-alt', desc: 'Calendar interface for date selection.' },
+						{ id: 'date_time_picker', label: 'Date Time', icon: 'dashicons-clock', desc: 'Select specific date and time.' },
+						{ id: 'time_picker', label: 'Time Picker', icon: 'dashicons-performance', desc: 'Interface for specific clock times.' },
+						{ id: 'color_picker', label: 'Color Picker', icon: 'dashicons-admin-appearance', desc: 'Hex-based color selection tool.' },
+						{ id: 'icon_picker', label: 'Icon Picker', icon: 'dashicons-smiley', desc: 'Select from WordPress Dashicon library.' }
+					],
+					'Choice': [
+						{ id: 'select', label: 'Select', icon: 'dashicons-editor-ul', desc: 'Standard dropdown selection menu.' },
+						{ id: 'checkbox', label: 'Checkbox', icon: 'dashicons-forms', desc: 'Select one or more via checkboxes.' },
+						{ id: 'radio', label: 'Radio Button', icon: 'dashicons-marker', desc: 'Select a single option from a list.' },
+						{ id: 'button_group', label: 'Button Group', icon: 'dashicons-button', desc: 'Horizontal list of selectable buttons.' }
+					],
+					'Media': [
+						{ id: 'image', label: 'Image', icon: 'dashicons-format-image', desc: 'Single image from Media Library.' },
+						{ id: 'file', label: 'File', icon: 'dashicons-media-default', desc: 'Upload or select any file type.' },
+						{ id: 'gallery', label: 'Gallery', icon: 'dashicons-images-alt2', desc: 'Manage a collection of multiple images.' },
+						{ id: 'wysiwyg', label: 'Visual Editor', icon: 'dashicons-editor-kitchensink', desc: 'Full WordPress Rich Text editor.' },
+						{ id: 'oembed', label: 'oEmbed', icon: 'dashicons-video-alt3', desc: 'Embed content (YouTube, Vimeo, etc).' }
+					],
+					'Relational': [
+						{ id: 'post_object', label: 'Post Object', icon: 'dashicons-admin-post', desc: 'Link to another post or CPT.' },
+						{ id: 'page_link', label: 'Page Link', icon: 'dashicons-admin-links', desc: 'Select and link to a site page.' },
+						{ id: 'relationship', label: 'Relationship', icon: 'dashicons-networking', desc: 'Many-to-many relationship builder.' },
+						{ id: 'taxonomy', label: 'Taxonomy', icon: 'dashicons-tag', desc: 'Select terms from a taxonomy.' },
+						{ id: 'user', label: 'User', icon: 'dashicons-admin-users', desc: 'Select one or more site users.' }
+					],
+					'Layout': [
+						{ id: 'message', label: 'Message', icon: 'dashicons-editor-help', desc: 'Display a read-only instructional message.' },
+						{ id: 'accordion', label: 'Accordion', icon: 'dashicons-arrow-down-alt2', desc: 'Group fields into a collapsible box.' },
+						{ id: 'tab', label: 'Tab', icon: 'dashicons-index-card', desc: 'Group fields into visual tabs.' },
+						{ id: 'group', label: 'Group', icon: 'dashicons-category', desc: 'Container for related sub-fields.' },
+						{ id: 'clone', label: 'Clone', icon: 'dashicons-admin-page', desc: 'Reuse existing field groups.' },
+						{ id: 'flexible_content', label: 'Flexible', icon: 'dashicons-layout', desc: 'Dynamic block-based builder layouts.' },
+						{ id: 'repeater', label: 'Repeater', icon: 'dashicons-menu-alt', desc: 'Rows of repeating sub-field data.' }
+					]
+				};
+
 				let fieldIndex = 0;
+				let activeFieldRow = null;
+				let pendingSelection = null;
 
-				function createFieldAccordion(index, data = {}) {
-					const type = data.type || 'text';
-					const isChoice = ['select', 'checkbox', 'radio', 'button_group'].includes(type);
-					const isRepeater = type === 'repeater';
-					// Container types that require sub-field definitions
-					const isContainer = ['repeater', 'flexible_content', 'group', 'accordion', 'tab'].includes(type);
-					const isMessage = type === 'message';
-					return `
-					<div class="field-item-acc" data-index="${index}">
-						<div class="acc-header" style="cursor:pointer; display:flex; align-items:center;">
-							<span class="dashicons dashicons-menu" style="margin-right:10px;"></span>
-							<strong class="label-preview" style="flex-grow:1;">${data.label || '(no label)'}</strong>
-							<span class="type-badge">${type}</span>
-							<span class="dashicons dashicons-no-alt delete-field" style="margin-left:10px; color:red;"></span>
-						</div>
-						<div class="acc-content" style="display:none; padding:20px; border-top:1px solid #eee;">
-							<div class="cora-form-row">
-								<div class="cora-control-group"><label>Label</label><input type="text" class="cora-input f-label" value="${data.label || ''}"></div>
-								<div class="cora-control-group"><label>Slug</label><input type="text" class="cora-input f-name" value="${data.name || ''}" readonly></div>
-							</div>
-							<div class="cora-form-row">
-								<div class="cora-control-group">
-									<label>Type</label>
-									<select class="f-type cora-input">
-										<optgroup label="Basic">
-											<option value="text" ${type === 'text' ? 'selected' : ''}>Text</option>
-											<option value="textarea" ${type === 'textarea' ? 'selected' : ''}>Textarea</option>
-											<option value="number" ${type === 'number' ? 'selected' : ''}>Number</option>
-											<option value="true_false" ${type === 'true_false' ? 'selected' : ''}>True / False</option>
-										</optgroup>
-										<optgroup label="Advanced">
-											<option value="google_map" ${type === 'google_map' ? 'selected' : ''}>Google Map</option>
-											<option value="date_picker" ${type === 'date_picker' ? 'selected' : ''}>Date Picker</option>
-											<option value="date_time_picker" ${type === 'date_time_picker' ? 'selected' : ''}>Date Time Picker</option>
-											<option value="time_picker" ${type === 'time_picker' ? 'selected' : ''}>Time Picker</option>
-											<option value="color_picker" ${type === 'color_picker' ? 'selected' : ''}>Color Picker</option>
-											<option value="icon_picker" ${type === 'icon_picker' ? 'selected' : ''}>Icon Picker</option>
-										</optgroup>
-										<optgroup label="Choice">
-											<option value="select" ${type === 'select' ? 'selected' : ''}>Select</option>
-											<option value="checkbox" ${type === 'checkbox' ? 'selected' : ''}>Checkbox</option>
-											<option value="radio" ${type === 'radio' ? 'selected' : ''}>Radio Button</option>
-											<option value="button_group" ${type === 'button_group' ? 'selected' : ''}>Button Group</option>
-										</optgroup>
-										<optgroup label="Media">
-											<option value="image" ${type === 'image' ? 'selected' : ''}>Image</option>
-											<option value="file" ${type === 'file' ? 'selected' : ''}>File</option>
-											<option value="gallery" ${type === 'gallery' ? 'selected' : ''}>Gallery</option>
-											<option value="wysiwyg" ${type === 'wysiwyg' ? 'selected' : ''}>WYSIWYG Editor</option>
-											<option value="oembed" ${type === 'oembed' ? 'selected' : ''}>oEmbed</option>
-										</optgroup>
-										<optgroup label="Relational">
-											<option value="post_object" ${type === 'post_object' ? 'selected' : ''}>Post Object</option>
-											<option value="page_link" ${type === 'page_link' ? 'selected' : ''}>Page Link</option>
-											<option value="relationship" ${type === 'relationship' ? 'selected' : ''}>Relationship</option>
-											<option value="taxonomy" ${type === 'taxonomy' ? 'selected' : ''}>Taxonomy</option>
-											<option value="user" ${type === 'user' ? 'selected' : ''}>User</option>
-										</optgroup>
-										<optgroup label="Layout">
-											<option value="message" ${type === 'message' ? 'selected' : ''}>Message</option>
-											<option value="accordion" ${type === 'accordion' ? 'selected' : ''}>Accordion</option>
-											<option value="tab" ${type === 'tab' ? 'selected' : ''}>Tab</option>
-											<option value="group" ${type === 'group' ? 'selected' : ''}>Group</option>
-											<option value="clone" ${type === 'clone' ? 'selected' : ''}>Clone</option>
-											<option value="flexible_content" ${type === 'flexible_content' ? 'selected' : ''}>Flexible Content</option>
-											<option value="repeater" ${type === 'repeater' ? 'selected' : ''}>Repeater</option>
-										</optgroup>
-									</select>
-								</div>
-								<div class="cora-control-group"><label>Placeholder</label><input type="text" class="cora-input f-placeholder" value="${data.placeholder || ''}"></div>
-							</div>
-							
-							<div class="choice-config" style="margin-top:15px; ${isChoice ? '' : 'display:none;'}">
-								<label><strong>Choices (One per line)</strong></label>
-								<textarea class="f-choices cora-input" style="height:80px;" placeholder="value : Label">${data.choices || ''}</textarea>
-							</div>
-
-							<div class="repeater-config" style="margin-top:15px; ${isRepeater ? '' : 'display:none;'}">
-								<label><strong>Sub-fields JSON Definition</strong></label>
-								<textarea class="f-subfields cora-input" style="font-family:monospace; height:80px;" placeholder='[{"label":"Title", "name":"title", "type":"text"}]'>${data.subfields_json || ''}</textarea>
-							</div>
-						</div>
-					</div>`;
-				}
-
-				$('#add-pro-field').on('click', () => $('#cora-fields-accordion').append(createFieldAccordion(fieldIndex++)));
-
-				$(document).on('change', '.f-type', function () {
-					const val = $(this).val();
-					const $acc = $(this).closest('.acc-content');
-					$acc.find('.choice-config').toggle(['select', 'checkbox', 'radio', 'button_group'].includes(val));
-					$acc.find('.repeater-config').toggle(val === 'repeater' || val === 'flexible_content');
-				});
-
-				$(document).on('click', '.acc-header', function (e) { if (!$(e.target).hasClass('delete-field')) $(this).next('.acc-content').slideToggle(200); });
-				$(document).on('click', '.delete-field', function () { $(this).closest('.field-item-acc').remove(); });
-
-				$(document).on('keyup', '.f-label', function () {
-					const label = $(this).val(); $(this).closest('.field-item-acc').find('.label-preview').text(label || '(no label)');
-					$(this).closest('.field-item-acc').find('.f-name').val(label.toLowerCase().trim().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, ''));
-				});
-
-				$('#cora-field-group-form').on('submit', function () {
-					let html = '';
-					$('.field-item-acc').each(function (i) {
-						html += `<input type="hidden" name="fields[${i}][label]" value="${$(this).find('.f-label').val()}">`;
-						html += `<input type="hidden" name="fields[${i}][name]" value="${$(this).find('.f-name').val()}">`;
-						html += `<input type="hidden" name="fields[${i}][type]" value="${$(this).find('.f-type').val()}">`;
-						html += `<input type="hidden" name="fields[${i}][placeholder]" value="${$(this).find('.f-placeholder').val()}">`;
-						html += `<input type="hidden" name="fields[${i}][choices]" value="${$(this).find('.f-choices').val() || ''}">`;
-						html += `<input type="hidden" name="fields[${i}][subfields_json]" value='${$(this).find('.f-subfields').val() || ''}'>`;
-					});
-					$('#fields-json-payload').html(html);
-				});
-
+				/**
+				 * 3. TARGETING ENGINE
+				 */
 				function updateTargets(type, selected = null) {
 					const $select = $('#group_location').empty();
-					const data = (type === 'options_page') ? optionsPages : postTypes;
+					const data = (type === 'options_page') ? studioOptions : studioPostTypes;
 					$.each(data, (k, v) => {
 						let opt = $('<option>').val(k).text(v);
 						if (k === selected) opt.prop('selected', true);
@@ -271,15 +256,160 @@ class Field_Group_Manager
 				}
 
 				$('#rule_type').on('change', function () { updateTargets($(this).val()); });
-				updateTargets('post_type');
+				updateTargets('post_type'); // Default Init
 
-				$(document).on('click', '.cora-group-item', function () {
-					const data = $(this).data('config'); $('.cora-group-item').removeClass('active'); $(this).addClass('active');
-					$('#group_id').val($(this).data('id')); $('#group_title').val(data.title); $('#current-group-label').text('Editing: ' + data.title);
-					$('#rule_type').val(data.rule_type || 'post_type').trigger('change'); $('#group_location').val(data.location);
-					$('#cora-fields-accordion').empty();
-					if (data.fields) $.each(data.fields, (idx, f) => { $('#cora-fields-accordion').append(createFieldAccordion(idx, f)); fieldIndex = Math.max(fieldIndex, idx + 1); });
+				/**
+				 * 4. MODAL & PICKER LOGIC
+				 */
+				function renderCard(field) {
+					return `<div class="field-type-card" data-id="${field.id}" data-label="${field.label}" data-desc="${field.desc}">
+					<span class="dashicons ${field.icon}"></span>
+					<strong>${field.label}</strong>
+				</div>`;
+				}
+
+				function renderFieldGrid(category) {
+					let html = '';
+					if (fieldLibrary[category]) {
+						fieldLibrary[category].forEach(field => { html += renderCard(field); });
+					}
+					$('#modal-field-grid').html(html);
+				}
+
+				$(document).on('click', '.f-type-trigger', function () {
+					activeFieldRow = $(this).closest('.field-item-acc');
+					$('#cora-field-picker-modal').addClass('is-visible');
+					$('.modal-nav-btn[data-cat="Popular"]').click();
 				});
+
+				$(document).on('click', '.modal-nav-btn', function () {
+					$('.modal-nav-btn').removeClass('active');
+					$(this).addClass('active');
+					$('#modal-search-input').val(''); // Clear search
+					renderFieldGrid($(this).data('cat'));
+				});
+
+				// Modal Search
+				$('#modal-search-input').on('input', function () {
+					const term = $(this).val().toLowerCase();
+					if (term === '') { $('.modal-nav-btn.active').click(); return; }
+					let html = '';
+					Object.keys(fieldLibrary).forEach(cat => {
+						fieldLibrary[cat].forEach(field => {
+							if (field.label.toLowerCase().includes(term)) html += renderCard(field);
+						});
+					});
+					$('#modal-field-grid').html(html || '<p style="padding:20px; color:#999;">No fields found...</p>');
+				});
+
+				$(document).on('click', '.field-type-card', function () {
+					$('.field-type-card').removeClass('selected');
+					$(this).addClass('selected');
+					pendingSelection = { id: $(this).data('id'), label: $(this).data('label') };
+					$('#preview-title').text($(this).data('label'));
+					$('#preview-desc').text($(this).data('desc'));
+					$('#confirm-field-selection').show();
+				});
+
+				$('#confirm-field-selection').on('click', function () {
+					if (pendingSelection && activeFieldRow) {
+						activeFieldRow.find('.f-type').val(pendingSelection.id);
+						activeFieldRow.find('.f-type-trigger span').text(pendingSelection.label);
+						activeFieldRow.find('.type-badge').text(pendingSelection.id.toUpperCase());
+
+						// Conditional Config Views
+						const isChoice = ['select', 'checkbox', 'radio', 'button_group'].includes(pendingSelection.id);
+						const isRepeater = ['repeater', 'flexible_content'].includes(pendingSelection.id);
+						activeFieldRow.find('.choice-config').toggle(isChoice);
+						activeFieldRow.find('.repeater-config').toggle(isRepeater);
+					}
+					$('#cora-field-picker-modal').removeClass('is-visible');
+				});
+
+				/**
+				 * 5. ARCHITECTURE FACTORY: Dynamic Row Generation
+				 */
+				function createFieldAccordion(index, data = {}) {
+					const type = data.type || 'text';
+					const typeLabel = type.charAt(0).toUpperCase() + type.slice(1);
+					return `
+		<div class="field-item-acc" data-index="${index}">
+			<div class="acc-header">
+				<span class="dashicons dashicons-menu"></span>
+				<strong class="label-preview" style="flex-grow:1;">${data.label || '(no label)'}</strong>
+				<span class="type-badge">${type.toUpperCase()}</span>
+				<span class="dashicons dashicons-no-alt delete-field" style="margin-left:10px; color:#ddd;"></span>
+			</div>
+			<div class="acc-content" style="display:none;">
+				<div class="cora-form-row">
+					<div class="input-pro"><label>Unit Label</label><input type="text" class="ghost-input f-label" value="${data.label || ''}"></div>
+					<div class="input-pro"><label>Unit Slug</label><input type="text" class="ghost-input f-name" value="${data.name || ''}" readonly></div>
+				</div>
+				<div class="cora-form-row">
+					<div class="input-pro">
+						<label>Field Type</label>
+						<input type="hidden" class="f-type" value="${type}">
+						<div class="f-type-trigger"><span>${typeLabel}</span> <i class="dashicons dashicons-arrow-down-alt2"></i></div>
+					</div>
+					<div class="input-pro"><label>Placeholder</label><input type="text" class="ghost-input f-placeholder" value="${data.placeholder || ''}"></div>
+				</div>
+				<div class="choice-config" style="margin-top:20px; ${['select', 'checkbox', 'radio', 'button_group'].includes(type) ? '' : 'display:none;'}">
+					<label>Choices (key : Value)</label>
+					<textarea class="f-choices ghost-area" style="height:80px;" placeholder="red : Red Color">${data.choices || ''}</textarea>
+				</div>
+				<div class="repeater-config" style="margin-top:20px; ${['repeater', 'flexible_content'].includes(type) ? '' : 'display:none;'}">
+					<label>Sub-fields JSON Architecture</label>
+					<textarea class="f-subfields ghost-area" style="height:80px; font-family:monospace;" placeholder='[{"label":"Title", "name":"t", "type":"text"}]'>${data.subfields_json || ''}</textarea>
+				</div>
+			</div>
+		</div>`;
+				}
+
+				// Interactive Controls
+				$('#add-pro-field').on('click', () => $('#cora-fields-accordion').append(createFieldAccordion(fieldIndex++)));
+				$(document).on('click', '.acc-header', function (e) { if (!$(e.target).hasClass('delete-field')) $(this).next().slideToggle(200); });
+				$(document).on('click', '.delete-field', function () { $(this).closest('.field-item-acc').remove(); });
+				$(document).on('keyup', '.f-label', function () {
+					const label = $(this).val();
+					$(this).closest('.field-item-acc').find('.label-preview').text(label || '(no label)');
+					$(this).closest('.field-item-acc').find('.f-name').val(label.toLowerCase().trim().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, ''));
+				});
+
+				/**
+				 * 6. PAYLOAD SERIALIZATION
+				 */
+				$('#cora-field-group-form').on('submit', function () {
+					let payload = '';
+					$('.field-item-acc').each(function (i) {
+						const $row = $(this);
+						const props = ['label', 'name', 'type', 'placeholder', 'choices', 'subfields_json'];
+						props.forEach(p => {
+							payload += `<input type="hidden" name="fields[${i}][${p}]" value='${$row.find('.f-' + p).val() || ''}'>`;
+						});
+					});
+					$('#fields-json-payload').html(payload);
+				});
+
+				/**
+				 * 7. REGISTRY HYDRATION
+				 */
+				$(document).on('click', '.cora-group-item', function () {
+					const data = $(this).data('config');
+					$('.cora-group-item').removeClass('active'); $(this).addClass('active');
+					$('#group_id').val($(this).data('id'));
+					$('#group_title').val(data.title);
+					$('#current-group-label').text('Editing Architecture: ' + data.title);
+					$('#rule_type').val(data.rule_type || 'post_type').trigger('change');
+					$('#group_location').val(data.location);
+					$('#cora-fields-accordion').empty();
+					if (data.fields) {
+						$.each(data.fields, (idx, f) => {
+							$('#cora-fields-accordion').append(createFieldAccordion(idx, f));
+							fieldIndex = Math.max(fieldIndex, idx + 1);
+						});
+					}
+				});
+
 				$('#reset-group-btn').on('click', () => window.location.reload());
 			});
 		</script>
