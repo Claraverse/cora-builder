@@ -14,7 +14,7 @@ class Cora_Info_Pill extends Base_Widget {
 
     protected function register_controls() {
         
-        // --- TAB: CONTENT ---
+        // --- TAB 1: CONTENT ---
         $this->start_controls_section('section_content', [ 'label' => __( 'Pill Content', 'cora-builder' ) ]);
 
         $this->add_control('badge_text', [
@@ -39,30 +39,44 @@ class Cora_Info_Pill extends Base_Widget {
 
         $this->end_controls_section();
 
-        // --- TAB: STYLE - PILL CONTAINER ---
-        $this->start_controls_section('style_pill', [ 'label' => 'Container Styling', 'tab' => Controls_Manager::TAB_STYLE ]);
+        // --- TAB 2: STYLE (Widget Specific) ---
+        $this->start_controls_section('style_pill', [ 'label' => 'Pill Skin Settings', 'tab' => Controls_Manager::TAB_STYLE ]);
         
-        $this->add_control('pill_bg', [
-            'label'     => 'Pill Background',
+        $this->add_control('badge_bg_local', [
+            'label'     => 'Badge Background',
             'type'      => Controls_Manager::COLOR,
-            'selectors' => [ '{{WRAPPER}} .cora-info-pill-container' => 'background-color: {{VALUE}};' ],
-        ]);
-
-        $this->add_control('pill_border_color', [
-            'label'     => 'Border Color',
-            'type'      => Controls_Manager::COLOR,
-            'selectors' => [ '{{WRAPPER}} .cora-info-pill-container' => 'border-color: {{VALUE}};' ],
+            'selectors' => [ '{{WRAPPER}} .pill-badge' => 'background-color: {{VALUE}};' ],
         ]);
 
         $this->end_controls_section();
 
-        // --- STYLE ENGINES: Typo & Spacing ---
+        // Register Core Typography Engines
         $this->register_text_styling_controls('badge_style', 'Badge Typography', '{{WRAPPER}} .pill-badge');
         $this->register_text_styling_controls('msg_style', 'Message Typography', '{{WRAPPER}} .pill-msg');
-        // Inside register_controls()
-$this->register_alignment_controls('pill_layout', '.cora-info-pill-container', '.pill-badge, .pill-msg');
 
+        // --- TAB 3: GLOBAL (Design System & Structural Layout) ---
+        // Integrated engines from Base_Widget mapping to your screenshots
+        
+        // 1. System Tokens
+        $this->register_global_design_controls('.cora-info-pill-container');
+
+        // 2. Layout & Geometry (Hug/Fill & Flex Distribution)
+        $this->register_layout_geometry('.cora-info-pill-container');
+
+        // 3. Styles & Surface (Glassmorphism & Shadows)
+        $this->register_surface_styles('.cora-info-pill-container');
+
+        // 4. Spatial Matrix (Rotation & Scale)
         $this->register_common_spatial_controls();
+        
+        // 5. Alignment Matrix
+        $this->register_alignment_controls('pill_layout', '.cora-info-pill-container', '.pill-badge, .pill-msg');
+
+        // --- TAB 4: ADVANCED (Interactive & Code) ---
+        $this->register_overlay_engine('.cora-info-pill-container');
+        $this->register_cursor_engine('.cora-info-pill-container');
+        $this->register_transform_engine('.cora-info-pill-container');
+        $this->register_interaction_motion();
     }
 
     protected function render() {

@@ -1,64 +1,52 @@
-/* --- WRAPPER --- */
-.cora_adv_heading_wrapper {
+/* .cora_adv_heading_wrapper {
     position: relative;
     width: 100%;
-    /* Alignment, Width, Padding handled by Elementor Controls */
 }
 
-/* --- TITLE --- */
 .cora_adv_heading_title {
     margin: 0;
     line-height: 1.2;
     font-weight: 700;
-    color: #101828; /* Default Dark */
+    color: #101828;
     position: relative;
     z-index: 1;
     word-wrap: break-word;
 }
 
-/* Main Text Part */
 .cora_head_main {
-    margin-right: 0.25em; /* Responsive spacing using em */
+    margin-right: 0.25em;
     display: inline;
 }
 
-/* --- HIGHLIGHT WRAPPER --- */
-/* This wraps the "Category" text and the Brush Image */
 .cora_head_highlight_wrap {
     position: relative;
     display: inline-block;
     z-index: 1;
-    line-height: 1; /* Tighter line height for the highlight to prevent brush gaps */
+    line-height: 1;
 }
 
-/* The Highlighted Text Itself */
 .cora_head_highlight {
     position: relative;
-    z-index: 2; /* Crucial: Sits ON TOP of the brush */
+    z-index: 2;
     color: inherit;
     display: inline-block;
 }
 
-/* --- BRUSH LAYER --- */
 .cora_brush_layer {
     position: absolute;
     top: 50%;
     left: 50%;
-    /* Centers the brush exactly behind the text */
-    transform: translate(-50%, -50%); 
-    
-    /* Width is controlled by the "Brush Width" slider in Elementor */
+    transform: translate(-50%, -50%);
+
     height: auto;
-    
-    z-index: 1; /* Crucial: Sits BEHIND the text */
-    pointer-events: none; /* Allows selecting text through the image */
-    
+
+    z-index: 1;
+    pointer-events: none;
+
     display: flex;
     align-items: center;
     justify-content: center;
-    
-    /* Mix-blend-mode can be cool for brushes, optional */
-    /* mix-blend-mode: multiply; */ 
+
 }
 
 .cora_brush_layer img,
@@ -66,10 +54,9 @@
     width: 100%;
     height: auto;
     display: block;
-    overflow: visible; /* Allows splashes/drips to show */
+    overflow: visible;
 }
 
-/* --- DESCRIPTION --- */
 .cora_adv_desc {
     font-size: 18px;
     color: #475467;
@@ -77,17 +64,13 @@
     margin-top: 16px;
 }
 
-/* --- RESPONSIVE FIXES --- */
 @media (max-width: 767px) {
-    /* On mobile, sometimes you want the highlight to break to a new line.
-       If so, you can add a control for this, but by default we keep it inline. */
-    
+
     .cora_adv_heading_title {
-        font-size: 32px; /* Fallback size */
+        font-size: 32px;
     }
-    
-    /* Ensure the brush doesn't get cut off on small screens */
+
     .cora_brush_layer {
-        max-width: none; 
+        max-width: none;
     }
-}
+} */
