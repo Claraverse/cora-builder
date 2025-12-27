@@ -24,34 +24,41 @@ class CPT_Manager
      * MODULE: WORDPRESS REGISTRATION
      * Handles the background injection of post types into the system.
      */
-   
-    public function register_stored_cpts() {
+
+    public function register_stored_cpts()
+    {
         $cpts = get_option($this->option_name, []);
         foreach ($cpts as $slug => $data) {
-            $icon = $data['icon_type'] === 'file' ? ($data['icon_file_url'] ?: 'dashicons-admin-post') : 
-                   ($data['icon_type'] === 'svg' ? 'data:image/svg+xml;base64,' . base64_encode($data['icon_svg_code']) : 
-                   ($data['icon_value'] ?: 'dashicons-admin-post'));
+            // Safe access with defaults
+            $icon_type = $data['icon_type'] ?? 'dashicon';
+            $icon_file_url = $data['icon_file_url'] ?? '';
+            $icon_svg_code = $data['icon_svg_code'] ?? '';
+            $icon_value = $data['icon_value'] ?? 'dashicons-admin-post';
+
+            $icon = $icon_type === 'file' ? ($icon_file_url ?: 'dashicons-admin-post') :
+                ($icon_type === 'svg' ? 'data:image/svg+xml;base64,' . base64_encode($icon_svg_code) :
+                    ($icon_value ?: 'dashicons-admin-post'));
 
             register_post_type($slug, [
                 'labels' => [
-                    'name'          => $data['plural'] ?: 'Posts',
-                    'singular_name' => $data['singular'] ?: 'Post',
-                    'add_new'       => $data['label_add_new'] ?: 'Add New',
-                    'not_found'     => $data['label_not_found'] ?: 'No items found',
+                    'name' => ($data['plural'] ?? '') ?: 'Posts',
+                    'singular_name' => ($data['singular'] ?? '') ?: 'Post',
+                    'add_new' => ($data['label_add_new'] ?? '') ?: 'Add New',
+                    'not_found' => ($data['label_not_found'] ?? '') ?: 'No items found',
                 ],
-                'public'             => true, // Force public for frontend visibility
-                'publicly_queryable' => true, // FIXED: Required for single page access
-                'show_ui'            => true,
-                'show_in_menu'       => (bool)($data['show_in_menu'] ?? true),
-                'has_archive'        => (bool)($data['has_archive'] ?? true),
-                'hierarchical'       => (bool)($data['hierarchical'] ?? false),
-                'show_in_rest'       => (bool)($data['enable_rest'] ?? true),
-                'menu_icon'          => $icon,
-                'menu_position'      => (int)($data['menu_position'] ?? 5),
-                'supports'           => $data['supports'] ?? ['title', 'editor', 'thumbnail'],
-                'taxonomies'         => $data['taxonomies'] ?? [],
-                'rewrite'            => ['slug' => $data['rewrite_slug'] ?: $slug, 'with_front' => false],
-                'query_var'          => true,
+                'public' => true,
+                'publicly_queryable' => true,
+                'show_ui' => true,
+                'show_in_menu' => (bool) ($data['show_in_menu'] ?? true),
+                'has_archive' => (bool) ($data['has_archive'] ?? true),
+                'hierarchical' => (bool) ($data['hierarchical'] ?? false),
+                'show_in_rest' => (bool) ($data['enable_rest'] ?? true),
+                'menu_icon' => $icon,
+                'menu_position' => (int) ($data['menu_position'] ?? 5),
+                'supports' => $data['supports'] ?? ['title', 'editor', 'thumbnail'],
+                'taxonomies' => $data['taxonomies'] ?? [],
+                'rewrite' => ['slug' => ($data['rewrite_slug'] ?? '') ?: $slug, 'with_front' => false],
+                'query_var' => true,
             ]);
         }
     }
@@ -86,7 +93,7 @@ class CPT_Manager
     {
         ?>
         <?php include CORA_BUILDER_PATH . 'views/components/sidebar.php'; ?>
-        
+
         <?php
     }
 
@@ -211,7 +218,10 @@ class CPT_Manager
                 <?php else: ?>
                     <?php foreach ($cpts as $slug => $data):
                         // Logic for displaying the representative icon
-                        $icon_class = ($data['icon_type'] === 'dashicon') ? ($data['icon_value'] ?: 'dashicons-admin-post') : 'dashicons-format-image';
+                        $type = $data['icon_type'] ?? 'dashicon';
+                        $val = $data['icon_value'] ?? 'dashicons-admin-post';
+                        $icon_class = ($type === 'dashicon') ? ($val ?: 'dashicons-admin-post') : 'dashicons-format-image';
+                        // $icon_class = ($data['icon_type'] === 'dashicon') ? ($data['icon_value'] ?: 'dashicons-admin-post') : 'dashicons-format-image';
                         ?>
                         <div class="engine-item" data-config='<?php echo esc_attr(json_encode($data)); ?>'
                             data-slug="<?php echo esc_attr($slug); ?>">
