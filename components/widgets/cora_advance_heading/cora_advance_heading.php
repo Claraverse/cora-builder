@@ -82,7 +82,7 @@ class Cora_Advance_Heading extends Base_Widget
 				'{{WRAPPER}} .cora_head_highlight' => 'position: relative; z-index: 2;',
 				'{{WRAPPER}} .cora_brush_layer' => 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1; pointer-events: none; display: flex; align-items: center; justify-content: center;',
 				'{{WRAPPER}} .cora_brush_layer svg' => 'width: 100%; height: auto; display: block; overflow: visible;',
-				'{{WRAPPER}} .cora_adv_desc' => 'margin-top: 16px;'
+			 
 			],
 		]);
 

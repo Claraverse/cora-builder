@@ -196,6 +196,7 @@ class Plugin_Loader
             'cora_browser_frame',
             'cora_status_pill',
             'cora_infra_scaling',
+            'cora_hosting_price',
             'cora_security_card',
             'cora_comparison_table',
             'cora_protection_card',

@@ -38,6 +38,31 @@ add_action('elementor/elements/categories_registered', function ($elements_manag
         ]
     );
 });
+// Add this to your main cora-builder.php file
+add_action( 'elementor/editor/after_enqueue_scripts', function() {
+    ?>
+    <script>
+        (function() {
+            /** * Cora Builder: UI Optimizer
+             * Automatically purges the loading state once the panel is initialized.
+             */
+            const purgeLoader = () => {
+                const loader = document.getElementById('elementor-panel-state-loading');
+                if (loader) {
+                    loader.remove();
+                    console.log('Cora Builder: Panel Loading State Purged.');
+                }
+            };
+
+            // Hook into Elementor's Panel Open event
+            window.addEventListener('elementor/panel/opened', purgeLoader);
+            
+            // Fallback: If the panel is already open or the event missed
+            setTimeout(purgeLoader, 5000); 
+        })();
+    </script>
+    <?php
+});
 
 class Cora_Editor_Customizer
 {

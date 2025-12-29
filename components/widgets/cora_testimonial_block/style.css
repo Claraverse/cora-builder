@@ -8,7 +8,7 @@
     overflow: hidden;
     display: flex;
     align-items: flex-end; /* Anchors card to bottom */
-    padding: 24px;
+    padding: 12px;
 }
 
 /* --- The Glass Card --- */

@@ -29,7 +29,7 @@ abstract class Base_Widget extends Widget_Base
          * REGISTRATION: The 4th "Global" Tab
          * This hook is required to make the tab appear in the Elementor editor.
          */
-       // Required to ensure the tab exists during frontend CSS generation
+        // Required to ensure the tab exists during frontend CSS generation
         add_filter('elementor/editor/tabs/register', function ($tabs) {
             $tabs[self::TAB_GLOBAL] = [
                 'title' => __('Global', 'cora-builder'),
@@ -38,6 +38,39 @@ abstract class Base_Widget extends Widget_Base
             return $tabs;
         });
 
+
+        add_action('elementor/editor/after_enqueue_scripts', function () {
+            ?>
+            <script>
+                (function () {
+                    window.addEventListener('elementor/panel/opened', function () {
+                        const activeModel = elementor.panel.currentView.model;
+                        if (activeModel && activeModel.get('widgetType') === '<?php echo $this->get_name(); ?>') {
+                            // Force a change trigger to refresh the controls sidebar
+                            activeModel.trigger('change:settings');
+                            console.log('Cora Sync: Model refreshed for <?php echo $this->get_name(); ?>');
+                        }
+                    });
+                })();
+            </script>
+            <?php
+        });
+        // Forces Elementor to re-evaluate the widget's model on load
+        add_action('elementor/editor/after_enqueue_scripts', function () {
+            ?>
+            <script>
+                jQuery(window).on('elementor:init', function () {
+                    // Ensures that even if the panel is "stuck", the model is refreshed
+                    elementor.hooks.addAction('panel/open_editor/widget/<?php echo $this->get_name(); ?>', function (panel, model, view) {
+                        if (!model.get('settings').attributes) {
+                            console.log('Cora Sync: Refreshing Widget Model...');
+                            model.trigger('change');
+                        }
+                    });
+                });
+            </script>
+            <?php
+        });
         $this->register_component_assets();
     }
 
@@ -149,6 +182,12 @@ abstract class Base_Widget extends Widget_Base
             'type' => Controls_Manager::SLIDER,
             'size_units' => ['px', 'vh', 'em'],
             'selectors' => [$selector => 'min-height: {{SIZE}}{{UNIT}};'],
+        ]);
+        $this->add_responsive_control('cora_min_width', [
+            'label' => __('Min Width', 'cora-builder'),
+            'type' => Controls_Manager::SLIDER,
+            'size_units' => ['px', 'vh', 'em', '%'],
+            'selectors' => [$selector => 'min-width: {{SIZE}}{{UNIT}};'],
         ]);
 
         // --- 2. FLEXBOX & GRID ENGINE ---

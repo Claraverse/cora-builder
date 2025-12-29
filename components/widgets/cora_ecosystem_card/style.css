@@ -1,27 +1,25 @@
-/* --- Card Architecture --- */
+ 
 .cora-ecosystem-card {
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Default to left-align */
-    /* Gap managed by Element Spacing slider */
+    align-items: flex-start;  
+ 
     gap: var(--cora-element-gap, 24px); 
     padding: 20px;
 }
 
-/* --- Styled Icon Box --- */
-.eco-icon-box {
+ .eco-icon-box {
     width: 64px;
     height: 64px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #f0f4ff; /* Light bluish wash */
+    background: #f0f4ff;  
     border-radius: 16px;
     font-size: 24px;
-    color: #7c3aed; /* Vibrant purple icon */
+    color: #7c3aed;  
 }
-
-/* --- Content Reset --- */
+ 
 .eco-content {
     display: flex;
     flex-direction: column;
@@ -29,7 +27,7 @@
 }
 
 .eco-title, .eco-desc {
-    margin: 0 !important; /* Zero Margin Authority */
+    margin: 0 !important;  
     padding: 0;
 }
 

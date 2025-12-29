@@ -1,16 +1,15 @@
-.service-card-v1 {
+/* .service-card-v1 {
     background: #ffffff;
     border: 1.5px solid #e2e8f0;
     border-radius: 32px;
     padding: 32px;
     display: flex;
     flex-direction: column;
-    /* Gap managed by Element Spacing slider */
+     
     gap: var(--cora-element-gap, 24px); 
     box-shadow: 0 4px 20px rgba(0,0,0,0.02);
 }
-
-/* --- The Category Badge --- */
+ 
 .service-badge {
     display: inline-flex;
     align-items: center;
@@ -25,11 +24,11 @@
     margin-bottom: 16px;
 }
 
-/* --- Content Reset --- */
+ 
 .service-title { margin: 0 !important; font-size: 32px; font-weight: 850; line-height: 1.2; color: #1e2b5e; }
 .service-subtitle { margin: 0 !important; font-size: 18px; color: #475569; line-height: 1.5; }
 
-/* --- Media Frame --- */
+ 
 .service-media-frame {
     width: 100%;
     border-radius: 20px;
@@ -45,4 +44,4 @@
     transition: transform 0.5s ease;
 }
 
-.service-card-v1:hover .preview-img { transform: scale(1.03); }
+.service-card-v1:hover .preview-img { transform: scale(1.03); } */
