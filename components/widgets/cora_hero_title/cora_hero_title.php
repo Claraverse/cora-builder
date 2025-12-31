@@ -3,164 +3,108 @@ namespace Cora_Builder\components;
 
 use Cora_Builder\Core\Base_Widget;
 use Elementor\Controls_Manager;
+use Elementor\Group_Control_Typography;
 
-if (!defined('ABSPATH'))
-    exit;
+if (!defined('ABSPATH')) exit;
 
 class Cora_Hero_Title extends Base_Widget
 {
+    public function get_name() { return 'cora_hero_title'; }
+    public function get_title() { return __('Cora Hero Title', 'cora-builder'); }
+    public function get_icon() { return 'eicon-t-letter'; }
 
-    public function get_name()
-    {
-        return 'cora_hero_title';
-    }
-    public function get_title()
-    {
-        return __('Cora Hero Title', 'cora-builder');
-    }
-    public function get_icon()
-    {
-        return 'eicon-t-letter';
+    // Load Fredoka Font Automatically
+    public function get_style_depends() {
+        wp_register_style('google-font-fredoka', 'https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap', [], null);
+        return ['google-font-fredoka'];
     }
 
     protected function register_controls()
     {
-
         // --- TAB 1: CONTENT ---
         $this->start_controls_section('section_content', ['label' => __('Headline Content', 'cora-builder')]);
 
-        $this->add_control('title_pre', [
-            'label' => 'Prefix Text',
-            'type' => Controls_Manager::TEXT,
-            'dynamic' => ['active' => true]
-        ]);
+        // LINE 1 INPUTS
+        $this->add_control('l1_text_start', [ 'label' => 'Line 1: Start ("From")', 'type' => Controls_Manager::TEXT, 'default' => 'From', 'dynamic' => ['active' => true] ]);
+        $this->add_control('l1_sketch', [ 'label' => 'Line 1: Sketch Word ("Idea")', 'type' => Controls_Manager::TEXT, 'default' => 'Idea', 'dynamic' => ['active' => true] ]);
+        $this->add_control('l1_text_mid', [ 'label' => 'Line 1: Mid ("To")', 'type' => Controls_Manager::TEXT, 'default' => 'To', 'dynamic' => ['active' => true] ]);
+        $this->add_control('l1_highlight', [ 'label' => 'Line 1: Green Word ("Brand")', 'type' => Controls_Manager::TEXT, 'default' => 'Brand', 'dynamic' => ['active' => true] ]);
 
-        $this->add_control('title_sketch', [
-            'label' => 'Sketch Word',
-            'type' => Controls_Manager::TEXT,
-            'dynamic' => ['active' => true]
-        ]);
+        // LINE 2 INPUTS
+        $this->add_control('l2_text_start', [ 'label' => 'Line 2: Start ("That")', 'type' => Controls_Manager::TEXT, 'default' => 'That', 'dynamic' => ['active' => true], 'separator' => 'before' ]);
+        $this->add_control('l2_highlight', [ 'label' => 'Line 2: Green Word ("Sells")', 'type' => Controls_Manager::TEXT, 'default' => 'Sells', 'dynamic' => ['active' => true] ]);
 
-        $this->add_control('title_mid', [
-            'label' => 'Middle Text',
-            'type' => Controls_Manager::TEXT,
-            'dynamic' => ['active' => true]
-        ]);
-
-        $this->add_control('title_highlight_1', [
-            'label' => 'Highlight Word',
-            'type' => Controls_Manager::TEXT,
-            'dynamic' => ['active' => true]
-        ]);
-
+        // SUBTITLE
         $this->add_control('subtitle', [
             'label' => 'Subtitle',
             'type' => Controls_Manager::TEXTAREA,
-            'dynamic' => ['active' => true]
+            'default' => 'Launch faster, sell smarter, and scale without the tech stress. Claraverse gives you design, development, hosting, and marketing — all done-for-you under one roof.',
+            'dynamic' => ['active' => true],
+            'separator' => 'before'
         ]);
 
         $this->end_controls_section();
-        $this->register_layout_geometry('.hero-title-container');
 
-        // --- TAB 2: STYLE (Widget-Specific Aesthetics) ---
-       // --- ENRICHED SKETCH & HIGHLIGHT SKIN ---
-        $this->start_controls_section('style_sketch_local', [ 
-            'label' => 'Sketch & Highlight Skin', 
-            'tab'   => Controls_Manager::TAB_STYLE // Note: Using TAB_STYLE for visual consistency
+        // --- TAB 2: STYLE (Design Reset) ---
+        $this->start_controls_section('style_reset', [ 'label' => 'Design Reset', 'tab' => Controls_Manager::TAB_STYLE ]);
+
+        // Visual Status Bar
+        $this->add_control('reset_info', [
+            'type' => Controls_Manager::RAW_HTML,
+            'raw'  => '<div style="background:#f1f4ff; color:#1e2b5e; padding:12px; border-radius:12px; font-weight:bold; text-align:center; border:1px solid #dbeafe;">
+                        <i class="eicon-check-circle"></i> Font: Fredoka Active
+                      </div>',
         ]);
 
-        // 1. HIGHLIGHT CONTROLS (Green Word)
-        $this->add_control('highlight_heading', [
-            'label' => __('Highlight Settings', 'cora-builder'),
-            'type'  => Controls_Manager::HEADING,
-        ]);
+        $this->add_control('structural_reset', [
+            'type' => Controls_Manager::HIDDEN,
+            'default' => 'reset',
+            'selectors' => [
+                // Container Centering
+                '{{WRAPPER}} .hero-title-container' => 'display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; max-width: 900px; margin: 0 auto; gap: 24px;',
+                
+                // Main Headline Reset (Fredoka Default)
+                '{{WRAPPER}} .hero-title' => 'font-family: "Fredoka", sans-serif; font-size: 64px; font-weight: 800; line-height: 1.1; color: #1e293b; margin: 0 !important; letter-spacing: -0.02em;',
+                
+                // The "Sketch" Word (Kept as cursive placeholder)
+                '{{WRAPPER}} .sketch-word' => 'font-family: cursive; position: relative; display: inline-block; color: transparent; -webkit-text-stroke: 1.5px #1e293b; padding: 0 4px;',
+                
+                // The "Green" Highlight Words
+                '{{WRAPPER}} .highlight-word' => 'color: #22c55e; font-weight: 800;',
 
-        $this->add_control('highlight_color', [
-            'label'     => 'Highlight Color',
-            'type'      => Controls_Manager::COLOR,
-            'selectors' => ['{{WRAPPER}} .highlight-word' => 'color: {{VALUE}};'],
-        ]);
+                // Subtitle Styling (Fredoka Default)
+                '{{WRAPPER}} .hero-subtitle' => 'font-family: "Fredoka", sans-serif; font-size: 18px; line-height: 1.6; color: #64748b; margin: 0 !important; max-width: 700px;',
 
-        $this->add_group_control(
-            \Elementor\Group_Control_Typography::get_type(),
-            [
-                'name'     => 'highlight_typo_local',
-                'selector' => '{{WRAPPER}} .highlight-word',
-            ]
-        );
-
-        // 2. SKETCH CONTROLS (Outlined Word)
-        $this->add_control('sketch_heading', [
-            'label'     => __('Sketch Settings', 'cora-builder'),
-            'type'      => Controls_Manager::HEADING,
-            'separator' => 'before',
-        ]);
-
-        $this->add_control('sketch_fill_color', [
-            'label'     => 'Inner Fill Color',
-            'type'      => Controls_Manager::COLOR,
-            'selectors' => ['{{WRAPPER}} .sketch-word' => 'color: {{VALUE}};'],
-            'description' => 'Set to transparent for the classic outline look.',
-        ]);
-
-        $this->add_control('sketch_stroke_color', [
-            'label'     => 'Stroke Color',
-            'type'      => Controls_Manager::COLOR,
-            'selectors' => ['{{WRAPPER}} .sketch-word' => '-webkit-text-stroke-color: {{VALUE}};'],
-        ]);
-
-        $this->add_responsive_control('sketch_stroke_width_local', [
-            'label'     => 'Stroke Width',
-            'type'      => Controls_Manager::SLIDER,
-            'range'     => ['px' => ['min' => 0, 'max' => 10]],
-            'selectors' => ['{{WRAPPER}} .sketch-word' => '-webkit-text-stroke-width: {{SIZE}}px;'],
-        ]);
-
-        $this->add_group_control(
-            \Elementor\Group_Control_Typography::get_type(),
-            [
-                'name'     => 'sketch_typo_local',
-                'selector' => '{{WRAPPER}} .sketch-word',
-            ]
-        );
-
-        // 3. ADVANCED EFFECTS
-        $this->add_control('sketch_blend_mode', [
-            'label'     => 'Blend Mode',
-            'type'      => Controls_Manager::SELECT,
-            'options'   => [
-                'normal'   => 'Normal',
-                'multiply' => 'Multiply',
-                'overlay'  => 'Overlay',
-                'screen'   => 'Screen',
+                // Responsive adjustments
+                '@media (max-width: 767px)' => [
+                    '{{WRAPPER}} .hero-title' => 'font-size: 36px; line-height: 1.2;',
+                    '{{WRAPPER}} .sketch-word' => '-webkit-text-stroke: 1px #1e293b;',
+                ],
             ],
-            'default'   => 'normal',
-            'selectors' => ['{{WRAPPER}} .sketch-word' => 'mix-blend-mode: {{VALUE}};'],
         ]);
-
-        $this->add_group_control(
-            \Elementor\Group_Control_Text_Shadow::get_type(),
-            [
-                'name'     => 'sketch_shadow',
-                'selector' => '{{WRAPPER}} .sketch-word',
-            ]
-        );
-
         $this->end_controls_section();
 
-        // Load Global Typography Engines into Style Tab
-        $this->register_text_styling_controls('main_headline', 'Main Headline Typography', '{{WRAPPER}} .hero-title');
-        $this->register_text_styling_controls('sub_headline', 'Subtitle Typography', '{{WRAPPER}} .hero-subtitle');
+        // --- ELEMENT ENGINES ---
 
-        // --- TAB 3: GLOBAL (4th Tab - Architectural Design System) ---
-        // These call the modular engines from Base_Widget
+        // 1. Sketch Word Engine
+        $this->start_controls_section('sketch_style', ['label' => 'Sketch Word Style', 'tab' => Controls_Manager::TAB_STYLE]);
+        $this->add_control('sketch_stroke_color', [ 'label' => 'Outline Color', 'type' => Controls_Manager::COLOR, 'selectors' => ['{{WRAPPER}} .sketch-word' => '-webkit-text-stroke-color: {{VALUE}};'] ]);
+        $this->add_group_control(Group_Control_Typography::get_type(), ['name' => 'sketch_typo', 'selector' => '{{WRAPPER}} .sketch-word', 'label' => 'Sketch Font']);
+        $this->end_controls_section();
+
+        // 2. Highlight Word Engine
+        $this->start_controls_section('highlight_style', ['label' => 'Highlight (Green) Style', 'tab' => Controls_Manager::TAB_STYLE]);
+        $this->add_control('highlight_color', [ 'label' => 'Text Color', 'type' => Controls_Manager::COLOR, 'default' => '#22c55e', 'selectors' => ['{{WRAPPER}} .highlight-word' => 'color: {{VALUE}};'] ]);
+        $this->end_controls_section();
+
+        // 3. Global Typography
+        $this->register_text_styling_controls('main_typo', 'Headline Typography', '{{WRAPPER}} .hero-title');
+        $this->register_text_styling_controls('sub_typo', 'Subtitle Typography', '{{WRAPPER}} .hero-subtitle');
+
+        // 4. Layout
         $this->register_global_design_controls('.hero-title-container');
-        $this->register_surface_styles('.hero-title-container');
+        $this->register_layout_geometry('.hero-title-container', 'hero_geo', 'Container Layout');
         $this->register_common_spatial_controls();
-
-        $this->register_alignment_controls('main_headline', 'Main Headline Typography', '{{WRAPPER}} .hero-title');
-        // --- TAB 4: ADVANCED (Interactions & Motion) ---
-        // Moves GSAP controls to the Advanced tab as per SaaS standards
         $this->register_interaction_motion();
     }
 
@@ -170,11 +114,19 @@ class Cora_Hero_Title extends Base_Widget
         ?>
         <div class="cora-unit-container hero-title-container">
             <h1 class="hero-title">
-                <span class="regular-word"><?php echo esc_html($settings['title_pre']); ?></span>
-                <span class="sketch-word"><?php echo esc_html($settings['title_sketch']); ?></span>
-                <span class="regular-word"><?php echo esc_html($settings['title_mid']); ?></span>
-                <span class="highlight-word"><?php echo esc_html($settings['title_highlight_1']); ?></span>
+                <span class="line-block">
+                    <?php if($settings['l1_text_start']) : ?><span class="regular-word"><?php echo esc_html($settings['l1_text_start']); ?></span><?php endif; ?>
+                    <?php if($settings['l1_sketch']) : ?><span class="sketch-word"><?php echo esc_html($settings['l1_sketch']); ?></span><?php endif; ?>
+                    <?php if($settings['l1_text_mid']) : ?><span class="regular-word"><?php echo esc_html($settings['l1_text_mid']); ?></span><?php endif; ?>
+                    <?php if($settings['l1_highlight']) : ?><span class="highlight-word"><?php echo esc_html($settings['l1_highlight']); ?></span><?php endif; ?>
+                </span>
+                <br>
+                <span class="line-block">
+                    <?php if($settings['l2_text_start']) : ?><span class="regular-word"><?php echo esc_html($settings['l2_text_start']); ?></span><?php endif; ?>
+                    <?php if($settings['l2_highlight']) : ?><span class="highlight-word"><?php echo esc_html($settings['l2_highlight']); ?></span><?php endif; ?>
+                </span>
             </h1>
+            
             <p class="hero-subtitle"><?php echo esc_html($settings['subtitle']); ?></p>
         </div>
         <?php

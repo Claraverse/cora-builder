@@ -5,160 +5,174 @@ use Cora_Builder\Core\Base_Widget;
 use Elementor\Controls_Manager;
 use Elementor\Icons_Manager;
 
-if (!defined('ABSPATH'))
-    exit;
+if (!defined('ABSPATH')) exit;
 
 class Cora_Home_Feature_Card extends Base_Widget
 {
+    public function get_name() { return 'cora_home_feature_card'; }
+    public function get_title() { return __('Cora Home Feature Card', 'cora-builder'); }
+    public function get_icon() { return 'eicon-info-box'; }
 
-    public function get_name()
-    {
-        return 'cora_home_feature_card';
-    }
-    public function get_title()
-    {
-        return __('Cora Home Feature Card', 'cora-builder');
-    }
-    public function get_icon()
-    {
-        return 'eicon-info-box';
+    // FORCE LOAD ICON LIBRARIES
+    public function get_style_depends() {
+        return [ 'elementor-icons-fa-solid', 'elementor-icons-fa-regular', 'elementor-icons-fa-brands' ];
     }
 
     protected function register_controls()
     {
+        // --- TAB 1: CONTENT ---
+        $this->start_controls_section('section_content', ['label' => __('Card Content', 'cora-builder')]);
 
-        // --- TAB 1: CONTENT (Icon Mode Toggle) ---
-        $this->start_controls_section('section_content', ['label' => __('Feature Content', 'cora-builder')]);
-
+        // ICON SOURCE SWITCHER
         $this->add_control('icon_source', [
-            'label' => __('Icon Source', 'cora-builder'),
+            'label' => 'Icon Source',
             'type' => Controls_Manager::SELECT,
             'default' => 'library',
             'options' => [
-                'library' => __('Icon Library', 'cora-builder'),
-                'custom' => __('Custom SVG Code', 'cora-builder'),
+                'library' => 'Icon Library',
+                'custom'  => 'Paste SVG Code',
             ],
         ]);
 
         $this->add_control('icon', [
-            'label' => 'Select Icon',
+            'label' => 'Icon',
             'type' => Controls_Manager::ICONS,
-            'default' => ['value' => 'fas fa-paint-brush', 'library' => 'solid'],
+            'default' => ['value' => 'fas fa-palette', 'library' => 'solid'],
             'condition' => ['icon_source' => 'library'],
         ]);
 
         $this->add_control('custom_svg', [
-            'label' => 'Paste SVG Code',
+            'label' => 'SVG Code',
             'type' => Controls_Manager::TEXTAREA,
+            'rows' => 10,
+            'placeholder' => '<svg viewBox="0 0 24 24">...</svg>',
             'condition' => ['icon_source' => 'custom'],
+            'description' => 'Paste raw SVG code here. Ensure it has a viewBox attribute.',
         ]);
 
-        $this->add_control('title', [
-            'label' => 'Title',
-            'type' => Controls_Manager::TEXT,
-            'default' => 'Design',
+        // SKIN SELECTOR
+        $this->add_control('skin_type', [
+            'label' => 'Card Skin',
+            'type' => Controls_Manager::SELECT,
+            'default' => 'purple',
+            'options' => [
+                'purple' => 'Design (Purple)',
+                'green'  => 'Develop (Green)',
+                'blue'   => 'Dominate (Blue)',
+                'custom' => 'Custom',
+            ],
+            'separator' => 'before',
         ]);
 
-        $this->add_control('desc', [
-            'label' => 'Description',
-            'type' => Controls_Manager::TEXTAREA,
-            'default' => 'Craft experiences that connect, convert, and inspire.',
-        ]);
+        $this->add_control('title', [ 'label' => 'Title', 'type' => Controls_Manager::TEXT, 'default' => 'Design', 'dynamic' => ['active' => true] ]);
+        $this->add_control('desc', [ 'label' => 'Description', 'type' => Controls_Manager::TEXTAREA, 'default' => 'Craft experiences that connect.', 'dynamic' => ['active' => true] ]);
+        $this->add_control('link', [ 'label' => 'Link', 'type' => Controls_Manager::URL, 'dynamic' => ['active' => true] ]);
 
         $this->end_controls_section();
 
-        // --- TAB 2: STYLE (Individual Elements & Resets) ---
-        $this->start_controls_section('style_icon', ['label' => 'Icon Skin', 'tab' => Controls_Manager::TAB_STYLE]);
+        // --- TAB 2: STYLE (Design Reset) ---
+        $this->start_controls_section('style_reset', [ 'label' => 'Design Reset', 'tab' => Controls_Manager::TAB_STYLE ]);
 
-        // MANDATORY: Force Layout Structure (Replaces style.css)
-        $this->add_control('layout_structure_reset', [
+        $this->add_control('reset_info', [
+            'type' => Controls_Manager::RAW_HTML,
+            'raw'  => '<div style="background:#f1f4ff; color:#1e2b5e; padding:12px; border-radius:12px; font-weight:bold; text-align:center; border:1px solid #dbeafe;">
+                        <i class="eicon-check-circle"></i> SVG & Responsive Engine Active
+                      </div>',
+        ]);
+
+        $this->add_control('structural_reset', [
             'type' => Controls_Manager::HIDDEN,
             'default' => 'reset',
             'selectors' => [
-                '{{WRAPPER}} .cora-feature-card-container' => 'display: flex; box-sizing: border-box; transition: all 0.3s ease;',
-                '{{WRAPPER}} .feature-icon-box' => 'display: flex; align-items: center; justify-content: center; flex-shrink: 0;',
-                '{{WRAPPER}} .feature-icon-box svg' => 'width: 1em; height: 1em; fill: currentColor;',
-                '{{WRAPPER}} .feature-content-body' => 'display: flex; flex-direction: column; gap: 8px;',
-                '{{WRAPPER}} .feature-title, {{WRAPPER}} .feature-desc' => 'margin: 0 !important; padding: 0;',
+                // Container Structure
+                '{{WRAPPER}} .cora-feature-card' => 'display: flex; align-items: flex-start; padding: 24px 32px; border-radius: 16px; gap: 24px; transition: transform 0.3s ease; text-decoration: none; position: relative; overflow: hidden;',
+                '{{WRAPPER}} .cora-feature-card:hover' => 'transform: translateY(-3px);',
+                
+                // Icon Box (Fixed Size)
+                '{{WRAPPER}} .feature-icon' => 'flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; font-size: 32px; line-height: 1;',
+                // SVG Scaling Magic
+                '{{WRAPPER}} .feature-icon i' => 'font-size: inherit; width: 1em; height: 1em;',
+                '{{WRAPPER}} .feature-icon svg' => 'width: 1em; height: 1em; fill: currentColor; display: block;',
+                
+                // Content Column
+                '{{WRAPPER}} .feature-body' => 'display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0;', // min-width:0 prevents flex overflow
+                '{{WRAPPER}} .feature-title' => 'margin: 0 !important; font-size: 20px; font-weight: 800; line-height: 1.2;',
+                '{{WRAPPER}} .feature-desc' => 'margin: 0 !important; font-size: 14px; line-height: 1.5;',
+
+                // PRESET SKINS
+                '{{WRAPPER}} .skin-purple' => 'background-color: #F3E8FF;',
+                '{{WRAPPER}} .skin-purple .feature-icon' => 'color: #7E22CE;',
+                '{{WRAPPER}} .skin-purple .feature-title' => 'color: #581C87;',
+                '{{WRAPPER}} .skin-purple .feature-desc' => 'color: #6B7280;',
+
+                '{{WRAPPER}} .skin-green' => 'background-color: #DCFCE7;',
+                '{{WRAPPER}} .skin-green .feature-icon' => 'color: #15803D;',
+                '{{WRAPPER}} .skin-green .feature-title' => 'color: #14532D;',
+                '{{WRAPPER}} .skin-green .feature-desc' => 'color: #4B5563;',
+
+                '{{WRAPPER}} .skin-blue' => 'background-color: #DBEAFE;',
+                '{{WRAPPER}} .skin-blue .feature-icon' => 'color: #1D4ED8;',
+                '{{WRAPPER}} .skin-blue .feature-title' => 'color: #1E3A8A;',
+                '{{WRAPPER}} .skin-blue .feature-desc' => 'color: #475569;',
+
+                // RESPONSIVE FIX (Mobile)
+                '@media (max-width: 767px)' => [
+                    '{{WRAPPER}} .cora-feature-card' => 'padding: 20px; gap: 16px; align-items: flex-start;',
+                    '{{WRAPPER}} .feature-icon' => 'width: 40px; height: 40px; font-size: 24px;', // Smaller icon on mobile
+                    '{{WRAPPER}} .feature-title' => 'font-size: 18px;',
+                ],
             ],
         ]);
-
-        $this->add_responsive_control('icon_size', [
-            'label' => 'Icon Size (px)',
-            'type' => Controls_Manager::SLIDER,
-            'default' => ['size' => 48],
-            'selectors' => ['{{WRAPPER}} .feature-icon-box' => 'font-size: {{SIZE}}px;'],
-        ]);
-
-        $this->add_control('icon_color', [
-            'label' => 'Icon Color',
-            'type' => Controls_Manager::COLOR,
-            'selectors' => ['{{WRAPPER}} .feature-icon-box' => 'color: {{VALUE}};'],
-        ]);
-
         $this->end_controls_section();
 
-        // Register Global Engines
-        $this->register_text_styling_controls('title_style', 'Title Typography', '{{WRAPPER}} .feature-title');
-        $this->register_text_styling_controls('desc_style', 'Description Typography', '{{WRAPPER}} .feature-desc');
-
-        // --- TAB 3: GLOBAL (Surfaces & Colors) ---
-        $this->start_controls_section('cora_card_surface', [
-            'label' => __('Background & Skin', 'cora-builder'),
+        // --- CUSTOM STYLE OVERRIDES ---
+        $this->start_controls_section('style_custom', [ 
+            'label' => 'Custom Styling', 
             'tab' => Controls_Manager::TAB_STYLE,
+            'condition' => ['skin_type' => 'custom']
         ]);
-
-        $this->start_controls_tabs('cora_card_tabs');
-        $this->start_controls_tab('cora_card_normal', ['label' => __('Normal', 'cora-builder')]);
-        $this->add_control('card_bg', [
-            'label' => 'Background Color',
-            'type' => Controls_Manager::COLOR,
-            'selectors' => ['{{WRAPPER}} .cora-feature-card-container' => 'background-color: {{VALUE}};'],
-        ]);
-        $this->end_controls_tab();
-
-        $this->start_controls_tab('cora_card_hover', ['label' => __('Hover', 'cora-builder')]);
-        $this->add_control('card_bg_h', [
-            'label' => 'Hover Background',
-            'type' => Controls_Manager::COLOR,
-            'selectors' => ['{{WRAPPER}} .cora-feature-card-container:hover' => 'background-color: {{VALUE}};'],
-        ]);
-        $this->end_controls_tab();
-        $this->end_controls_tabs();
+        $this->add_control('custom_bg', [ 'label' => 'Background', 'type' => Controls_Manager::COLOR, 'selectors' => ['{{WRAPPER}} .cora-feature-card' => 'background-color: {{VALUE}};'] ]);
+        $this->add_control('custom_icon_color', [ 'label' => 'Icon Color', 'type' => Controls_Manager::COLOR, 'selectors' => ['{{WRAPPER}} .feature-icon' => 'color: {{VALUE}};'] ]);
+        $this->add_control('custom_title_color', [ 'label' => 'Title Color', 'type' => Controls_Manager::COLOR, 'selectors' => ['{{WRAPPER}} .feature-title' => 'color: {{VALUE}};'] ]);
         $this->end_controls_section();
 
-        // Architectural Engines
-        $this->register_layout_geometry('.cora-feature-card-container');
-        $this->register_surface_styles('.cora-feature-card-container');
-        $this->register_common_spatial_controls();
-        $this->register_alignment_controls('card_align', '.cora-feature-card-container', '.feature-icon-box, .feature-content-body');
-
-        // --- TAB 4: ADVANCED ---
+        // Global Typography & Layout
+        $this->register_text_styling_controls('title_typo', 'Title Typography', '{{WRAPPER}} .feature-title');
+        $this->register_text_styling_controls('desc_typo', 'Description Typography', '{{WRAPPER}} .feature-desc');
+        $this->register_layout_geometry('.cora-feature-card');
         $this->register_interaction_motion();
-        $this->register_transform_engine('.cora-feature-card-container');
     }
 
     protected function render()
     {
         $settings = $this->get_settings_for_display();
+        $skin_class = 'skin-' . $settings['skin_type'];
+        
+        $wrapper_tag = 'div';
+        $wrapper_attrs = 'class="cora-unit-container cora-feature-card ' . esc_attr($skin_class) . '"';
+        
+        if ( ! empty( $settings['link']['url'] ) ) {
+            $wrapper_tag = 'a';
+            $this->add_link_attributes( 'card_link', $settings['link'] );
+            $wrapper_attrs .= ' ' . $this->get_render_attribute_string( 'card_link' );
+        }
         ?>
-        <div class="cora-unit-container cora-feature-card-container">
-            <?php if (!empty($settings['icon']['value']) || !empty($settings['custom_svg'])): ?>
-                <div class="feature-icon-box">
-                    <?php
-                    if ('library' === $settings['icon_source']) {
-                        Icons_Manager::render_icon($settings['icon'], ['aria-hidden' => 'true']);
-                    } else {
-                        echo wp_kses($settings['custom_svg'], ['svg' => ['xmlns' => [], 'viewbox' => [], 'fill' => [], 'class' => []], 'path' => ['d' => [], 'fill' => []]]);
-                    }
-                    ?>
-                </div>
-            <?php endif; ?>
-            <div class="feature-content-body">
+        <<?php echo $wrapper_tag; ?> <?php echo $wrapper_attrs; ?>>
+            
+            <div class="feature-icon">
+                <?php if ( 'custom' === $settings['icon_source'] && ! empty( $settings['custom_svg'] ) ) : ?>
+                    <?php echo $settings['custom_svg']; ?>
+                <?php else : ?>
+                    <?php Icons_Manager::render_icon($settings['icon'], ['aria-hidden' => 'true']); ?>
+                <?php endif; ?>
+            </div>
+
+            <div class="feature-body">
                 <h3 class="feature-title"><?php echo esc_html($settings['title']); ?></h3>
                 <p class="feature-desc"><?php echo esc_html($settings['desc']); ?></p>
             </div>
-        </div>
+
+        </<?php echo $wrapper_tag; ?>>
         <?php
     }
 }

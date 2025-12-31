@@ -73,6 +73,7 @@
     display: flex;
     flex-direction: column;
     /* Gap controlled by Elementor */
+    gap: 20px;
     margin-bottom: 24px;
 }
 
@@ -164,7 +165,7 @@
     /* Stack content if screen is ultra narrow */
     .cora_cluster_item {
         /* Optional: enable if you want them stacked on phones */
-        flex-direction: row; align-items: flex-start;
+        flex-direction: row; align-items: flex-start;  gap: 20px;
     }
     
     .cora_cluster_thumb {

@@ -10,7 +10,7 @@
 }
 
 .cora_blog_card:hover {
-    transform: translateY(-5px);
+     
     box-shadow: 0 12px 24px rgba(0,0,0,0.08);
 }
 
@@ -121,7 +121,7 @@
 .cora_author_avatar {
     width: 32px;
     height: 32px;
-    border-radius: 50%;
+    border-radius: 100px;
     object-fit: cover;
 }
 

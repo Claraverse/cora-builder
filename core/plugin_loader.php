@@ -184,6 +184,7 @@ class Plugin_Loader
             'cora_invoice_builder',
 
             // Blog Page
+            'cora_article_card',
             'cora_blog_cat_header',
             'cora_blog_single_header',
             'cora_blog_content',
