@@ -1,216 +1,299 @@
 <?php
-namespace Cora_Builder\components;
+namespace Cora_Builder\Components;
 
 use Cora_Builder\Core\Base_Widget;
 use Elementor\Controls_Manager;
+use Elementor\Group_Control_Typography;
 use Elementor\Group_Control_Background;
 use Elementor\Utils;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if (!defined('ABSPATH'))
+    exit;
 
-class Cora_Service_Banner extends Base_Widget {
-
+class Cora_Service_Banner extends Base_Widget
+{
     public function get_name() { return 'cora_service_banner'; }
-    public function get_title() { return __( 'Cora Service Banner Hero', 'cora-builder' ); }
+    public function get_title() { return 'Cora Service Banner'; }
     public function get_icon() { return 'eicon-banner'; }
 
-    protected function register_controls() {
-        
-        // --- TAB 1: CONTENT ---
-        $this->start_controls_section('section_content', [ 'label' => 'Banner Identity' ]);
-        
-        $this->add_control('banner_logo', [
-            'label'   => 'Brand Logo',
-            'type'    => Controls_Manager::MEDIA,
+    // Load fonts
+    public function get_style_depends() {
+        wp_register_style('cora-fonts', 'https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap', [], null);
+        return ['cora-fonts'];
+    }
+
+    protected function register_controls()
+    {
+        // --- CONTENT ---
+        $this->start_controls_section('section_content', ['label' => 'Content']);
+
+        $this->add_control('logo_image', [
+            'label' => 'Brand Logo',
+            'type' => Controls_Manager::MEDIA,
             'default' => [ 'url' => Utils::get_placeholder_image_src() ],
         ]);
 
         $this->add_control('title', [
-            'label'   => 'Service Title',
-            'type'    => Controls_Manager::TEXTAREA,
+            'label' => 'Heading',
+            'type' => Controls_Manager::TEXTAREA,
             'default' => 'High-performance E-Commerce Hosting',
             'dynamic' => ['active' => true],
         ]);
 
-        $this->add_control('subline', [
-            'label'   => 'Subline',
-            'type'    => Controls_Manager::TEXTAREA,
+        $this->add_control('desc', [
+            'label' => 'Description',
+            'type' => Controls_Manager::TEXTAREA,
             'default' => 'Work smarter with tasks that can live in your whiteboards, chat, calendar—anywhere you work.',
             'dynamic' => ['active' => true],
         ]);
 
-        $this->add_control('btn_text', [ 'label' => 'Button Text', 'type' => Controls_Manager::TEXT, 'default' => 'Get Started for Free' ]);
-        $this->add_control('btn_link', [ 'label' => 'Button Link', 'type' => Controls_Manager::URL, 'dynamic' => ['active' => true] ]);
+        $this->add_control('btn_text', [
+            'label' => 'Button Text',
+            'type' => Controls_Manager::TEXT,
+            'default' => 'Get Started for Free',
+        ]);
 
-        $this->add_control('mockup_img', [
-            'label'   => 'Right Side Mockup',
-            'type'    => Controls_Manager::MEDIA,
+        $this->add_control('btn_link', [
+            'label' => 'Button Link',
+            'type' => Controls_Manager::URL,
+            'dynamic' => ['active' => true],
+        ]);
+
+        $this->add_control('hero_image', [
+            'label' => 'Hero Image',
+            'type' => Controls_Manager::MEDIA,
             'default' => [ 'url' => Utils::get_placeholder_image_src() ],
+            'dynamic' => ['active' => true],
         ]);
 
         $this->end_controls_section();
 
-        // --- TAB 2: STYLE (Structure & Response) ---
-        $this->start_controls_section('style_structure', [ 'label' => 'Layout Structure', 'tab' => Controls_Manager::TAB_STYLE ]);
+        // --- STYLE ---
+        $this->start_controls_section('section_style', ['label' => 'Design', 'tab' => Controls_Manager::TAB_STYLE]);
 
-        $this->add_control('reset_info', [
-            'type' => Controls_Manager::RAW_HTML,
-            'raw'  => '<div style="background:#f1f4ff; color:#1e2b5e; padding:12px; border-radius:12px; font-weight:bold; text-align:center; border:1px solid #dbeafe; margin-bottom: 15px;">
-                        <i class="eicon-device-desktop"></i> Responsive Grid Engine Active
-                      </div>',
+        $this->add_group_control(
+            Group_Control_Background::get_type(),
+            [
+                'name' => 'banner_background',
+                'label' => 'Banner Background',
+                'types' => ['classic', 'gradient'],
+                'selector' => '{{WRAPPER}} .cora-banner-root',
+                'fields_options' => [
+                    'background' => [
+                        'default' => 'gradient',
+                    ],
+                    'gradient' => [
+                        'default' => [
+                            'angle' => [ 'size' => 90, 'unit' => 'deg' ],
+                            'color' => '#000000',
+                            'color_b' => '#4A1D96', // Dark Purple
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $this->add_control('title_color', [
+            'label' => 'Title Color',
+            'type' => Controls_Manager::COLOR,
+            'default' => '#FFFFFF',
+            'selectors' => ['{{WRAPPER}} .cora-title' => 'color: {{VALUE}};'],
         ]);
 
-        // 1. BASE RESET (Universal Styles Only)
-        $this->add_control('base_reset', [
-            'type' => Controls_Manager::HIDDEN,
-            'default' => 'reset',
-            'selectors' => [
-                '{{WRAPPER}} .cora-banner-hero' => 'width: 100%; overflow: hidden; display: flex; align-items: center; border-radius: 40px; background-color: #000; box-sizing: border-box;',
-                '{{WRAPPER}} .banner-grid' => 'display: grid; width: 100%; align-items: center;',
-                '{{WRAPPER}} .banner-logo' => 'display: block; width: auto; height: 32px; margin-bottom: 32px !important;',
-                '{{WRAPPER}} .banner-h1, {{WRAPPER}} .banner-p' => 'margin: 0 !important; padding: 0;', // Zero Margin Authority
-                '{{WRAPPER}} .banner-btn' => 'display: inline-flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.3s ease;',
-                '{{WRAPPER}} .banner-mockup img' => 'width: 100%; height: auto; object-fit: contain; filter: drop-shadow(0 40px 80px rgba(0,0,0,0.5));',
-            ],
+        $this->add_group_control(Group_Control_Typography::get_type(), [
+            'name' => 'title_typo',
+            'label' => 'Title Typography',
+            'selector' => '{{WRAPPER}} .cora-title',
         ]);
 
-        // 2. RESPONSIVE GRID COLUMNS
-        // Desktop: 2 Columns (Content | Image) | Mobile: 1 Column (Stacked)
-        $this->add_responsive_control('grid_columns', [
-            'label' => 'Grid Columns',
-            'type' => Controls_Manager::SELECT,
-            'default' => '1fr 1.2fr',
-            'options' => [
-                '1fr 1.2fr' => 'Side by Side (1fr 1.2fr)',
-                '1fr 1fr' => 'Equal Split (1fr 1fr)',
-                '1fr' => 'Stacked (1fr)',
-            ],
-            // IMPORTANT: This sets the default device values automatically
-            'desktop_default' => '1fr 1.2fr',
-            'tablet_default' => '1fr',
-            'mobile_default' => '1fr',
-            'selectors' => [
-                '{{WRAPPER}} .banner-grid' => 'grid-template-columns: {{VALUE}};',
-            ],
+        $this->add_control('btn_gradient', [
+            'label' => 'Button Gradient',
+            'type' => Controls_Manager::HEADING,
+            'separator' => 'before',
         ]);
 
-        // 3. RESPONSIVE ALIGNMENT
-        // Center text on mobile, Left on desktop
-        $this->add_responsive_control('content_align', [
-            'label' => 'Content Align',
-            'type' => Controls_Manager::CHOOSE,
-            'options' => [
-                'left' => [ 'title' => 'Left', 'icon' => 'eicon-text-align-left' ],
-                'center' => [ 'title' => 'Center', 'icon' => 'eicon-text-align-center' ],
-                'right' => [ 'title' => 'Right', 'icon' => 'eicon-text-align-right' ],
-            ],
-            'desktop_default' => 'left',
-            'tablet_default' => 'center',
-            'mobile_default' => 'center',
-            'selectors' => [
-                '{{WRAPPER}} .banner-content' => 'text-align: {{VALUE}}; align-items: {{VALUE}} == "center" ? center : ({{VALUE}} == "right" ? flex-end : flex-start); display: flex; flex-direction: column;',
-            ],
-        ]);
-
-        // 4. RESPONSIVE ORDER (Image on Top for Mobile)
-        $this->add_responsive_control('mockup_order', [
-            'label' => 'Image Position',
-            'type' => Controls_Manager::CHOOSE,
-            'options' => [
-                '0' => [ 'title' => 'Normal', 'icon' => 'eicon-arrow-down' ], 
-                '-1' => [ 'title' => 'Top', 'icon' => 'eicon-arrow-up' ],
-            ],
-            'desktop_default' => '0',
-            'tablet_default' => '-1', // Moves image above text on tablet
-            'mobile_default' => '-1', // Moves image above text on mobile
-            'selectors' => [
-                '{{WRAPPER}} .banner-mockup' => 'order: {{VALUE}};',
-            ],
+        $this->add_control('btn_bg_css', [
+            'label' => 'Button Gradient CSS',
+            'type' => Controls_Manager::TEXT,
+            'default' => 'linear-gradient(90deg, #3B82F6 0%, #D946EF 100%)',
+            'selectors' => ['{{WRAPPER}} .cora-btn' => 'background: {{VALUE}};'],
         ]);
 
         $this->end_controls_section();
-
-        // --- ELEMENT ENGINES (Colors, Typos, Geometry) ---
-        
-        // Logo
-        $this->register_layout_geometry('.banner-logo', 'logo_geo', 'Logo Layout');
-
-        // Typography
-        $this->register_text_styling_controls('title_typo', 'Headline Typography', '{{WRAPPER}} .banner-h1');
-        $this->register_text_styling_controls('desc_typo', 'Subline Typography', '{{WRAPPER}} .banner-p');
-
-        // Button
-        $this->register_text_styling_controls('btn_typo', 'Button Text', '{{WRAPPER}} .banner-btn');
-        $this->register_layout_geometry('.banner-btn', 'btn_geo', 'Button Geometry');
-        
-        // Force the Gradient Default for Button via Surface
-        $this->start_controls_section('btn_skin_section', ['label' => 'Button Skin', 'tab' => Controls_Manager::TAB_STYLE]);
-        $this->add_group_control(Group_Control_Background::get_type(), [
-            'name' => 'btn_bg_gradient',
-            'types' => ['classic', 'gradient'],
-            'selector' => '{{WRAPPER}} .banner-btn',
-            'fields_options' => [
-                'background' => [ 'default' => 'gradient' ],
-                'color' => [ 'default' => '#3b82f6' ],
-                'color_b' => [ 'default' => '#d946ef' ],
-                'gradient_angle' => [ 'default' => [ 'unit' => 'deg', 'size' => 90 ] ],
-            ],
-        ]);
-        $this->end_controls_section();
-
-        // Global Container (Padding & Background)
-        $this->register_global_design_controls('.cora-banner-hero');
-        
-        // This responsive padding control handles the desktop (60px) vs mobile (24px) spacing
-        $this->register_layout_geometry('.cora-banner-hero', 'hero_geo', 'Container Padding');
-        
-        // Card Background (Black Default)
-        $this->start_controls_section('section_hero_bg', ['label' => 'Card Background', 'tab' => Controls_Manager::TAB_STYLE]);
-        $this->add_group_control(Group_Control_Background::get_type(), [
-            'name' => 'hero_background',
-            'selector' => '{{WRAPPER}} .cora-banner-hero',
-            'fields_options' => [
-                'background' => [ 'default' => 'classic' ],
-                'color' => [ 'default' => '#000000' ],
-            ],
-        ]);
-        $this->end_controls_section();
-        
-        $this->register_common_spatial_controls();
-
-        // Advanced Motion
-        $this->register_interaction_motion();
     }
 
-    protected function render() {
+    protected function render()
+    {
         $settings = $this->get_settings_for_display();
-        
-        $this->add_render_attribute('btn', 'class', 'banner-btn');
-        if ( ! empty( $settings['btn_link']['url'] ) ) {
-            $this->add_link_attributes( 'btn', $settings['btn_link'] );
+        $id = $this->get_id();
+
+        $btn_attrs = '';
+        if (!empty($settings['btn_link']['url'])) {
+            $this->add_link_attributes('btn_link', $settings['btn_link']);
+            $btn_attrs = $this->get_render_attribute_string('btn_link');
         }
         ?>
-        <div class="cora-banner-hero cora-unit-container">
-            <div class="banner-grid">
-                <div class="banner-content">
-                    <?php if ( ! empty( $settings['banner_logo']['url'] ) ) : ?>
-                        <img src="<?php echo esc_url($settings['banner_logo']['url']); ?>" class="banner-logo">
-                    <?php endif; ?>
-                    
-                    <h1 class="banner-h1"><?php echo esc_html($settings['title']); ?></h1>
-                    <p class="banner-p"><?php echo esc_html($settings['subline']); ?></p>
-                    
-                    <a <?php echo $this->get_render_attribute_string('btn'); ?>>
+
+        <style>
+            .cora-root-<?php echo $id; ?> {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                border-radius: 24px;
+                padding: 48px;
+                overflow: hidden;
+                width: 100%;
+                min-height: 380px;
+                position: relative;
+                gap: 40px;
+                box-sizing: border-box;
+                /* Background handled by Group Control */
+            }
+
+            /* --- Left Column: Content --- */
+            .cora-root-<?php echo $id; ?> .cora-content-col {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 24px;
+                z-index: 2;
+                max-width: 550px;
+            }
+
+            .cora-root-<?php echo $id; ?> .cora-logo {
+                height: 28px;
+                width: auto;
+                object-fit: contain;
+                display: block;
+            }
+
+            .cora-root-<?php echo $id; ?> .cora-title {
+                margin: 0;
+                font-family: "Fredoka", sans-serif;
+                font-size: 42px;
+                font-weight: 500;
+                line-height: 1.1;
+                color: #FFFFFF;
+            }
+
+            .cora-root-<?php echo $id; ?> .cora-desc {
+                margin: 0;
+                font-family: "Inter", sans-serif;
+                font-size: 16px;
+                line-height: 1.6;
+                color: rgba(255, 255, 255, 0.9);
+                max-width: 90%;
+            }
+
+            /* --- Button: Vivid Gradient --- */
+            .cora-root-<?php echo $id; ?> .cora-btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 14px 32px;
+                border-radius: 100px;
+                text-decoration: none;
+                color: #FFFFFF;
+                font-family: "Fredoka", sans-serif;
+                font-size: 16px;
+                font-weight: 600;
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+                border: none;
+                cursor: pointer;
+            }
+
+            .cora-root-<?php echo $id; ?> .cora-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+            }
+
+            /* --- Right Column: Image with Glass Frame --- */
+            .cora-root-<?php echo $id; ?> .cora-media-col {
+                flex: 1;
+                display: flex;
+                justify-content: flex-end;
+                position: relative;
+                height: 100%;
+                min-height: 300px;
+            }
+
+            /* The Glass/Glow Frame Container */
+            .cora-root-<?php echo $id; ?> .cora-img-frame {
+                position: relative;
+                border-radius: 20px;
+                padding: 6px; /* Width of the border effect */
+                background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.05) 100%);
+                box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+                width: 100%;
+                max-width: 450px;
+                height: 100%;
+            }
+
+            .cora-root-<?php echo $id; ?> .cora-hero-img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 16px; /* Inner radius */
+                display: block;
+            }
+
+            /* --- Responsive --- */
+            @media (max-width: 1024px) {
+                .cora-root-<?php echo $id; ?> {
+                    flex-direction: column;
+                    padding: 32px;
+                    text-align: center;
+                    height: auto;
+                }
+                
+                .cora-root-<?php echo $id; ?> .cora-content-col {
+                    align-items: center; /* Center text on mobile */
+                    max-width: 100%;
+                }
+
+                .cora-root-<?php echo $id; ?> .cora-title {
+                    font-size: 32px;
+                }
+
+                .cora-root-<?php echo $id; ?> .cora-media-col {
+                    width: 100%;
+                    justify-content: center;
+                    min-height: 250px;
+                }
+                
+                .cora-root-<?php echo $id; ?> .cora-img-frame {
+                    width: 100%;
+                }
+            }
+        </style>
+
+        <div class="cora-unit-container cora-banner-root cora-root-<?php echo $id; ?>">
+            
+            <div class="cora-content-col">
+                <?php if (!empty($settings['logo_image']['url'])) : ?>
+                    <img src="<?php echo esc_url($settings['logo_image']['url']); ?>" class="cora-logo" alt="Logo">
+                <?php endif; ?>
+
+                <h2 class="cora-title"><?php echo esc_html($settings['title']); ?></h2>
+                <p class="cora-desc"><?php echo esc_html($settings['desc']); ?></p>
+
+                <?php if (!empty($settings['btn_text'])) : ?>
+                    <a <?php echo $btn_attrs; ?> class="cora-btn">
                         <?php echo esc_html($settings['btn_text']); ?>
                     </a>
-                </div>
-
-                <div class="banner-mockup">
-                    <?php if ( ! empty( $settings['mockup_img']['url'] ) ) : ?>
-                        <img src="<?php echo esc_url($settings['mockup_img']['url']); ?>" alt="Service Preview">
-                    <?php endif; ?>
-                </div>
+                <?php endif; ?>
             </div>
+
+            <?php if (!empty($settings['hero_image']['url'])) : ?>
+                <div class="cora-media-col">
+                    <div class="cora-img-frame">
+                        <img src="<?php echo esc_url($settings['hero_image']['url']); ?>" class="cora-hero-img" alt="Hero">
+                    </div>
+                </div>
+            <?php endif; ?>
+
         </div>
         <?php
     }

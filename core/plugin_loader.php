@@ -152,6 +152,7 @@ class Plugin_Loader
             'cora_guide_card_v3',
 
             // home page
+            'cora_advance_heading_two',
             'cora_hero_title',
             'cora_info_pill',
             'cora_logo_carousel',

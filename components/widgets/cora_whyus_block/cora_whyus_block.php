@@ -1,125 +1,192 @@
 <?php
-namespace Cora_Builder\components;
+namespace Cora_Builder\Components;
 
 use Cora_Builder\Core\Base_Widget;
 use Elementor\Controls_Manager;
+use Elementor\Group_Control_Typography;
+use Elementor\Utils;
 
 if (!defined('ABSPATH'))
     exit;
 
 class Cora_WhyUs_Block extends Base_Widget
 {
+    public function get_name() { return 'cora_whyus_block'; }
+    public function get_title() { return 'Cora Why Us Block'; }
+    public function get_icon() { return 'eicon-info-box'; }
 
-    public function get_name()
-    {
-        return 'cora_whyus_block';
-    }
-    public function get_title()
-    {
-        return __('Cora WhyUs Block', 'cora-builder');
-    }
-    public function get_icon()
-    {
-        return 'eicon-info-box';
+    // Load Fredoka Font Automatically
+    public function get_style_depends() {
+        wp_register_style('cora-google-fredoka', 'https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap', [], null);
+        return ['cora-google-fredoka'];
     }
 
     protected function register_controls()
     {
-
-        // --- TAB 1: CONTENT ---
-        $this->start_controls_section('section_content', ['label' => __('Feature Info', 'cora-builder')]);
+        // --- CONTENT ---
+        $this->start_controls_section('section_content', ['label' => 'Content']);
 
         $this->add_control('title', [
-            'label' => 'Headline',
-            'type' => Controls_Manager::TEXT,
+            'label' => 'Title',
+            'type' => Controls_Manager::TEXTAREA,
             'default' => 'SEO-Optimized',
-            'dynamic' => ['active' => true]
+            'dynamic' => ['active' => true],
         ]);
 
         $this->add_control('desc', [
             'label' => 'Description',
             'type' => Controls_Manager::TEXTAREA,
             'default' => 'Our SEO-centric design approach enhances your online visibility and drives organic traffic effectively.',
-            'dynamic' => ['active' => true]
+            'dynamic' => ['active' => true],
         ]);
 
-        $this->add_control('dashboard_img', [
-            'label' => 'Analytics Preview',
+        $this->add_control('image', [
+            'label' => 'Image',
             'type' => Controls_Manager::MEDIA,
-            'default' => ['url' => \Elementor\Utils::get_placeholder_image_src()]
+            'default' => [ 'url' => Utils::get_placeholder_image_src() ],
+            'dynamic' => ['active' => true],
         ]);
 
         $this->end_controls_section();
 
-        // --- TAB 2: STYLE (Design Reset & Structural Authority) ---
-        $this->start_controls_section('style_reset', [
-            'label' => 'Design Reset',
-            'tab' => Controls_Manager::TAB_STYLE
+        // --- STYLE ---
+        $this->start_controls_section('section_style', ['label' => 'Design', 'tab' => Controls_Manager::TAB_STYLE]);
+
+        $this->add_control('bg_color', [
+            'label' => 'Background Color',
+            'type' => Controls_Manager::COLOR,
+            'default' => '#FFFFFF',
+            'selectors' => ['{{WRAPPER}} .cora-why-root' => 'background-color: {{VALUE}};'],
         ]);
 
-        $this->add_control('reset_info', [
-            'type' => Controls_Manager::RAW_HTML,
-            'raw' => '<div style="background:#f1f4ff; color:#1e2b5e; padding:12px; border-radius:12px; font-weight:bold; text-align:center; border:1px solid #dbeafe;">
-                        <i class="eicon-check-circle"></i> Cora Structural Reset Active
-                      </div>',
+        // Title Styling
+        $this->add_control('title_color', [
+            'label' => 'Title Color',
+            'type' => Controls_Manager::COLOR,
+            'default' => '#2E2B88',
+            'selectors' => ['{{WRAPPER}} .cora-title' => 'color: {{VALUE}};'],
         ]);
 
-        $this->add_control('structural_reset', [
-            'type' => Controls_Manager::HIDDEN,
-            'default' => 'reset',
+        $this->add_group_control(Group_Control_Typography::get_type(), [
+            'name' => 'title_typo',
+            'label' => 'Title Typography',
+            'selector' => '{{WRAPPER}} .cora-title',
+        ]);
+
+        // Desc Styling
+        $this->add_control('desc_color', [
+            'label' => 'Description Color',
+            'type' => Controls_Manager::COLOR,
+            'default' => '#475569',
+            'selectors' => ['{{WRAPPER}} .cora-desc' => 'color: {{VALUE}};'],
+        ]);
+
+        $this->add_group_control(Group_Control_Typography::get_type(), [
+            'name' => 'desc_typo',
+            'label' => 'Desc Typography',
+            'selector' => '{{WRAPPER}} .cora-desc',
+        ]);
+
+        // --- NEW: Image Height Control ---
+        $this->add_control('img_height_heading', [
+            'label' => 'Image Sizing',
+            'type' => Controls_Manager::HEADING,
+            'separator' => 'before',
+        ]);
+
+        $this->add_responsive_control('image_height', [
+            'label' => 'Image Height',
+            'type' => Controls_Manager::SLIDER,
+            'size_units' => ['px', '%', 'vh'],
+            'range' => [
+                'px' => ['min' => 100, 'max' => 800],
+                'vh' => ['min' => 10, 'max' => 100],
+            ],
+            'default' => ['unit' => 'px', 'size' => 300],
             'selectors' => [
-                '{{WRAPPER}} .cora-why-us-container' => 'display: flex; flex-direction: column; transition: all 0.3s ease;',
-                '{{WRAPPER}} .why-content' => 'display: flex; flex-direction: column; gap: 16px;',
-                '{{WRAPPER}} .why-title, {{WRAPPER}} .why-desc' => 'margin: 0 !important; padding: 0;',
-                '{{WRAPPER}} .why-media' => 'width: 100%; display: flex; justify-content: center;',
-                '{{WRAPPER}} .dashboard-preview' => 'width: 100%; height: auto; object-fit: contain; transition: all 0.3s ease;',
+                '{{WRAPPER}} .cora-img' => 'height: {{SIZE}}{{UNIT}}; object-fit: cover;',
             ],
         ]);
+
         $this->end_controls_section();
-
-        // --- ELEMENT CONTROL ENGINES ---
-
-        // 1. Headline & Description Typography
-        $this->register_text_styling_controls('title_style', 'Headline Typography', '{{WRAPPER}} .why-title');
-        $this->register_text_styling_controls('desc_style', 'Description Typography', '{{WRAPPER}} .why-desc');
-
-        // 2. Media Surface & Sizing (Individual Element Geometry)
-        $this->register_layout_geometry('.cora-why-us-container');
-        $this->register_surface_styles('.cora-why-us-container');
-
-        // --- TAB 3: GLOBAL (Main Card Container) ---
-
-        // CARD PADDING, MARGIN & GAP
-        // This engine provides responsive padding (default 40px) for the entire card.
-        $this->register_layout_geometry('.cora-why-us-container', );
-
-        // CARD BACKGROUND, BORDERS & SHADOWS
-        $this->register_surface_styles('.cora-why-us-container');
-
-        $this->register_global_design_controls('.cora-why-us-container');
-        $this->register_alignment_controls('why_align', '.cora-why-us-container', '.why-content, .why-media');
-        $this->register_common_spatial_controls();
-
-        // --- TAB 4: ADVANCED ---
-        $this->register_interaction_motion();
-        $this->register_transform_engine('.cora-why-us-container');
     }
 
     protected function render()
     {
         $settings = $this->get_settings_for_display();
+        $id = $this->get_id();
         ?>
-        <div class="cora-unit-container cora-why-us-container">
-            <div class="why-content">
-                <h3 class="why-title"><?php echo esc_html($settings['title']); ?></h3>
-                <p class="why-desc"><?php echo esc_html($settings['desc']); ?></p>
+
+        <style>
+            .cora-root-<?php echo $id; ?> {
+                display: flex;
+                flex-direction: column;
+                background-color: #FFFFFF;
+                border-radius: 32px;
+                padding: 20px 20px 20px 20px; /* Flush bottom */
+                box-sizing: border-box;
+                border: 1px solid #E0E7FF;
+                overflow: hidden;
+                width: 100%;
+                gap: 24px;
+                min-height: 400px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+            }
+
+            .cora-root-<?php echo $id; ?> .cora-content {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+                padding: 12px; /* Inner padding for text */
+            }
+
+            .cora-root-<?php echo $id; ?> .cora-title {
+                margin: 0;
+                font-family: "Fredoka", sans-serif;
+                font-size: 38px;
+                font-weight: 700;
+                color: #2E2B88;
+                line-height: 1.1;
+                letter-spacing: -0.02em;
+            }
+
+            .cora-root-<?php echo $id; ?> .cora-desc {
+                margin: 0;
+                font-family: "Inter", sans-serif;
+                font-size: 16px;
+                line-height: 1.6;
+                color: #475569;
+                max-width: 95%;
+            }
+
+            /* Image Wrapper: Anchored to Bottom */
+            .cora-root-<?php echo $id; ?> .cora-img-wrap {
+                margin-top: auto;
+                width: 100%;
+                display: flex;
+            }
+
+            .cora-root-<?php echo $id; ?> .cora-img {
+                width: 100%;
+                /* Height controlled via Elementor settings */
+                display: block;
+                object-fit: cover;
+                border-radius: 12px;
+   
+            }
+        </style>
+
+        <div class="cora-unit-container cora-why-root cora-root-<?php echo $id; ?>">
+            <div class="cora-content">
+                <h3 class="cora-title"><?php echo esc_html($settings['title']); ?></h3>
+                <p class="cora-desc"><?php echo esc_html($settings['desc']); ?></p>
             </div>
 
-            <div class="why-media">
-                <?php if (!empty($settings['dashboard_img']['url'])): ?>
-                    <img src="<?php echo esc_url($settings['dashboard_img']['url']); ?>" class="cora-why-us-container">
-                <?php endif; ?>
-            </div>
+            <?php if ( ! empty( $settings['image']['url'] ) ) : ?>
+                <div class="cora-img-wrap">
+                    <img src="<?php echo esc_url($settings['image']['url']); ?>" class="cora-img" alt="<?php echo esc_attr($settings['title']); ?>">
+                </div>
+            <?php endif; ?>
         </div>
         <?php
     }
