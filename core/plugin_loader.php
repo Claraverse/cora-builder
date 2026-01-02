@@ -168,6 +168,7 @@ class Plugin_Loader
             // Course Page
             'cora_community_cta',
             'cora_category_header',
+            'cora_course_hero_feature',
             'cora_guide_header',
             'cora_guide_content',
 
