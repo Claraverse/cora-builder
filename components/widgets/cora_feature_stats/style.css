@@ -36,7 +36,7 @@
 /* Responsive Stacking */
 @media (max-width: 767px) {
     .stats-grid {
-        grid-template-columns: 1fr 1fr !important;
+         
         row-gap: 40px;
     }
 }
