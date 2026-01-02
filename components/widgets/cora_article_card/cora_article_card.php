@@ -22,7 +22,8 @@ class Cora_Article_Card extends Base_Widget {
         $this->add_control('thumbnail', [
             'label' => 'Thumbnail Image',
             'type' => Controls_Manager::MEDIA,
-            'default' => [ 'url' => Utils::get_placeholder_image_src() ],'dynamic' => ['active' => true]
+            'default' => [ 'url' => Utils::get_placeholder_image_src() ],
+            'dynamic' => ['active' => true]
         ]);
 
         $this->add_control('meta_date', [
@@ -62,73 +63,63 @@ class Cora_Article_Card extends Base_Widget {
         // --- TAB 2: STYLE (Design Reset) ---
         $this->start_controls_section('style_reset', [ 'label' => 'Design Reset', 'tab' => Controls_Manager::TAB_STYLE ]);
 
-        // Visual Status Bar
-        $this->add_control('reset_info', [
-            'type' => Controls_Manager::RAW_HTML,
-            'raw'  => '<div style="background:#f1f4ff; color:#1e2b5e; padding:12px; border-radius:12px; font-weight:bold; text-align:center; border:1px solid #dbeafe;">
-                        <i class="eicon-check-circle"></i> Horizontal Layout Active
-                      </div>',
-        ]);
-
         $this->add_control('structural_reset', [
             'type' => Controls_Manager::HIDDEN,
             'default' => 'reset',
             'selectors' => [
-                // Main Container (Enforce Horizontal Row)
-                '{{WRAPPER}} .cora-article-card' => 'display: flex; flex-direction: row; align-items: flex-start; gap: 24px; padding: 24px; background: #fff;  text-decoration: none;',
+                // Container: Use a fluid gap and responsive padding
+                '{{WRAPPER}} .cora-article-card' => 'display: flex; flex-direction: row; align-items: stretch; gap: 4%; padding: 20px; background: #fff; text-decoration: none; width: 100%; box-sizing: border-box;',
                 
-                // Image Styling (Fixed Width is Key for Horizontal Layout)
-                '{{WRAPPER}} .article-thumb' => 'width: 180px; height: 120px; border-radius: 12px; object-fit: cover; flex-shrink: 0;',
+                // Image Styling: Use flex-basis for fluid sizing on desktop
+                '{{WRAPPER}} .article-thumb-wrapper' => 'flex: 0 0 30%; max-width: 220px; min-width: 140px;',
+                '{{WRAPPER}} .article-thumb' => 'width: 100%; height: 100%; aspect-ratio: 3/2; border-radius: 12px; object-fit: cover;',
                 
-                // Content Column (Flex 1 ensures it fills remaining space)
-                '{{WRAPPER}} .article-content' => 'display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 0;',
+                // Content Column
+                '{{WRAPPER}} .article-content' => 'display: flex; flex-direction: column; justify-content: center; gap: 8px; flex: 1; min-width: 0;',
                 
-                // Meta Row (Date & Time)
-                '{{WRAPPER}} .meta-row' => 'display: flex; align-items: center; gap: 16px; color: #64748b; font-size: 13px; font-weight: 500; line-height: 1;',
-                '{{WRAPPER}} .meta-item' => 'display: flex; align-items: center; gap: 6px;',
-                '{{WRAPPER}} .meta-item i' => 'font-size: 13px; color: #94a3b8;',
+                // Meta Row
+                '{{WRAPPER}} .meta-row' => 'display: flex; flex-wrap: wrap; align-items: center; gap: 12px; color: #64748b; font-size: clamp(11px, 1vw, 13px); font-weight: 500;',
+                '{{WRAPPER}} .meta-item' => 'display: flex; align-items: center; gap: 6px; white-space: nowrap;',
                 
-                // Typography Authority
-                '{{WRAPPER}} .article-title' => 'margin: 4px 0 8px 0 !important; font-size: 18px; font-weight: 700; color: #0f172a; line-height: 1.3;',
-                '{{WRAPPER}} .article-desc' => 'margin: 0 !important; font-size: 15px; color: #475569; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;',
+                // Typography Authority with Fluid Sizing
+                '{{WRAPPER}} .article-title' => 'margin: 0 !important; font-size: clamp(16px, 2vw, 20px); font-weight: 700; color: #0f172a; line-height: 1.25;',
+                '{{WRAPPER}} .article-desc' => 'margin: 0 !important; font-size: clamp(13px, 1.5vw, 15px); color: #475569; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;',
 
-                // Responsive: Stack on Mobile
+                // Tablet Breakpoint
+                '@media (max-width: 1024px)' => [
+                    '{{WRAPPER}} .cora-article-card' => 'gap: 20px;',
+                    '{{WRAPPER}} .article-thumb-wrapper' => 'flex: 0 0 35%;',
+                ],
+
+                // Mobile Breakpoint: Stack vertically
                 '@media (max-width: 767px)' => [
-                    '{{WRAPPER}} .cora-article-card' => 'flex-direction: column;',
-                    '{{WRAPPER}} .article-thumb' => 'width: 100%; height: 200px;',
+                    '{{WRAPPER}} .cora-article-card' => 'flex-direction: column; align-items: flex-start; padding: 16px; gap: 16px;',
+                    '{{WRAPPER}} .article-thumb-wrapper' => 'width: 100%; max-width: 100%; flex: 0 0 auto;',
+                    '{{WRAPPER}} .article-thumb' => 'aspect-ratio: 16/9;',
+                    '{{WRAPPER}} .article-title' => 'font-size: 18px;',
+                    '{{WRAPPER}} .article-desc' => '-webkit-line-clamp: 3;', // Show more text on mobile
                 ],
             ],
         ]);
         $this->end_controls_section();
 
-        // --- ELEMENT ENGINES ---
-
-        // 1. Thumbnail Geometry (Allows you to resize the image)
-        $this->register_layout_geometry('.article-thumb' );
-        
-        // 2. Typography Engines
+        // --- CUSTOM STYLE CONTROLS ---
         $this->register_text_styling_controls('title_typo', 'Title Typography', '{{WRAPPER}} .article-title');
         $this->register_text_styling_controls('desc_typo', 'Excerpt Typography', '{{WRAPPER}} .article-desc');
         
-        // 3. Meta Data Styling
         $this->start_controls_section('meta_style_sec', ['label' => 'Meta Data', 'tab' => Controls_Manager::TAB_STYLE]);
         $this->add_control('meta_color', ['label' => 'Text Color', 'type' => Controls_Manager::COLOR, 'selectors' => ['{{WRAPPER}} .meta-row' => 'color: {{VALUE}};']]);
         $this->add_control('meta_icon_color', ['label' => 'Icon Color', 'type' => Controls_Manager::COLOR, 'selectors' => ['{{WRAPPER}} .meta-item i' => 'color: {{VALUE}};']]);
-        $this->add_group_control(Group_Control_Typography::get_type(), ['name' => 'meta_typo', 'selector' => '{{WRAPPER}} .meta-row']);
         $this->end_controls_section();
 
-        // 4. Global Container
         $this->register_global_design_controls('.cora-article-card');
         $this->register_layout_geometry('.cora-article-card' );
         $this->register_surface_styles('.cora-article-card'  );
-        
-        $this->register_interaction_motion();
     }
 
     protected function render() {
         $settings = $this->get_settings_for_display();
         
-        // Link Wrapper Logic
         $wrapper_tag = 'div';
         $wrapper_attrs = 'class="cora-unit-container cora-article-card"';
         if ( ! empty( $settings['link']['url'] ) ) {
@@ -140,7 +131,9 @@ class Cora_Article_Card extends Base_Widget {
         <<?php echo $wrapper_tag; ?> <?php echo $wrapper_attrs; ?>>
             
             <?php if ( ! empty( $settings['thumbnail']['url'] ) ) : ?>
-                <img src="<?php echo esc_url($settings['thumbnail']['url']); ?>" class="article-thumb" alt="Article Thumbnail">
+                <div class="article-thumb-wrapper">
+                    <img src="<?php echo esc_url($settings['thumbnail']['url']); ?>" class="article-thumb" alt="Article Thumbnail">
+                </div>
             <?php endif; ?>
 
             <div class="article-content">

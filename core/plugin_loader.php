@@ -187,6 +187,7 @@ class Plugin_Loader
             // Blog Page
             'cora_article_card',
             'cora_blog_cat_header',
+            'cora_cta_block',
             'cora_blog_single_header',
             'cora_blog_content',
 
