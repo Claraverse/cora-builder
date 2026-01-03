@@ -12,7 +12,7 @@ if (!defined('ABSPATH'))
 class Cora_Testimonial_Block extends Base_Widget
 {
     public function get_name() { return 'cora_testimonial_block'; }
-    public function get_title() { return 'Cora Testimonial Block'; }
+    public function get_title() { return 'Cora – Testimonial Block'; }
     public function get_icon() { return 'eicon-testimonial'; }
 
     // Load fonts
@@ -81,19 +81,19 @@ class Cora_Testimonial_Block extends Base_Widget
         $this->add_responsive_control('card_height', [
             'label' => 'Card Height',
             'type' => Controls_Manager::SLIDER,
-            'size_units' => ['px', 'vh'],
-            'range' => [ 'px' => [ 'min' => 400, 'max' => 900 ] ],
-            'default' => [ 'unit' => 'px', 'size' => 550 ], // Taller default
-            'selectors' => ['{{WRAPPER}} .cora-testi-root' => 'height: {{SIZE}}{{UNIT}};'],
+            'size_units' => ['px', 'vh', 'em'],
+            'range' => [ 'px' => [ 'min' => 300, 'max' => 900 ] ],
+            'default' => [ 'unit' => 'px', 'size' => 550 ],
+            'selectors' => [
+                '{{WRAPPER}} .cora-testi-root' => 'height: {{SIZE}}{{UNIT}};',
+            ],
         ]);
 
-        $this->add_responsive_control('card_min_width', [
-            'label' => 'Min Width',
-            'type' => Controls_Manager::SLIDER,
-            'size_units' => ['px', '%'],
-            'range' => [ 'px' => [ 'min' => 200, 'max' => 600 ] ],
-            'default' => [ 'unit' => 'px', 'size' => 320 ], // Standard portrait width
-            'selectors' => ['{{WRAPPER}} .cora-testi-root' => 'min-width: {{SIZE}}{{UNIT}};'],
+        $this->add_control('overlay_color', [
+            'label' => 'Glass Color',
+            'type' => Controls_Manager::COLOR,
+            'default' => 'rgba(20, 20, 20, 0.85)',
+            'selectors' => ['{{WRAPPER}} .cora-glass-card' => '--glass-bg: {{VALUE}};'],
         ]);
 
         $this->end_controls_section();
@@ -118,13 +118,12 @@ class Cora_Testimonial_Block extends Base_Widget
             .cora-root-<?php echo $id; ?> {
                 position: relative;
                 width: 100%;
-                /* Height & Min-Width handled by controls */
+                /* Height handled by controls */
                 border-radius: 24px;
                 overflow: hidden;
                 background-image: url('<?php echo esc_url($bg_url); ?>');
                 background-size: cover;
                 background-position: center;
-                min-width: 400px;
                 display: flex;
                 align-items: flex-end; /* Push content to bottom */
                 padding: 10px; /* Small gap for the floating look */
@@ -135,13 +134,14 @@ class Cora_Testimonial_Block extends Base_Widget
             /* Dark Glass Overlay */
             .cora-root-<?php echo $id; ?> .cora-glass-card {
                 width: 100%;
-                /* Much darker background for high contrast */
-                background: linear-gradient(180deg, rgba(20, 20, 20, 0.85) 0%, rgba(10, 10, 10, 0.95) 100%);
+                /* CSS Variable for easy color control */
+                --glass-bg: rgba(20, 20, 20, 0.85);
+                background: linear-gradient(180deg, var(--glass-bg) 0%, rgba(0, 0, 0, 0.95) 100%);
                 backdrop-filter: blur(20px);
                 -webkit-backdrop-filter: blur(20px);
-                border-top: 1px solid rgba(255, 255, 255, 0.15); /* Subtle top highlight */
+                border-top: 1px solid rgba(255, 255, 255, 0.15);
                 border-radius: 20px;
-                padding: 28px;
+                padding: 24px;
                 box-sizing: border-box;
                 color: #FFFFFF;
                 display: flex;
@@ -151,7 +151,6 @@ class Cora_Testimonial_Block extends Base_Widget
             }
 
             .cora-root-<?php echo $id; ?>:hover .cora-glass-card {
-                background: linear-gradient(180deg, rgba(20, 20, 20, 0.9) 0%, rgba(0, 0, 0, 0.98) 100%);
                 transform: translateY(-4px);
             }
 
@@ -159,7 +158,8 @@ class Cora_Testimonial_Block extends Base_Widget
             .cora-root-<?php echo $id; ?> .cora-category {
                 font-family: "Playfair Display", serif;
                 font-style: italic;
-                font-size: 32px;
+                /* Responsive Font Size */
+                font-size: clamp(24px, 5vw, 32px);
                 font-weight: 400;
                 margin: 0;
                 line-height: 1;
@@ -181,14 +181,16 @@ class Cora_Testimonial_Block extends Base_Widget
                 align-items: flex-end;
                 justify-content: space-between;
                 width: 100%;
-                gap: 12px;
-                margin-top: 8px;
+                gap: 16px;
+                margin-top: 4px;
+                flex-wrap: wrap; /* Critical for responsiveness */
             }
 
             .cora-root-<?php echo $id; ?> .cora-meta {
                 display: flex;
                 flex-direction: column;
                 gap: 2px;
+                min-width: 120px; /* Ensure name doesn't squish too much */
             }
 
             .cora-root-<?php echo $id; ?> .cora-name {
@@ -231,31 +233,23 @@ class Cora_Testimonial_Block extends Base_Widget
                 border-color: #FFFFFF;
             }
 
-            /* --- RESPONSIVE --- */
-            @media (max-width: 768px) {
+            /* --- RESPONSIVE MOBILE FIXES --- */
+            @media (max-width: 767px) {
+                .cora-root-<?php echo $id; ?> {
+                    /* On mobile, unset fixed height to prevent cutoff if text is long */
+                    height: auto !important; 
+                    min-height: 400px; 
+                }
+
                 .cora-root-<?php echo $id; ?> .cora-glass-card {
-                    padding: 24px;
+                    padding: 20px;
                     gap: 12px;
                 }
-                .cora-root-<?php echo $id; ?> {
                 
-                min-width: 320px;
-                display: flex;
-                align-items: flex-end; /* Push content to bottom */
-                padding: 10px; /* Small gap for the floating look */
-                box-sizing: border-box;
-                z-index: 1;
-            }
-
-                .cora-root-<?php echo $id; ?> .cora-category {
-                    font-size: 28px;
-                }
-                /* On mobile, keep button side-by-side if space permits, else wrap */
-                .cora-root-<?php echo $id; ?> .cora-card-footer {
-                    flex-wrap: wrap; 
-                }
                 .cora-root-<?php echo $id; ?> .cora-btn {
-                    margin-left: auto; /* Push to right */
+                    /* On very small screens, make button full width for easier tapping */
+                    flex-grow: 1;
+                    text-align: center;
                 }
             }
         </style>

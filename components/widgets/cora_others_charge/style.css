@@ -1,44 +1,56 @@
-/* --- Competitive Card Reset --- */
+/* --- Competitive Card Container --- */
 .cora-comp-container {
     width: 100%;
-    max-width: 100vw;
     background: #ffffff;
-    overflow: hidden; /* No Viewport Overflow */
     box-sizing: border-box;
-    margin: 0 !important; /* Zero-Margin */
-    padding: 40px; /* Managed via Style Tab */
+    /* Default padding is handled by the Elementor control, 
+       but we set a safe fallback here */
+    padding: 20px; 
 }
 
 /* --- Header Engine --- */
 .comp-header {
     display: flex;
-    align-items: center;
+    align-items: flex-start; /* Aligns icon with top of text */
     gap: 20px;
-    margin-bottom: 40px !important;
+    margin-bottom: 40px;
 }
 
 .comp-icon-box {
-    width: 60px; height: 60px;
-    background: #f1f5f9; /* Subtle gray hub */
+    width: 60px;
+    height: 60px;
+    background: #f1f5f9;
     border-radius: 50%;
     display: flex;
-    align-items: center; justify-content: center;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0; /* Prevents icon from squishing on mobile */
 }
 
-.comp-icon-box img { width: 40%; }
+.comp-icon-box img {
+    width: 40%;
+    height: auto;
+    display: block;
+}
+
+.comp-header-text {
+    flex: 1; /* Takes up remaining space */
+}
 
 .comp-h2 {
-    margin: 0 0 4px 0 !important;
-    font-size: 32px;
+    margin: 0 0 8px 0;
+    font-size: clamp(24px, 5vw, 32px); /* Scales between 24px and 32px */
     font-weight: 850;
     color: #0f172a;
+    line-height: 1.1;
 }
 
 .comp-p {
-    margin: 0 !important;
-    font-size: 18px;
+    margin: 0;
+    font-size: clamp(16px, 4vw, 18px);
     color: #475569;
     font-weight: 500;
+    line-height: 1.5;
 }
 
 /* --- Price Canvas Architecture --- */
@@ -47,45 +59,96 @@
     width: 100%;
     background: #f8fafc;
     border-radius: 32px;
-    min-height: 400px;
+    /* We remove fixed height and use padding + min-height for responsiveness */
+    min-height: 350px; 
+    padding: 60px 40px;
+    border: 1px solid #f1f5f9;
+    box-sizing: border-box;
+    
+    /* Flex Center for the Price Text */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 60px;
-    border: 1px solid #f1f5f9;
+    overflow: hidden; /* Clips the illustration if it sits on the edge */
 }
 
-.comp-illustration {
-    position: absolute;
-    bottom: 0; left: 40px;
-    width: 250px;
+/* --- Pricing Stack --- */
+.comp-pricing-stack {
+    text-align: center;
+    z-index: 5; /* Ensures text stays above illustration */
+    position: relative;
 }
-
-.comp-illustration img { width: 100%; height: auto; }
-
-.comp-pricing-stack { text-align: center; z-index: 5; }
 
 .comp-price {
-    margin: 0 !important;
-    font-size: 84px;
+    margin: 0 0 10px 0;
+    /* Responsive Font Size using Clamp */
+    font-size: clamp(48px, 10vw, 84px); 
     font-weight: 900;
     color: #0f172a;
     letter-spacing: -2px;
+    line-height: 1;
+    
+    /* Strikethrough Effect */
+    position: relative;
+    display: inline-block;
+}
+
+/* The Strikethrough Line */
+.comp-price::after {
+    content: '';
+    position: absolute;
+    left: -5%;
+    top: 50%;
+    width: 110%;
+    height: 4px; /* Thickness of line */
+    background: #0f172a;
+    transform: rotate(-5deg); /* Slight angle like the mockup */
+    border-radius: 2px;
 }
 
 .comp-price-label {
-    margin: 0 !important;
-    font-size: 28px;
-    font-weight: 850;
+    margin: 0;
+    font-size: clamp(18px, 4vw, 28px);
+    font-weight: 700;
     color: #0f172a;
+    line-height: 1.2;
 }
 
-/* --- Responsive Adaptability --- */
-@media (max-width: 767px) {
-    .comp-canvas { min-height: 300px; padding: 40px 20px; }
-    .comp-price { font-size: 56px; }
-    .comp-price-label { font-size: 20px; }
-    .comp-illustration { position: relative; left: 0; width: 150px; margin-top: 40px; order: 2; }
-    .comp-pricing-stack { order: 1; }
+/* --- Illustration Logic --- */
+.comp-illustration {
+    position: absolute;
+    bottom: 0;
+    left: 40px;
+    width: 250px;
+    z-index: 1;
+    pointer-events: none; /* Allows clicking through if needed */
+}
+
+.comp-illustration img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* --- Responsive Breakpoints --- */
+
+/* Tablet & Mobile (Below 1024px) */
+/* We switch illustration to flow normally so it doesn't overlap text */
+@media (max-width: 1024px) {
+    .comp-canvas {
+        min-height: auto; /* Let content define height */
+        padding: 60px 20px 0 20px; /* Remove bottom padding for image */
+        justify-content: flex-start; /* Stack from top */
+    }
+
+    .comp-illustration {
+        position: relative; /* No longer absolute */
+        left: auto;
+        bottom: auto;
+        width: 180px;
+        margin-top: 40px;
+        margin-bottom: -10px; /* Slight tuck at bottom */
+        align-self: center; /* Center the image */
+    }
 }

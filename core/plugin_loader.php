@@ -237,7 +237,10 @@ class Plugin_Loader
             // Shopify Services
             'cora_service_hero',
             'cora_problem_card',
+            'cora_micro_card',
+            'cora_process_curve',
             'cora_integrations_orbit',
+            'cora_whyus_block_two',
             'cora_service_feature_card',
             'cora_performance_showcase',
             'cora_service_banner',
@@ -249,6 +252,7 @@ class Plugin_Loader
 
             // Services Page
             'cora_infinite_carousel',
+            'cora_industry_booster',
             'cora_promise_banner',
             'cora_performance_block',
             'cora_others_charge',

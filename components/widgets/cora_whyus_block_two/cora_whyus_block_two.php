@@ -11,10 +11,10 @@ use Elementor\Utils;
 if (!defined('ABSPATH'))
     exit;
 
-class Cora_WhyUs_Block extends Base_Widget
+class Cora_WhyUs_Block_Two extends Base_Widget
 {
-    public function get_name() { return 'cora_whyus_block'; }
-    public function get_title() { return 'Cora – Why Us Block'; }
+    public function get_name() { return 'cora_whyus_block_two'; }
+    public function get_title() { return 'Cora – Why Us Block Two'; }
     public function get_icon() { return 'eicon-info-box'; }
 
     // Load Fonts
@@ -327,6 +327,12 @@ class Cora_WhyUs_Block extends Base_Widget
         </style>
 
         <div class="cora-why-root cora-root-<?php echo $id; ?>">
+
+            <?php if ( ! empty( $settings['image']['url'] ) ) : ?>
+                <div class="cora-img-wrap">
+                    <img src="<?php echo esc_url($settings['image']['url']); ?>" class="cora-img" alt="<?php echo esc_attr($settings['title']); ?>">
+                </div>
+            <?php endif; ?>
             <div class="cora-header-row">
                 <div class="cora-content-inner">
                     <h3 class="cora-title"><?php echo esc_html($settings['title']); ?></h3>
@@ -341,11 +347,6 @@ class Cora_WhyUs_Block extends Base_Widget
                 </a>
             </div>
 
-            <?php if ( ! empty( $settings['image']['url'] ) ) : ?>
-                <div class="cora-img-wrap">
-                    <img src="<?php echo esc_url($settings['image']['url']); ?>" class="cora-img" alt="<?php echo esc_attr($settings['title']); ?>">
-                </div>
-            <?php endif; ?>
         </div>
         <?php
     }
