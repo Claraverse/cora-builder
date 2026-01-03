@@ -249,6 +249,10 @@ class Plugin_Loader
             'cora_clean_accordion',
             'cora_success_card',
 
+            // Design Service
+            'cora_brand_kit',
+            'cora_advanced_feature',
+            'cora_portfolio_showcase',
 
             // Services Page
             'cora_infinite_carousel',
