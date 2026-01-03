@@ -24,13 +24,13 @@
     justify-content: center;
     align-items: flex-end; /* Mockup sits on the bottom edge */
     overflow: hidden;
-    padding: 0 40px;
+    padding: 0 20px;
 }
 
 /* iPhone Hardware */
 .iphone-frame {
     width: 100%;
-    max-width: 280px;
+    max-width: 340px;
     border: 8px solid #1e293b; /* Dark hardware frame */
     border-bottom: none;
     border-radius: 36px 36px 0 0;
