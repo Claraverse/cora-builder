@@ -256,8 +256,12 @@ class Plugin_Loader
 
             // Services Page
             'cora_infinite_carousel',
+            'cora_process_steps',
+            'cora_logo_marquee',
+            'cora_stats_trust_row',
             'cora_industry_booster',
             'cora_promise_banner',
+            'cora_profile_card',
             'cora_performance_block',
             'cora_others_charge',
             'cora_others_charge_v2',

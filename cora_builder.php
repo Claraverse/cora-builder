@@ -36,7 +36,7 @@ add_action('elementor/elements/categories_registered', function ($elements_manag
             'title' => esc_html__('Cora Studio Elements', 'cora-builder'),
             'icon' => 'eicon-font',
         ]
-    );
+    ); 
 });
 // Add this to your main cora-builder.php file
 add_action( 'elementor/editor/after_enqueue_scripts', function() {
