@@ -55,21 +55,12 @@ class Cora_Advanced_Feature extends Widget_Base {
         ]);
         $this->end_controls_section();
 
-        // --- SECTION: FEATURE GRID ---
-        $this->start_controls_section('grid_section', ['label' => 'Feature Cards']);
+        // --- SECTION: FEATURE GRID & CTA ---
+        $this->start_controls_section('grid_section', ['label' => 'Features & CTA']);
+        
         $repeater = new Repeater();
-        $repeater->add_control('feature_title', [
-            'label' => 'Title', 
-            'type' => Controls_Manager::TEXT, 
-            'default' => 'Strategy-Led Wireframes',
-            'dynamic' => ['active' => true]
-        ]);
-        $repeater->add_control('feature_text', [
-            'label' => 'Description', 
-            'type' => Controls_Manager::TEXTAREA, 
-            'default' => 'Every layout starts with a goal — whether it’s conversions or user flow.',
-            'dynamic' => ['active' => true]
-        ]);
+        $repeater->add_control('feature_title', [ 'label' => 'Title', 'type' => Controls_Manager::TEXT, 'default' => 'Feature Title' ]);
+        $repeater->add_control('feature_text', [ 'label' => 'Description', 'type' => Controls_Manager::TEXTAREA, 'default' => 'Feature description goes here.' ]);
         
         $this->add_control('features', [
             'label' => 'Features',
@@ -82,6 +73,19 @@ class Cora_Advanced_Feature extends Widget_Base {
                 ['feature_title' => 'Pixel Perfect Design', 'feature_text' => 'Clean, consistent designs that maintain brand integrity across all touchpoints.'],
             ]
         ]);
+
+        $this->add_control('cta_text', [
+            'label' => 'CTA Button Text',
+            'type' => Controls_Manager::TEXT,
+            'default' => 'Start Your Project',
+            'separator' => 'before',
+        ]);
+        $this->add_control('cta_link', [
+            'label' => 'CTA Link',
+            'type' => Controls_Manager::URL,
+            'default' => [ 'url' => '#' ],
+        ]);
+
         $this->end_controls_section();
     }
 
@@ -89,117 +93,196 @@ class Cora_Advanced_Feature extends Widget_Base {
         $settings = $this->get_settings_for_display();
         ?>
         <style>
+            /* --- Layout Wrapper --- */
             .cora-adv-wrap { 
                 width: 100%; 
                 font-family: 'Inter', sans-serif; 
-                padding: clamp(40px, 8vw, 20px) 0;
-                 
+                padding: clamp(40px, 6vw, 80px) 0;
+                position: relative;
             }
             
-            /* Top Header */
+            /* --- Top Header --- */
             .cora-adv-header { 
                 text-align: center; 
-                margin-bottom: clamp(60px, 10vw, 40px); 
+                margin-bottom: clamp(30px, 5vw, 60px);
                 padding: 0 20px;
             }
             .cora-adv-header h2 { 
-                font-size: clamp(32px, 5vw, 56px); 
+                font-size: clamp(32px, 5vw, 52px); 
                 font-weight: 900; 
                 color: #0f172a; 
-                margin-bottom: 20px; 
-                letter-spacing: -0.04em;
+                margin-bottom: 16px; 
+                letter-spacing: -0.03em;
                 line-height: 1.1;
             }
             .cora-adv-header p { 
-                font-size: clamp(16px, 2vw, 20px); 
+                font-size: clamp(16px, 2vw, 18px); 
                 color: #64748b; 
-                max-width: 720px; 
+                max-width: 680px; 
                 margin: 0 auto; 
                 line-height: 1.6;
                 font-weight: 500;
             }
 
-            /* Main Split Layout */
+            /* --- Main Body Split --- */
             .cora-adv-body { 
-                display: flex; 
+                display: flex;
+                /* CHANGED: Must be flex-start for sticky column to work correctly */
                 align-items: flex-start; 
-                gap: clamp(40px, 6vw, 20px); 
-                max-width: 1400px;
+                gap: clamp(30px, 4vw, 50px);
+                max-width: 1280px;
                 margin: 0 auto;
-                padding: 0 30px;
+                padding: 0 12px;
+                position: relative; /* Needed context for sticky child */
             }
-            .cora-adv-left { flex: 1.3; }
-            .cora-adv-right { flex: 1; }
+            
+            /* --- Left Column (Sticky Image) --- */
+            .cora-adv-left { 
+                flex: 1; 
+                width: 50%;
+                /* STICKY LOGIC START */
+                position: -webkit-sticky; /* Safari support */
+                position: sticky;
+                /* Fluid Top Offset: Ensures it doesn't hit the very top edge */
+                top: clamp(80px, 10vw, 120px); 
+                align-self: flex-start; /* Prevents stretching height */
+                z-index: 2;
+                /* STICKY LOGIC END */
+            }
 
+            /* --- Right Column (Scrolling Content) --- */
+            .cora-adv-right { 
+                flex: 1; 
+                width: 50%;
+                /* Ensure right column is tall enough to scroll past left */
+                min-height: 100%; 
+            }
+
+            /* Showcase Image */
             .cora-adv-showcase-img img { 
                 width: 100%; 
                 height: auto; 
-                border-radius: 24px; 
-                box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+                border-radius: 20px; 
+                box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1);
+                display: block;
             }
 
             /* Right Side Typography */
-            .cora-adv-side-text { margin-bottom: 0; }
+            .cora-adv-side-text { margin-bottom: 30px; }
+            
             .cora-adv-side-text h3 { 
-                font-size: clamp(26px, 4vw, 36px); 
+                font-size: clamp(26px, 3vw, 32px); 
                 font-weight: 850; 
                 color: #0f172a; 
                 line-height: 1.15; 
-                margin-bottom: 0; 
-                letter-spacing: -0.03em;
+                margin-bottom: 12px; 
+                letter-spacing: -0.02em;
             }
             .cora-adv-side-text p { 
-                font-size: 17px; 
+                font-size: 16px; 
                 color: #475569; 
-                line-height: 1.7; 
+                line-height: 1.6; 
                 font-weight: 500;
+                max-width: 480px;
             }
 
-            /* Internal Feature Grid */
+            /* Feature Grid */
             .cora-adv-feature-grid { 
                 display: grid; 
                 grid-template-columns: repeat(2, 1fr); 
-                gap: 12px; 
+                gap: 16px;
+                margin-bottom: 30px;
             }
+            
+            /* Feature Card */
             .cora-feat-card { 
                 background: #ffffff; 
                 border: 1px solid #f1f5f9; 
-                border-radius: 20px; 
-                padding: 12px; 
-                transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); 
-                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+                border-radius: 16px; 
+                padding: 20px;
+                transition: all 0.3s ease;
             }
             .cora-feat-card:hover { 
-                transform: translateY(-8px); 
+                transform: translateY(-3px); 
                 border-color: #3b82f6; 
-                box-shadow: 0 20px 40px rgba(0,0,0,0.06); 
+                box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); 
             }
             .cora-feat-card h4 { 
-                font-size: 18px; 
+                font-size: 17px; 
                 font-weight: 800; 
                 color: #0f172a; 
-                margin-bottom: 12px; 
-                line-height: 1.3; 
-                letter-spacing: -0.02em;
+                margin: 0 0 8px 0;
+                letter-spacing: -0.01em;
             }
             .cora-feat-card p { 
-                font-size: 15px; 
+                font-size: 14px; 
                 color: #64748b; 
-                line-height: 1.6; 
+                line-height: 1.5; 
                 margin: 0; 
                 font-weight: 500;
             }
 
-            /* RESPONSIVE */
-            @media (max-width: 1024px) {
-                .cora-adv-body { flex-direction: column; gap: 60px; }
-                .cora-adv-left, .cora-adv-right { width: 100%; }
-                .cora-adv-header { margin-bottom: 50px; }
+            /* --- CTA Button --- */
+            .cora-adv-cta-wrap { text-align: left; }
+            .cora-adv-cta-btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 14px 28px;
+                background-color: #0f172a;
+                color: #ffffff;
+                font-weight: 700;
+                font-size: 15px;
+                border-radius: 50px;
+                text-decoration: none;
+                transition: all 0.3s ease;
             }
+            .cora-adv-cta-btn:hover {
+                background-color: #3b82f6;
+                transform: translateY(-2px);
+                box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.3);
+            }
+
+            /* --- RESPONSIVE LOGIC --- */
+            
+            /* Tablet Breakpoint */
+            @media (max-width: 992px) {
+                .cora-adv-body { 
+                    flex-direction: column; 
+                    gap: 40px;
+                    /* Revert alignment for stacked layout */
+                    align-items: stretch; 
+                }
+                
+                /* IMPORTANT: Disable sticky on mobile/tablet stack */
+                .cora-adv-left { 
+                    width: 100%; 
+                    position: static; 
+                }
+                
+                .cora-adv-right { width: 100%; }
+                
+                .cora-adv-showcase-img {
+                    max-width: 700px;
+                    margin: 0 auto;
+                }
+                
+                /* Center aligned content on Tablet */
+                .cora-adv-side-text { text-align: center; }
+                .cora-adv-side-text p { margin: 0 auto; }
+                .cora-adv-cta-wrap { text-align: center; }
+            }
+
+            /* Mobile Breakpoint */
             @media (max-width: 640px) {
-                .cora-adv-feature-grid { grid-template-columns: 1fr; }
-                .cora-feat-card { padding: 25px; }
-                .cora-adv-body { padding: 0 20px; }
+                .cora-adv-feature-grid { 
+                    grid-template-columns: 1fr;
+                    gap: 12px;
+                }
+                
+                .cora-adv-side-text { text-align: left; }
+                .cora-adv-cta-wrap { text-align: left; }
+                .cora-adv-cta-btn { width: 100%; }
             }
         </style>
 
@@ -232,6 +315,14 @@ class Cora_Advanced_Feature extends Widget_Base {
                             </div>
                         <?php endforeach; ?>
                     </div>
+
+                    <?php if ( ! empty( $settings['cta_text'] ) ) : ?>
+                    <div class="cora-adv-cta-wrap">
+                        <a class="cora-adv-cta-btn" href="<?php echo esc_url($settings['cta_link']['url']); ?>">
+                            <?php echo esc_html($settings['cta_text']); ?>
+                        </a>
+                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

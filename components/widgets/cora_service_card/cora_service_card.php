@@ -154,8 +154,7 @@ class Cora_Service_Card extends Base_Widget {
             }
 
             .cora-svc-card-<?php echo $id; ?>:hover {
-                transform: translateY(-6px);
-                box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+                 box-shadow: 0 20px 40px rgba(0,0,0,0.06);
             }
 
             /* --- Badge --- */
@@ -235,10 +234,11 @@ class Cora_Service_Card extends Base_Widget {
                 transform: scale(1.03); /* Subtle zoom on hover */
             }
 
+         
             /* --- RESPONSIVE --- */
             @media (max-width: 768px) {
                 .cora-svc-card-<?php echo $id; ?> {
-                    padding: 24px 24px 0 24px;
+                    padding: 24px 24px 24px 24px;
                     min-height: auto; /* Let height flow naturally on mobile */
                 }
                 .cora-svc-title-<?php echo $id; ?> {
