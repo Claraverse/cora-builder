@@ -117,6 +117,9 @@
     align-items: center;
     gap: 10px;
 }
+.cora_blog_author img {
+    border-radius: 100px;
+}
 
 .cora_author_avatar {
     width: 32px;

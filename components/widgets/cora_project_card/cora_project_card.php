@@ -146,6 +146,7 @@ class Cora_Project_Card extends Base_Widget
                 letter-spacing: -0.03em;
             }
         
+         
             .cora-card-desc {
                 font-family: "Inter", sans-serif;
                 font-size: 15px;
@@ -205,6 +206,9 @@ class Cora_Project_Card extends Base_Widget
                 box-shadow: 0 4px 12px rgba(126, 122, 255, 0.25);
             }
         
+            .cora-author-banner img{
+                border-radius: 100px;
+            }
             .cora-author-banner:hover {
                 filter: brightness(1.05);
                 transform: scale(1.01);

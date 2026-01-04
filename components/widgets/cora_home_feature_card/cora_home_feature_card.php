@@ -24,16 +24,13 @@ class Cora_Home_Feature_Card extends Base_Widget
             'label' => 'Icon Source',
             'type' => Controls_Manager::SELECT,
             'default' => 'library',
-            'options' => [
-                'library' => 'Icon Library',
-                'custom'  => 'Paste SVG Code',
-            ],
+            'options' => [ 'library' => 'Icon Library', 'custom'  => 'Paste SVG Code' ],
         ]);
 
         $this->add_control('icon', [
             'label' => 'Icon',
             'type' => Controls_Manager::ICONS,
-            'default' => ['value' => 'fas fa-book-open', 'library' => 'solid'],
+            'default' => ['value' => 'fas fa-code', 'library' => 'solid'],
             'condition' => ['icon_source' => 'library'],
         ]);
 
@@ -41,14 +38,14 @@ class Cora_Home_Feature_Card extends Base_Widget
             'label' => 'SVG Code',
             'type' => Controls_Manager::TEXTAREA,
             'rows' => 10,
-            'placeholder' => '<svg viewBox="0 0 24 24">...</svg>',
+            'placeholder' => '<svg...>...</svg>',
             'condition' => ['icon_source' => 'custom'],
         ]);
 
         $this->add_control('title', [ 
             'label' => 'Title', 
             'type' => Controls_Manager::TEXT, 
-            'default' => 'Online Learning', 
+            'default' => 'Develop', 
             'dynamic' => ['active' => true],
             'separator' => 'before',
         ]);
@@ -56,7 +53,7 @@ class Cora_Home_Feature_Card extends Base_Widget
         $this->add_control('desc', [ 
             'label' => 'Description', 
             'type' => Controls_Manager::TEXTAREA, 
-            'default' => 'Engage in interactive, real-time sessions led by industry experts.', 
+            'default' => 'Build high-performance websites, funnels, and systems tailored for growth.', 
             'dynamic' => ['active' => true] 
         ]);
 
@@ -69,39 +66,11 @@ class Cora_Home_Feature_Card extends Base_Widget
         // 1. Layout & Container
         $this->start_controls_section('style_layout', [ 'label' => 'Layout & Container', 'tab' => Controls_Manager::TAB_STYLE ]);
         
-        $this->add_responsive_control('mobile_layout', [
-            'label' => 'Mobile Layout',
-            'type' => Controls_Manager::CHOOSE,
-            'options' => [
-                'row' => [ 'title' => 'Horizontal', 'icon' => 'eicon-h-align-left' ],
-                'column' => [ 'title' => 'Stacked', 'icon' => 'eicon-v-align-top' ],
-            ],
-            'default' => 'column',
-            'selectors' => [
-                '{{WRAPPER}} .cora-feature-card' => 'flex-direction: {{VALUE}};',
-            ],
-            'devices' => ['mobile'],
-        ]);
-
         $this->add_control('card_bg', [
             'label' => 'Card Background',
             'type' => Controls_Manager::COLOR,
-            'default' => '#ffffff',
+            'default' => '#E9F8EE', /* The Light Mint Green */
             'selectors' => [ '{{WRAPPER}} .cora-feature-card' => 'background-color: {{VALUE}};' ],
-        ]);
-
-        $this->add_responsive_control('card_padding', [
-            'label' => 'Padding',
-            'type' => Controls_Manager::DIMENSIONS,
-            'size_units' => [ 'px', 'em' ],
-            'selectors' => [ '{{WRAPPER}} .cora-feature-card' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
-        ]);
-
-        $this->add_responsive_control('card_radius', [
-            'label' => 'Border Radius',
-            'type' => Controls_Manager::DIMENSIONS,
-            'size_units' => [ 'px', '%' ],
-            'selectors' => [ '{{WRAPPER}} .cora-feature-card' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
         ]);
 
         $this->add_group_control(Group_Control_Box_Shadow::get_type(), [
@@ -109,68 +78,82 @@ class Cora_Home_Feature_Card extends Base_Widget
             'selector' => '{{WRAPPER}} .cora-feature-card',
         ]);
 
+        $this->add_responsive_control('card_padding', [
+            'label' => 'Padding',
+            'type' => Controls_Manager::DIMENSIONS,
+            'size_units' => [ 'px', 'em' ],
+            'default' => [ 'top' => 32, 'right' => 32, 'bottom' => 32, 'left' => 32, 'unit' => 'px' ],
+            'selectors' => [ '{{WRAPPER}} .cora-feature-card' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+        ]);
+        
+        $this->add_responsive_control('card_radius', [
+            'label' => 'Border Radius',
+            'type' => Controls_Manager::DIMENSIONS,
+            'default' => [ 'top' => 24, 'right' => 24, 'bottom' => 24, 'left' => 24, 'unit' => 'px' ],
+            'selectors' => [ '{{WRAPPER}} .cora-feature-card' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+        ]);
+
         $this->end_controls_section();
 
         // 2. Icon Box Style
-        $this->start_controls_section('style_icon', [ 'label' => 'Icon Box', 'tab' => Controls_Manager::TAB_STYLE ]);
+        $this->start_controls_section('style_icon', [ 'label' => 'Icon Style', 'tab' => Controls_Manager::TAB_STYLE ]);
         
         $this->add_control('icon_box_bg', [
             'label' => 'Box Background',
             'type' => Controls_Manager::COLOR,
-            'default' => '#E2E4E9', // Grey from screenshot
+            'default' => 'transparent', /* Transparent to match the image */
             'selectors' => [ '{{WRAPPER}} .feature-icon' => 'background-color: {{VALUE}};' ],
         ]);
 
         $this->add_control('icon_color', [
             'label' => 'Icon Color',
             'type' => Controls_Manager::COLOR,
-            'default' => '#0f172a',
-            'selectors' => [ '{{WRAPPER}} .feature-icon' => 'color: {{VALUE}}; fill: {{VALUE}};' ],
-        ]);
-
-        $this->add_responsive_control('icon_box_size', [
-            'label' => 'Box Size',
-            'type' => Controls_Manager::SLIDER,
-            'range' => [ 'px' => [ 'min' => 30, 'max' => 100 ] ],
-            'default' => [ 'size' => 64 ],
-            'selectors' => [ '{{WRAPPER}} .feature-icon' => 'width: {{SIZE}}px; height: {{SIZE}}px;' ],
+            'default' => '#103E28', /* Dark Forest Green */
+            'selectors' => [ '{{WRAPPER}} .feature-icon' => 'color: {{VALUE}}; fill: {{VALUE}}; stroke: {{VALUE}};' ],
         ]);
 
         $this->add_responsive_control('icon_size', [
             'label' => 'Icon Size',
             'type' => Controls_Manager::SLIDER,
-            'range' => [ 'px' => [ 'min' => 10, 'max' => 50 ] ],
-            'default' => [ 'size' => 24 ],
+            'range' => [ 'px' => [ 'min' => 20, 'max' => 100 ] ],
+            'default' => [ 'size' => 54 ], /* Large Icon */
             'selectors' => [ '{{WRAPPER}} .feature-icon i' => 'font-size: {{SIZE}}px;', '{{WRAPPER}} .feature-icon svg' => 'width: {{SIZE}}px; height: {{SIZE}}px;' ],
         ]);
 
-        $this->add_responsive_control('icon_box_radius', [
-            'label' => 'Border Radius',
-            'type' => Controls_Manager::DIMENSIONS,
-            'selectors' => [ '{{WRAPPER}} .feature-icon' => 'border-radius: {{TOP}}px {{RIGHT}}px {{BOTTOM}}px {{LEFT}}px;' ],
+        // Gap between Icon and Text
+        $this->add_responsive_control('icon_gap', [
+            'label' => 'Gap to Text',
+            'type' => Controls_Manager::SLIDER,
+            'default' => [ 'size' => 24 ],
+            'selectors' => [ '{{WRAPPER}} .cora-feature-card' => 'gap: {{SIZE}}px;' ],
         ]);
 
         $this->end_controls_section();
 
         // 3. Typography
-        $this->start_controls_section('style_content', [ 'label' => 'Content Style', 'tab' => Controls_Manager::TAB_STYLE ]);
+        $this->start_controls_section('style_content', [ 'label' => 'Typography', 'tab' => Controls_Manager::TAB_STYLE ]);
         
         $this->add_control('title_color', [
             'label' => 'Title Color',
             'type' => Controls_Manager::COLOR,
-            'default' => '#0f172a',
+            'default' => '#103E28', /* Matching Dark Green */
             'selectors' => [ '{{WRAPPER}} .feature-title' => 'color: {{VALUE}};' ],
         ]);
         
         $this->add_group_control(Group_Control_Typography::get_type(), [
             'name' => 'title_typo',
             'selector' => '{{WRAPPER}} .feature-title',
+            'fields_options' => [
+                'typography' => [ 'default' => 'custom' ],
+                'font_weight' => [ 'default' => '800' ], // Extra Bold
+                'font_size' => [ 'default' => [ 'size' => 26, 'unit' => 'px' ] ],
+            ],
         ]);
 
         $this->add_control('desc_color', [
             'label' => 'Description Color',
             'type' => Controls_Manager::COLOR,
-            'default' => '#64748b',
+            'default' => '#4D6458', /* Muted Green-Grey */
             'selectors' => [ '{{WRAPPER}} .feature-desc' => 'color: {{VALUE}};' ],
             'separator' => 'before',
         ]);
@@ -178,34 +161,12 @@ class Cora_Home_Feature_Card extends Base_Widget
         $this->add_group_control(Group_Control_Typography::get_type(), [
             'name' => 'desc_typo',
             'selector' => '{{WRAPPER}} .feature-desc',
-        ]);
-
-        $this->end_controls_section();
-
-        // 4. Structural Layout (Hidden Authority)
-        $this->start_controls_section('layout_reset', [ 'label' => 'Structural Layout', 'tab' => Controls_Manager::TAB_STYLE ]);
-        $this->add_control('css_reset', [
-            'type' => Controls_Manager::HIDDEN,
-            'default' => 'reset',
-            'selectors' => [
-                '{{WRAPPER}} .cora-feature-card' => 'display: flex; align-items: flex-start; padding: 24px; border-radius: 16px; gap: 20px; text-decoration: none; border: 1px solid #f1f5f9; transition: transform 0.2s;',
-                '{{WRAPPER}} .cora-feature-card:hover' => 'transform: translateY(-2px);',
-                
-                // Icon Box
-                '{{WRAPPER}} .feature-icon' => 'flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 12px;',
-                
-                // Content Body
-                '{{WRAPPER}} .feature-body' => 'display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 0;',
-                '{{WRAPPER}} .feature-title' => 'margin: 0 !important; font-size: 18px; font-weight: 700; line-height: 1.2;',
-                '{{WRAPPER}} .feature-desc' => 'margin: 0 !important; font-size: 15px; line-height: 1.5;',
-
-                // Default Mobile Behavior (Can be overridden by the control above)
-                '@media (max-width: 767px)' => [
-                    '{{WRAPPER}} .cora-feature-card' => 'flex-direction: column; align-items: flex-start; gap: 16px;',
-                    '{{WRAPPER}} .feature-icon' => 'width: 56px; height: 56px;',
-                ],
+            'fields_options' => [
+                'font_size' => [ 'default' => [ 'size' => 16, 'unit' => 'px' ] ],
+                'line_height' => [ 'default' => [ 'size' => 1.5, 'unit' => 'em' ] ],
             ],
         ]);
+
         $this->end_controls_section();
     }
 
@@ -222,6 +183,58 @@ class Cora_Home_Feature_Card extends Base_Widget
             $wrapper_attrs .= ' ' . $this->get_render_attribute_string( 'card_link' );
         }
         ?>
+        <style>
+            .cora-feature-card {
+                display: flex;
+                flex-direction: row; /* Force Row for Desktop */
+                align-items: flex-start;
+                /* Gap controlled by JS */
+                text-decoration: none;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                height: 100%;
+                /* BG, Padding, Radius set by Controls */
+            }
+
+            .cora-feature-card:hover {
+                transform: translateY(-4px);
+            }
+
+            /* --- Icon Container --- */
+            .feature-icon {
+                flex-shrink: 0;
+                display: flex;
+                align-items: flex-start; /* Align icon to top of text */
+                justify-content: center;
+                line-height: 1;
+            }
+
+            /* --- Content Body --- */
+            .feature-body {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                flex: 1;
+            }
+
+            .feature-title {
+                margin: 0 0 6px 0 !important;
+                line-height: 1.1;
+                /* Typography set by Controls */
+            }
+
+            .feature-desc {
+                margin: 0 !important;
+            }
+
+            /* --- Mobile Stack --- */
+            @media (max-width: 767px) {
+                .cora-feature-card {
+                    flex-direction: column;
+                    gap: 20px;
+                }
+            }
+        </style>
+
         <<?php echo $wrapper_tag; ?> <?php echo $wrapper_attrs; ?>>
             
             <div class="feature-icon">
@@ -234,7 +247,7 @@ class Cora_Home_Feature_Card extends Base_Widget
 
             <div class="feature-body">
                 <h3 class="feature-title"><?php echo esc_html($settings['title']); ?></h3>
-                <p class="feature-desc"><?php echo esc_html($settings['desc']); ?></p>
+                <div class="feature-desc"><?php echo esc_html($settings['desc']); ?></div>
             </div>
 
         </<?php echo $wrapper_tag; ?>>

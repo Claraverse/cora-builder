@@ -223,6 +223,10 @@ class Plugin_Loader
             'cora_timeline',
             'cora_deliverable_card',
 
+
+            // Global
+            'cora_loop_builder',
+
             // Booster Services
             'clara_trust_bar',
             'clara_lead_magnet',

@@ -141,7 +141,7 @@ class Cora_Testimonial_Block extends Base_Widget
                 -webkit-backdrop-filter: blur(20px);
                 border-top: 1px solid rgba(255, 255, 255, 0.15);
                 border-radius: 20px;
-                padding: 24px;
+                padding: 16px;
                 box-sizing: border-box;
                 color: #FFFFFF;
                 display: flex;
@@ -242,7 +242,7 @@ class Cora_Testimonial_Block extends Base_Widget
                 }
 
                 .cora-root-<?php echo $id; ?> .cora-glass-card {
-                    padding: 20px;
+                    padding: 10px;
                     gap: 12px;
                 }
                 

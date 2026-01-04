@@ -102,7 +102,7 @@ class Cora_Advance_Heading_Two extends Base_Widget {
             .cora-adv-content-<?php echo $id; ?> {
                 display: flex;
                 flex-direction: column;
-                gap: 16px;
+                gap: 8px;
                 max-width: 650px;
             }
 
