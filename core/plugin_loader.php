@@ -226,6 +226,7 @@ class Plugin_Loader
 
             // Global
             'cora_loop_builder',
+            'cora_pages_dashboard',
 
             // Booster Services
             'clara_trust_bar',

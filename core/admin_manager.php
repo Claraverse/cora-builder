@@ -28,6 +28,7 @@ class Admin_Manager
             2
         );
     }
+    
     public function register_admin_menu()
     {
         // 1. Main Menu Item
@@ -102,6 +103,29 @@ class Admin_Manager
             'cora-fieldgroups',
             [$this, 'route_fieldgroups_page']
         );
+        // 6. Modern Pages Submenu (NEW)
+        add_submenu_page(
+            'cora-builder',
+            'All Pages',
+            'Pages',
+            'manage_options',
+            'cora-pages',
+            [$this, 'route_pages_dashboard']
+        );
+    }
+
+    /**
+     * Routing function for the new Pages Dashboard
+     */
+    public function route_pages_dashboard() {
+        // Fetch pages to display
+        $pages = get_posts([
+            'post_type' => 'page',
+            'posts_per_page' => -1,
+            'post_status' => ['publish', 'draft', 'pending']
+        ]);
+        
+        $this->render_pages_dashboard($pages);
     }
 
     /**
@@ -277,7 +301,59 @@ public function handle_widget_toggle() {
  * * @return array Metadata of all discovered widgets.
  */
 
+/**
+     * SaaS UI Renderer for Pages
+     */
+    private function render_pages_dashboard($pages) {
+        ?>
+        <div class="cora-notion-container cora-pages-studio">
+            <?php include CORA_BUILDER_PATH . 'views/components/sidebar.php'; ?>
+            
+            <main class="cora-main-workspace">
+                <header class="workspace-header">
+                    <div class="header-info">
+                        <h1>Pages Studio <span class="mode-pill">LIVE</span></h1>
+                        <p>Manage your site architecture with surgical precision.</p>
+                    </div>
+                    <div class="header-actions">
+                        <a href="<?php echo admin_url('post-new.php?post_type=page'); ?>" class="cora-btn-bw primary">Add New Page</a>
+                    </div>
+                </header>
 
+                <div class="cora-grid-layout pages-grid">
+                    <?php if (empty($pages)) : ?>
+                        <p class="empty-state-pro">No pages found in your workspace.</p>
+                    <?php else : ?>
+                        <?php foreach ($pages as $page) : 
+                            $edit_link = get_edit_post_link($page->ID);
+                            $preview_link = get_permalink($page->ID);
+                            $status = get_post_status($page->ID);
+                        ?>
+                            <div class="page-item-card">
+                                <div class="card-status status-<?php echo $status; ?>"><?php echo ucfirst($status); ?></div>
+                                <div class="card-main">
+                                    <div class="page-icon-box">
+                                        <span class="dashicons dashicons-admin-page"></span>
+                                    </div>
+                                    <div class="page-info">
+                                        <h3><?php echo esc_html($page->post_title); ?></h3>
+                                        <code>/<?php echo esc_html($page->post_name); ?></code>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="<?php echo $edit_link; ?>" class="action-btn">Edit Design</a>
+                                    <a href="<?php echo $preview_link; ?>" target="_blank" class="preview-btn">
+                                        <span class="dashicons dashicons-external"></span>
+                                    </a>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+            </main>
+        </div>
+        <?php
+    }
 private function get_all_registered_widgets() {
     $widgets = [];
     
@@ -402,7 +478,9 @@ private function get_all_registered_widgets() {
             wp_enqueue_style('cora-options-builder-pro', CORA_BUILDER_URL . 'assets/css/cora-option.css', ['cora-admin-css'], time());
         }
 
-
+if ($_GET['page'] === 'cora-pages') {
+            wp_enqueue_style('cora-pages-studio-css', CORA_BUILDER_URL . 'assets/css/pages-studio.css', ['cora-admin-css'], time());
+        }
 
         // Load dedicated Field Groups Studio CSS
         if ($_GET['page'] === 'cora-fieldgroups') {

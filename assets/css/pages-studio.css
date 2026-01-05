@@ -1,0 +1,79 @@
+.cora-pages-studio .pages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+    padding: 20px 0;
+}
+
+.page-item-card {
+    background: #fff;
+    border: 1px solid #f1f5f9;
+    border-radius: 16px;
+    padding: 24px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.page-item-card:hover {
+    box-shadow: 0 20px 40px rgba(0,0,0,0.04);
+    border-color: #e2e8f0;
+}
+
+.card-status {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: #f1f5f9;
+}
+
+.status-publish { background: #dcfce7; color: #166534; }
+.status-draft { background: #fef9c3; color: #854d0e; }
+
+.page-icon-box {
+    width: 48px;
+    height: 48px;
+    background: #f8fafc;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+}
+
+.page-info h3 { margin: 0; font-size: 17px; font-weight: 700; color: #0f172a; }
+.page-info code { font-size: 12px; color: #94a3b8; }
+
+.card-footer {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 20px;
+}
+
+.action-btn {
+    flex: 1;
+    background: #000;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.preview-btn {
+    width: 40px;
+    border: 1px solid #f1f5f9;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+}
