@@ -62,7 +62,7 @@ class Cora_Challenges_Grid extends Base_Widget {
                 display: grid;
                 /* Smart Layout: Fits as many columns as possible, min width 280px */
                 grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-                gap: clamp(20px, 3vw, 32px); /* Fluid Gap */
+                gap: 20px; /* Fluid Gap */
             }
 
             /* --- Card Styling --- */

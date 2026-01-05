@@ -96,6 +96,34 @@ class Cora_Category_Stats_Header extends Base_Widget {
         // --- TAB: STYLE - LAYOUT ---
         $this->start_controls_section('style_layout', [ 'label' => 'Layout & Container', 'tab' => Controls_Manager::TAB_STYLE ]);
         
+        $this->add_responsive_control('grid_columns', [
+            'label' => 'Grid Columns',
+            'type' => Controls_Manager::SELECT,
+            'default' => '4', // Desktop default
+            'tablet_default' => '2',
+            'mobile_default' => '2', // Mobile default explicitly set to 2
+            'options' => [
+                '1' => '1',
+                '2' => '2',
+                '3' => '3',
+                '4' => '4',
+                '5' => '5',
+                '6' => '6',
+            ],
+            'selectors' => [
+                '{{WRAPPER}} .stats-grid' => 'grid-template-columns: repeat({{VALUE}}, 1fr);',
+            ],
+        ]);
+
+        $this->add_responsive_control('stats_gap', [
+            'label' => 'Grid Gap',
+            'type' => Controls_Manager::SLIDER,
+            'range' => [ 'px' => [ 'min' => 0, 'max' => 100 ] ],
+            'default' => [ 'size' => 24 ],
+            'mobile_default' => [ 'size' => 12 ], // Tighter gap for mobile 2-col
+            'selectors' => [ '{{WRAPPER}} .stats-grid' => 'gap: {{SIZE}}px;' ],
+        ]);
+
         $this->add_control('bg_color', [
             'label' => 'Background',
             'type' => Controls_Manager::COLOR,
@@ -104,18 +132,10 @@ class Cora_Category_Stats_Header extends Base_Widget {
         ]);
 
         $this->add_responsive_control('padding', [
-            'label' => 'Padding',
+            'label' => 'Container Padding',
             'type' => Controls_Manager::DIMENSIONS,
             'size_units' => ['px', 'em'],
             'selectors' => ['{{WRAPPER}} .cora-stats-header' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};'],
-        ]);
-        
-        $this->add_responsive_control('stats_gap', [
-            'label' => 'Stats Grid Gap',
-            'type' => Controls_Manager::SLIDER,
-            'range' => [ 'px' => [ 'min' => 0, 'max' => 100 ] ],
-            'default' => [ 'size' => 24 ],
-            'selectors' => [ '{{WRAPPER}} .stats-grid' => 'gap: {{SIZE}}px;' ],
         ]);
 
         $this->end_controls_section();
@@ -190,75 +210,129 @@ class Cora_Category_Stats_Header extends Base_Widget {
         $this->add_group_control(Group_Control_Box_Shadow::get_type(), [ 'name' => 'card_shadow', 'selector' => '{{WRAPPER}} .stat-card' ]);
 
         $this->end_controls_section();
-
-
-        // --- LAYOUT ENGINE (FIXED) ---
-        $this->start_controls_section('layout_engine', [ 'label' => 'Layout Engine', 'tab' => Controls_Manager::TAB_STYLE ]);
-        $this->add_control('css_reset', [
-            'type' => Controls_Manager::HIDDEN,
-            'default' => 'reset',
-            'selectors' => [
-                '{{WRAPPER}} .cora-stats-header' => 'width: 100%; max-width:1200px; display: flex; flex-direction: column; gap: 48px; box-sizing: border-box; overflow: hidden;',
-                
-                // Breadcrumbs
-                '{{WRAPPER}} .breadcrumbs' => 'font-size: 14px; color: #6B7280; font-weight: 500; display: flex; align-items: center; gap: 8px;',
-                '{{WRAPPER}} .breadcrumbs i' => 'color: #9CA3AF; font-size: 12px;',
-
-                // Identity Section (Flex)
-                '{{WRAPPER}} .identity-wrapper' => 'display: flex; gap: 32px; align-items: center;',
-                
-                // Icon Box
-                '{{WRAPPER}} .identity-icon-box' => 'width: 120px; height: 120px; border-radius: 24px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;',
-                '{{WRAPPER}} .identity-icon-box i' => 'font-size: 48px;',
-                '{{WRAPPER}} .identity-icon-box svg' => 'width: 48px; height: 48px;',
-
-                // Text Stack
-                '{{WRAPPER}} .identity-content' => 'display: flex; flex-direction: column; gap: 12px;',
-                '{{WRAPPER}} .identity-title' => 'margin: 0; font-size: clamp(32px, 4vw, 56px); font-weight: 800; line-height: 1.1; letter-spacing: -0.02em;',
-                '{{WRAPPER}} .identity-desc' => 'margin: 0; font-size: clamp(16px, 2vw, 20px); line-height: 1.5; max-width: 650px;',
-
-                // Stats Grid (DEFAULT DESKTOP)
-                '{{WRAPPER}} .stats-grid' => 'display: grid; width: 100%; grid-template-columns: repeat(4, 1fr); gap:12px;',
-                
-                // Stat Card
-                '{{WRAPPER}} .stat-card' => 'padding: 24px; display: flex; flex-direction: column; gap: 12px; transition: transform 0.2s;',
-                '{{WRAPPER}} .stat-card:hover' => 'transform: translateY(-3px);',
-                
-                '{{WRAPPER}} .stat-header' => 'display: flex; align-items: center; gap: 10px;',
-                '{{WRAPPER}} .stat-icon' => 'font-size: 16px; color: #374151;', 
-                '{{WRAPPER}} .stat-label' => 'font-size: 15px; color: #6B7280; font-weight: 500;',
-                '{{WRAPPER}} .stat-value' => 'font-size: 28px; font-weight: 700; color: #111827; line-height: 1.2;',
-
-                // --- RESPONSIVE BREAKPOINTS ---
-
-                // Tablet (Max 1024px)
-                '@media (max-width: 1024px)' => [
-                    '{{WRAPPER}} .stats-grid' => 'display: grid; grid-template-columns: repeat(2, 1fr);', // Enforced grid & cols
-                    '{{WRAPPER}} .identity-icon-box' => 'width: 100px; height: 100px;',
-                    '{{WRAPPER}} .identity-icon-box i' => 'font-size: 40px;',
-                ],
-
-                // Mobile (Max 767px)
-                '@media (max-width: 767px)' => [
-                    '{{WRAPPER}} .identity-wrapper' => 'flex-direction: column; align-items: flex-start; gap: 20px;',
-                    '{{WRAPPER}} .identity-icon-box' => 'width: 80px; height: 80px;',
-                    '{{WRAPPER}} .identity-icon-box i' => 'font-size: 32px;',
-                    
-                    // FIXED: Explicitly set display: grid again to override any 'block' interference
-                    '{{WRAPPER}} .stats-grid' => 'display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;', 
-                    
-                    '{{WRAPPER}} .stat-card' => 'padding: 16px;', 
-                    '{{WRAPPER}} .stat-value' => 'font-size: 24px;',
-                    '{{WRAPPER}} .cora-stats-header' => 'gap: 32px; padding: 40px 20px;',
-                ],
-            ],
-        ]);
-        $this->end_controls_section();
     }
 
     protected function render() {
         $settings = $this->get_settings_for_display();
         ?>
+        <style>
+            .cora-stats-header {
+                width: 100%;
+                /* Fluid Max Width */
+                max-width: 1200px;
+                display: flex;
+                flex-direction: column;
+                gap: clamp(32px, 5vw, 48px);
+                box-sizing: border-box;
+                overflow: hidden;
+            }
+            
+            /* Breadcrumbs */
+            .breadcrumbs {
+                font-size: 14px;
+                color: #6B7280;
+                font-weight: 500;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .breadcrumbs i { color: #9CA3AF; font-size: 12px; }
+
+            /* Identity Section (Icon + Text) */
+            .identity-wrapper {
+                display: flex;
+                gap: 32px;
+                align-items: center;
+            }
+            
+            /* Icon Box */
+            .identity-icon-box {
+                width: clamp(80px, 10vw, 120px);
+                height: clamp(80px, 10vw, 120px);
+                border-radius: 24px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+            }
+            .identity-icon-box i { font-size: clamp(32px, 4vw, 48px); }
+            .identity-icon-box svg { width: clamp(32px, 4vw, 48px); height: auto; }
+
+            /* Text Stack */
+            .identity-content {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                min-width: 0;
+            }
+            .identity-title {
+                margin: 0;
+                font-size: clamp(32px, 4vw, 56px);
+                font-weight: 800;
+                line-height: 1.1;
+                letter-spacing: -0.02em;
+            }
+            .identity-desc {
+                margin: 0;
+                font-size: clamp(16px, 2vw, 20px);
+                line-height: 1.5;
+                max-width: 650px;
+            }
+
+            /* Stats Grid */
+            .stats-grid {
+                display: grid;
+                width: 100%;
+                /* Columns handled by widget control */
+            }
+            
+            /* Stat Card */
+            .stat-card {
+                padding: 24px;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                transition: transform 0.2s, box-shadow 0.2s;
+            }
+            .stat-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+            }
+            
+            .stat-header {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .stat-icon { font-size: 16px; color: #374151; }
+            .stat-label { font-size: 15px; color: #6B7280; font-weight: 500; }
+            .stat-value {
+                font-size: 28px;
+                font-weight: 700;
+                color: #111827;
+                line-height: 1.2;
+            }
+
+            /* --- RESPONSIVE ADJUSTMENTS --- */
+            
+            /* Mobile Breakpoint */
+            @media (max-width: 767px) {
+                .identity-wrapper {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 20px;
+                }
+                
+                /* Tighter Cards for 2-column Layout */
+                .stat-card { padding: 16px 12px; gap: 8px; }
+                .stat-value { font-size: 20px; }
+                .stat-label { font-size: 13px; }
+                .stat-icon { font-size: 14px; }
+                
+                .cora-stats-header { gap: 32px; padding: 40px 20px; }
+            }
+        </style>
+
         <div class="cora-stats-header">
             
             <?php if ( ! empty( $settings['breadcrumbs'] ) ) : ?>

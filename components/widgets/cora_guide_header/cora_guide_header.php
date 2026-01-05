@@ -82,6 +82,25 @@ class Cora_Guide_Header extends Base_Widget {
         // --- TAB: STYLE - LAYOUT ---
         $this->start_controls_section('style_layout', [ 'label' => 'Container', 'tab' => Controls_Manager::TAB_STYLE ]);
         
+        $this->add_responsive_control('grid_columns', [
+            'label' => 'Metric Columns',
+            'type' => Controls_Manager::SELECT,
+            'default' => '4',
+            'tablet_default' => '2',
+            'mobile_default' => '2',
+            'options' => [ '1'=>'1', '2'=>'2', '3'=>'3', '4'=>'4' ],
+            'selectors' => [ '{{WRAPPER}} .guide-metric-matrix' => 'grid-template-columns: repeat({{VALUE}}, 1fr);' ],
+        ]);
+
+        $this->add_responsive_control('grid_gap', [
+            'label' => 'Grid Gap',
+            'type' => Controls_Manager::SLIDER,
+            'range' => [ 'px' => [ 'min' => 0, 'max' => 60 ] ],
+            'default' => [ 'size' => 24, 'unit' => 'px' ],
+            'mobile_default' => [ 'size' => 12, 'unit' => 'px' ],
+            'selectors' => [ '{{WRAPPER}} .guide-metric-matrix' => 'gap: {{SIZE}}{{UNIT}};' ],
+        ]);
+
         $this->add_control('bg_color', [
             'label' => 'Background',
             'type' => Controls_Manager::COLOR,
@@ -136,65 +155,111 @@ class Cora_Guide_Header extends Base_Widget {
         $this->add_group_control(Group_Control_Box_Shadow::get_type(), [ 'name' => 'card_shadow', 'selector' => '{{WRAPPER}} .guide-metric-card' ]);
 
         $this->end_controls_section();
-
-        // --- LAYOUT ENGINE (CSS AUTHORITY) ---
-        $this->start_controls_section('layout_engine', [ 'label' => 'Layout Engine', 'tab' => Controls_Manager::TAB_STYLE ]);
-        $this->add_control('css_reset', [
-            'type' => Controls_Manager::HIDDEN,
-            'default' => 'reset',
-            'selectors' => [
-                '{{WRAPPER}} .guide-header-container' => 'width: 100%; display: flex; flex-direction: column; gap: 48px; box-sizing: border-box; overflow: hidden; padding: 60px 0;',
-                
-                // Badges Row
-                '{{WRAPPER}} .guide-badge-row' => 'display: flex; align-items: center; gap: 12px; flex-wrap: wrap;',
-                '{{WRAPPER}} .badge-item' => 'padding: 6px 14px; border-radius: 100px; font-size: 13px; font-weight: 700; white-space: nowrap;',
-                '{{WRAPPER}} .badge-cat' => 'color: #166534; background: #DCFCE7;',
-                '{{WRAPPER}} .badge-lvl' => 'color: #1E293B; font-weight: 600;',
-                '{{WRAPPER}} .badge-rat' => 'color: #9A3412; background: #FFEDD5; display: flex; align-items: center; gap: 6px;',
-                '{{WRAPPER}} .badge-dot' => 'color: #CBD5E1; font-size: 8px;',
-
-                // Identity Stack
-                '{{WRAPPER}} .guide-identity-stack' => 'display: flex; flex-direction: column; gap: 24px; max-width: 800px;',
-                '{{WRAPPER}} .guide-h1' => 'margin: 0 !important; font-size: clamp(40px, 5vw, 64px); font-weight: 800; color: #111827; line-height: 1.1; letter-spacing: -0.02em;',
-                '{{WRAPPER}} .guide-p' => 'margin: 0 !important; font-size: clamp(18px, 2vw, 20px); color: #6B7280; line-height: 1.6;',
-
-                // Metrics Matrix (Grid)
-                '{{WRAPPER}} .guide-metric-matrix' => 'display: grid; width: 100%; grid-template-columns: repeat(4, 1fr); gap: 24px;',
-                
-                // Metric Card
-                '{{WRAPPER}} .guide-metric-card' => 'background: #fff; border: 1px solid #f1f5f9; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 8px; transition: transform 0.2s;',
-                '{{WRAPPER}} .guide-metric-card:hover' => 'transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.03);',
-                
-                '{{WRAPPER}} .metric-top' => 'display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; color: #94A3B8; letter-spacing: 0.5px; text-transform: uppercase;',
-                '{{WRAPPER}} .metric-val' => 'font-size: 24px; font-weight: 700; color: #111827; line-height: 1.2;',
-
-                // --- RESPONSIVE BREAKPOINTS ---
-                
-                // Tablet (Max 1024px) -> 2 Columns
-                '@media (max-width: 1024px)' => [
-                    '{{WRAPPER}} .guide-metric-matrix' => 'grid-template-columns: repeat(2, 1fr);',
-                    '{{WRAPPER}} .guide-h1' => 'font-size: 48px;',
-                ],
-
-                // Mobile (Max 767px) -> 1 Column (or 2 if tight)
-                '@media (max-width: 767px)' => [
-                    '{{WRAPPER}} .guide-header-container' => 'padding: 40px 20px;',
-                    '{{WRAPPER}} .guide-identity-stack' => 'gap: 16px;',
-                    
-                    // Force 2 columns on mobile for better data density, or change to 1fr for stacking
-                    '{{WRAPPER}} .guide-metric-matrix' => 'grid-template-columns: repeat(2, 1fr); gap: 12px;',
-                    
-                    '{{WRAPPER}} .guide-metric-card' => 'padding: 16px;',
-                    '{{WRAPPER}} .metric-val' => 'font-size: 20px;',
-                ],
-            ],
-        ]);
-        $this->end_controls_section();
     }
 
     protected function render() {
         $settings = $this->get_settings_for_display();
         ?>
+        <style>
+            .guide-header-container {
+                width: 100%;
+                /* Fluid Padding: 60px mobile -> 100px desktop */
+                padding: clamp(60px, 8vw, 100px) 0;
+                display: flex;
+                flex-direction: column;
+                gap: 48px;
+                box-sizing: border-box;
+                overflow: hidden;
+            }
+
+            /* --- Badges --- */
+            .guide-badge-row {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                flex-wrap: wrap; /* Wrap on mobile */
+            }
+            .badge-item {
+                padding: 6px 14px;
+                border-radius: 100px;
+                font-size: 13px;
+                font-weight: 700;
+                white-space: nowrap;
+            }
+            .badge-lvl { color: #1E293B; font-weight: 600; }
+            .badge-dot { color: #CBD5E1; font-size: 8px; }
+            .badge-rat { display: flex; align-items: center; gap: 6px; }
+
+            /* --- Identity --- */
+            .guide-identity-stack {
+                display: flex;
+                flex-direction: column;
+                gap: 24px;
+                max-width: 900px;
+            }
+            .guide-h1 {
+                margin: 0 !important;
+                /* Fluid Type: 42px -> 72px */
+                font-size: clamp(42px, 5vw, 72px);
+                font-weight: 850;
+                color: #111827;
+                line-height: 1.1;
+                letter-spacing: -0.03em;
+            }
+            .guide-p {
+                margin: 0 !important;
+                /* Fluid Type: 18px -> 24px */
+                font-size: clamp(18px, 2vw, 24px);
+                color: #64748b;
+                line-height: 1.5;
+                max-width: 800px;
+            }
+
+            /* --- Metrics Grid --- */
+            .guide-metric-matrix {
+                display: grid;
+                width: 100%;
+                /* Grid Columns set by Widget Controls */
+            }
+
+            .guide-metric-card {
+                /* Padding reduced slightly for mobile density */
+                padding: clamp(20px, 3vw, 30px);
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                transition: transform 0.2s, box-shadow 0.2s;
+                height: 100%;
+            }
+            .guide-metric-card:hover {
+                transform: translateY(-3px);
+            }
+
+            .metric-top {
+                display: flex; align-items: center; gap: 8px;
+                font-size: 11px; font-weight: 700; 
+                color: #94a3b8; letter-spacing: 1px; text-transform: uppercase;
+            }
+            .metric-val {
+                /* Fluid Type: 24px -> 32px */
+                font-size: clamp(24px, 3vw, 32px);
+                font-weight: 750;
+                color: #111827;
+                line-height: 1.2;
+            }
+
+            /* --- Mobile Optimizations --- */
+            @media (max-width: 767px) {
+                .guide-header-container { gap: 32px; padding-left: 20px; padding-right: 20px; }
+                .guide-identity-stack { gap: 16px; }
+                
+                /* Adjust Metric Card density for 2-column mobile layout */
+                .guide-metric-card { padding: 16px; }
+                .metric-val { font-size: 20px; }
+                .metric-top { font-size: 10px; gap: 6px; }
+            }
+        </style>
+
         <div class="guide-header-container">
             
             <div class="guide-badge-row">

@@ -53,12 +53,12 @@ class Clara_Video_Booster extends Base_Widget {
             'label' => 'Show Fake Player Bar',
             'type' => Controls_Manager::SWITCHER,
             'default' => 'yes',
-            'condition' => ['cover_mode' => 'layout'], // Usually only looks good on the grid layout
+            'condition' => ['cover_mode' => 'layout'], 
         ]);
 
         $this->end_controls_section();
 
-        // --- DYNAMIC CONTENT (Only for Layout Mode) ---
+        // --- DYNAMIC CONTENT (Layout Mode) ---
         $this->start_controls_section('content_setup', [ 
             'label' => 'Cover Content',
             'condition' => ['cover_mode' => 'layout'],
@@ -67,9 +67,9 @@ class Clara_Video_Booster extends Base_Widget {
         $this->add_control('brand_name', [ 'label' => 'Brand Label', 'type' => Controls_Manager::TEXT, 'default' => '' ]);
         $this->add_control('headline_prefix', [ 'label' => 'Headline (Normal)', 'type' => Controls_Manager::TEXT, 'default' => 'Shopify' ]);
         $this->add_control('headline_suffix', [ 'label' => 'Headline (Serif)', 'type' => Controls_Manager::TEXT, 'default' => 'Sales Booster' ]);
-        $this->add_control('description', [ 'label' => 'Description', 'type' => Controls_Manager::TEXTAREA, 'default' => '' ]);
+        $this->add_control('description', [ 'label' => 'Description', 'type' => Controls_Manager::TEXTAREA, 'default' => 'See how we increased conversion rates by 200% in just 30 days.' ]);
 
-        // Floating Decorations (Empty by default)
+        // Floating Decorations
         $this->add_control('dec_image_1', [ 'label' => 'Floating Card 1', 'type' => Controls_Manager::MEDIA ]);
         $this->add_control('dec_image_2', [ 'label' => 'Floating Card 2', 'type' => Controls_Manager::MEDIA ]);
         $this->add_control('dec_image_3', [ 'label' => 'Floating Card 3', 'type' => Controls_Manager::MEDIA ]);
@@ -80,7 +80,7 @@ class Clara_Video_Booster extends Base_Widget {
     protected function render() {
         $settings = $this->get_settings_for_display();
         
-        // Extract Video ID logic
+        // Helper: Extract Video ID
         $video_url = $settings['video_url'];
         $video_id = '';
         if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $video_url, $match)) {
@@ -91,18 +91,21 @@ class Clara_Video_Booster extends Base_Widget {
         ?>
 
         <style>
+            /* --- Component Container --- */
             .cv-player-wrap {
                 position: relative;
                 width: 100%;
-                max-width: 1000px;
+                /* Fluid Max Width */
+                max-width: 1100px;
                 margin: 0 auto;
                 border-radius: 24px;
                 overflow: hidden;
                 box-shadow: 0 30px 60px rgba(0,0,0,0.12);
                 border: 1px solid #f1f5f9;
                 background: #000;
+                /* Default Desktop Aspect Ratio */
                 aspect-ratio: 16 / 9;
-                group; /* Enable group hover */
+                isolation: isolate;
             }
 
             /* --- COVER LAYER --- */
@@ -120,9 +123,10 @@ class Clara_Video_Booster extends Base_Widget {
                 text-align: center;
                 cursor: pointer;
                 transition: opacity 0.5s ease;
+                padding: 20px; 
             }
 
-            /* Grid Pattern (Only applied if NOT image mode) */
+            /* Grid Pattern */
             .cv-mode-layout {
                 background-image: 
                     linear-gradient(#f1f5f9 1px, transparent 1px), 
@@ -136,7 +140,7 @@ class Clara_Video_Booster extends Base_Widget {
                 z-index: -1;
             }
 
-            /* --- CONTENT ELEMENTS (Layout Mode) --- */
+            /* --- TYPOGRAPHY (Fluid) --- */
             .cv-brand-pill {
                 display: inline-flex;
                 align-items: center;
@@ -152,6 +156,7 @@ class Clara_Video_Booster extends Base_Widget {
 
             .cv-title {
                 font-family: 'Inter', sans-serif;
+                /* Fluid: 32px mobile -> 56px desktop */
                 font-size: clamp(32px, 5vw, 56px);
                 font-weight: 850;
                 color: #0f172a;
@@ -163,7 +168,7 @@ class Clara_Video_Booster extends Base_Widget {
             .cv-serif {
                 font-family: 'Playfair Display', serif;
                 font-style: italic;
-                color: #15803d;
+                color: #15803d; /* Forest Green */
                 font-weight: 600;
             }
 
@@ -177,60 +182,60 @@ class Clara_Video_Booster extends Base_Widget {
                 position: relative; z-index: 5;
             }
 
-            /* --- FLOATING DECORATIONS --- */
+            /* --- FLOATING DECORATIONS (Desktop Only) --- */
             .cv-float {
                 position: absolute;
                 z-index: 2;
-                width: 140px;
+                width: clamp(100px, 12vw, 160px); 
                 filter: drop-shadow(0 15px 30px rgba(0,0,0,0.08));
                 transition: transform 0.4s ease;
+                pointer-events: none;
             }
             .cv-float img { width: 100%; height: auto; border-radius: 10px; display: block; }
             
-            .f-1 { top: 15%; left: 8%; transform: rotate(-8deg); }
-            .f-2 { bottom: 20%; right: 8%; transform: rotate(6deg); width: 160px; }
-            .f-3 { top: 12%; right: 12%; transform: rotate(4deg); width: 120px; }
-
-            .cv-player-wrap:hover .f-1 { transform: rotate(-10deg) translateY(-10px); }
-            .cv-player-wrap:hover .f-2 { transform: rotate(8deg) translateY(-10px); }
-            .cv-player-wrap:hover .f-3 { transform: rotate(2deg) translateY(-10px); }
+            .f-1 { top: 12%; left: 8%; transform: rotate(-8deg); }
+            .f-2 { bottom: 18%; right: 6%; transform: rotate(6deg); width: clamp(120px, 15vw, 180px); }
+            .f-3 { top: 10%; right: 10%; transform: rotate(4deg); width: clamp(80px, 10vw, 120px); }
 
             /* --- PLAY BUTTON --- */
             .cv-play-btn {
                 position: relative;
                 z-index: 20;
-                width: 70px;
-                height: 48px;
-                background: #ff0000;
+                width: clamp(60px, 8vw, 80px); 
+                height: clamp(40px, 5vw, 56px);
+                background: #ef4444; /* YouTube Red */
                 border-radius: 12px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                box-shadow: 0 10px 20px rgba(255,0,0,0.3);
+                box-shadow: 0 10px 20px rgba(220, 38, 38, 0.4);
                 transition: transform 0.2s ease;
+                flex-shrink: 0;
             }
-            .cv-play-btn svg { width: 24px; height: 24px; fill: #fff; }
+            .cv-play-btn svg { width: clamp(20px, 3vw, 28px); height: auto; fill: #fff; }
             .cv-player-wrap:hover .cv-play-btn { transform: scale(1.1); }
 
             /* --- FAKE PLAYER BAR --- */
             .cv-fake-bar {
                 position: absolute; bottom: 20px; left: 20px; right: 20px;
                 height: 40px;
-                background: rgba(255,255,255,0.8);
-                backdrop-filter: blur(10px);
+                background: rgba(255,255,255,0.85);
+                backdrop-filter: blur(12px);
                 border-radius: 10px;
                 border: 1px solid rgba(0,0,0,0.05);
                 display: flex;
                 align-items: center;
                 padding: 0 15px;
                 gap: 15px;
-                color: #94a3b8;
+                color: #64748b;
                 font-size: 12px;
                 font-family: sans-serif;
+                font-weight: 600;
                 z-index: 5;
             }
-            .cv-bar-play { width: 0; height: 0; border-style: solid; border-width: 6px 0 6px 10px; border-color: transparent transparent transparent #cbd5e1; }
-            .cv-bar-line { flex: 1; height: 4px; background: #e2e8f0; border-radius: 2px; }
+            .cv-bar-play { width: 0; height: 0; border-style: solid; border-width: 6px 0 6px 10px; border-color: transparent transparent transparent #94a3b8; }
+            .cv-bar-line { flex: 1; height: 4px; background: #cbd5e1; border-radius: 2px; }
+            .cv-bar-line::after { content:''; display:block; width: 30%; height:100%; background: #ef4444; border-radius: 2px; }
 
             /* --- VIDEO LAYER --- */
             .cv-video-layer {
@@ -238,18 +243,32 @@ class Clara_Video_Booster extends Base_Widget {
                 inset: 0;
                 height: 100%;
                 width: 100%;
-               
                 z-index: 1;
             }
             
-            /* Clean Mobile */
-            @media (max-width: 767px) {
-                .cv-float { display: none; }
-                .cv-title { font-size: 28px; }
+            /* --- RESPONSIVE FIX (MOBILE) --- */
+            @media (max-width: 768px) {
+                .cv-player-wrap {
+                    /* Release strict 16:9 ratio on mobile to allow content to fit */
+                    aspect-ratio: unset;
+                    min-height: 240px;
+                }
+                
+                /* Ensure decorations don't cause overflow */
+                .cv-float { display: none !important; }
+                
+                /* Tighter Bar */
+                .cv-fake-bar { bottom: 15px; left: 15px; right: 15px; height: 36px; }
+                
+                /* Ensure title wraps cleanly */
+                .cv-title { font-size: 32px; margin-bottom: 16px; }
+                
+                /* Ensure description is visible */
+                .cv-desc { margin-bottom: 24px; font-size: 16px; }
             }
         </style>
 
-        <div class="cv-player-wrap" id="cv-player-<?php echo $this->get_id(); ?>">
+        <div class="cora-unit-container cv-player-wrap" id="cv-player-<?php echo $this->get_id(); ?>">
             
             <div class="cv-cover-layer <?php echo ($settings['cover_mode'] === 'layout') ? 'cv-mode-layout' : ''; ?>"
                  style="<?php echo $has_image_cover ? 'background-image: url(' . esc_url($settings['custom_cover_image']['url']) . ');' : ''; ?>"
@@ -281,13 +300,14 @@ class Clara_Video_Booster extends Base_Widget {
                     <?php if ( 'yes' === $settings['show_player_bar'] ) : ?>
                         <div class="cv-fake-bar">
                             <div class="cv-bar-play"></div>
-                            <div>0:00 / 0:47</div>
+                            <div>0:00 / 2:45</div>
                             <div class="cv-bar-line"></div>
                             <div>HD</div>
                         </div>
                     <?php endif; ?>
 
                 <?php endif; ?>
+                
                 <?php if ( 'yes' === $settings['show_play_icon'] ) : ?>
                     <div class="cv-play-btn">
                         <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
@@ -309,8 +329,8 @@ class Clara_Video_Booster extends Base_Widget {
                 // Fade out cover
                 cover.classList.add('cv-cover-hidden');
                 
-                // Inject Iframe
-                videoContainer.innerHTML = '<iframe style=" height: 100%;" src="https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+                // Inject Iframe (Will fill the 450px min-height on mobile)
+                videoContainer.innerHTML = '<iframe style="width:100%; height:100%;" src="https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
             }
         </script>
         <?php

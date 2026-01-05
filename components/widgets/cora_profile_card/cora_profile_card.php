@@ -29,12 +29,14 @@ class Cora_Profile_Card extends Widget_Base {
             'label' => 'Name',
             'type' => Controls_Manager::TEXT,
             'default' => 'Dravya Bansal',
+            'dynamic' => ['active' => true],
         ]);
 
         $this->add_control('role', [
             'label' => 'Job Title',
             'type' => Controls_Manager::TEXT,
             'default' => 'Senior Shopify Developer',
+            'dynamic' => ['active' => true],
         ]);
 
         $this->add_control('stats', [
@@ -42,6 +44,7 @@ class Cora_Profile_Card extends Widget_Base {
             'type' => Controls_Manager::TEXTAREA,
             'default' => '📈 50+ Shopify Projects | 🚀 $20M+ Revenue Optimized',
             'description' => 'You can copy-paste emojis here.',
+            'dynamic' => ['active' => true],
         ]);
 
         $this->end_controls_section();
@@ -89,27 +92,31 @@ class Cora_Profile_Card extends Widget_Base {
         <style>
             .cora-profile-wrap {
                 width: 100%;
-                font-family: 'Inter', sans-serif; /* Fallback to Inter */
+                font-family: 'Inter', sans-serif;
             }
 
             .cora-profile-card {
                 background-color: <?php echo esc_attr($card_bg); ?>;
                 border-radius: 40px;
-                padding: 40px;
+                /* Fluid Padding: 24px mobile -> 40px desktop */
+                padding: clamp(24px, 4vw, 40px);
                 display: flex;
                 align-items: center;
-                gap: 30px;
+                /* Fluid Gap: 20px -> 30px */
+                gap: clamp(20px, 3vw, 30px);
                 position: relative;
                 box-shadow: 0 20px 40px rgba(0,0,0,0.03);
+                transition: transform 0.3s ease;
             }
 
             /* Avatar Wrapper */
             .cp-avatar-box {
                 flex-shrink: 0;
-                width: 140px;
-                height: 140px;
+                /* Fluid Size: 100px mobile -> 140px desktop */
+                width: clamp(100px, 12vw, 140px);
+                height: clamp(100px, 12vw, 140px);
                 border-radius: 50%;
-                border: 5px solid <?php echo esc_attr($accent); ?>; /* The Green Border */
+                border: 5px solid <?php echo esc_attr($accent); ?>;
                 overflow: hidden;
                 background: #fff;
                 display: flex;
@@ -128,12 +135,14 @@ class Cora_Profile_Card extends Widget_Base {
                 flex: 1;
                 display: flex;
                 flex-direction: column;
-                gap: 8px;
+                gap: 6px;
+                min-width: 0; /* Prevents text overflow flex issues */
             }
 
             .cp-name {
-                font-family: 'Recoleta', 'Cooper', 'Inter', serif; /* Trying to match that soft serif look */
-                font-size: 36px;
+                font-family: 'Inter', serif; /* Use system/theme font */
+                /* Fluid Font: 26px -> 36px */
+                font-size: clamp(26px, 4vw, 36px);
                 font-weight: 800;
                 color: <?php echo esc_attr($accent); ?>;
                 line-height: 1.1;
@@ -141,59 +150,69 @@ class Cora_Profile_Card extends Widget_Base {
             }
 
             .cp-role {
-                font-size: 18px;
+                /* Fluid Font: 16px -> 18px */
+                font-size: clamp(16px, 2vw, 18px);
                 font-weight: 600;
-                color: #22c55e; /* Lighter Green standard */
-                margin: 0 0 8px 0;
-                opacity: 0.9;
+                color: <?php echo esc_attr($accent); ?>;
+                opacity: 0.7;
+                margin: 0;
             }
-            /* Override role color with accent but slightly transparent if needed, 
-               or keep specific green. The image shows a lighter green for title. */
-            .cp-role { color: <?php echo esc_attr($accent); ?>; opacity: 0.7; }
 
             .cp-stats {
-                font-size: 16px;
-                color: #374151; /* Dark Gray for readability */
+                /* Fluid Font: 14px -> 16px */
+                font-size: clamp(14px, 1.5vw, 16px);
+                color: #374151;
                 font-weight: 500;
                 line-height: 1.5;
-                margin: 0;
+                margin-top: 4px;
             }
 
             /* Floating Badge */
             .cp-badge {
                 background: #ffffff;
-                padding: 12px 20px;
+                padding: 10px 18px;
                 border-radius: 50px;
                 display: flex;
                 align-items: center;
-                gap: 15px;
+                gap: 12px;
                 box-shadow: 0 10px 20px rgba(0,0,0,0.08);
-                margin-left: auto; /* Push to right */
+                margin-left: auto; /* Push to right on Desktop */
                 flex-shrink: 0;
             }
 
             .cp-badge img {
-                width: 28px;
-                height: 28px;
+                width: 24px;
+                height: 24px;
                 object-fit: contain;
                 display: block;
             }
 
-            /* Responsive */
+            /* --- RESPONSIVE LOGIC --- */
+            
+            /* Tablet/Mobile Breakpoint (< 768px) */
             @media (max-width: 768px) {
                 .cora-profile-card {
                     flex-direction: column;
                     text-align: center;
-                    padding: 30px 20px;
+                    /* Slightly tighter padding on mobile */
+                    padding: 32px 24px; 
+                    gap: 20px;
                 }
-                .cp-badge {
-                    margin: 10px auto 0 auto; /* Center badge */
+                
+                .cp-content {
+                    width: 100%;
+                    gap: 8px;
                 }
+
                 .cp-avatar-box {
-                    width: 120px;
-                    height: 120px;
+                    border-width: 4px; /* Thinner border on mobile */
                 }
-                .cp-name { font-size: 28px; }
+
+                .cp-badge {
+                    margin-left: 0; /* Remove auto margin */
+                    margin-top: 8px; /* Add spacing from stats */
+                    align-self: center; /* Center horizontally */
+                }
             }
         </style>
 
